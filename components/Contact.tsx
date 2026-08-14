@@ -1,4 +1,4 @@
-import { Mail } from "lucide-react";
+import { ArrowUpRight, Mail, MapPin } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./BrandIcons";
 import { profile } from "@/content/profile";
 import { Reveal } from "./Reveal";
@@ -6,66 +6,98 @@ import { Section } from "./Section";
 
 export function Contact() {
   return (
-    <Section id="contact" title="Get in touch" icon={<Mail className="h-5 w-5" />}>
+    <Section
+      id="contact"
+      title="Get in touch"
+      icon={<Mail className="h-5 w-5" />}
+    >
       <Reveal>
-        <p className="max-w-2xl text-base leading-relaxed text-ink-soft">
-          I&apos;m always happy to talk about backend architecture, data pipelines, or interesting
-          engineering problems. The fastest way to reach me is email.
-        </p>
+        {/* One panel rather than a grid of equal cards: email is the action
+            that matters, so it gets the weight and everything else recedes. */}
+        <div className="relative overflow-hidden rounded-2xl border border-rule bg-paper-raised p-7 sm:p-10">
+          {/* Soft teal bloom behind the top-right corner. Decorative only. */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-teal/10 blur-3xl"
+          />
 
-        <ul className="mt-7 grid gap-3 sm:grid-cols-2">
-          <ContactRow
-            href={`mailto:${profile.email}`}
-            label="Email"
-            value={profile.email}
-            icon={<Mail className="h-4 w-4" aria-hidden="true" />}
-          />
-          <ContactRow
-            href={profile.links.linkedin}
-            label="LinkedIn"
-            value="in/mrityunjoy-das"
-            external
-            icon={<LinkedinIcon className="h-4 w-4" />}
-          />
-          <ContactRow
-            href={profile.links.github}
-            label="GitHub"
-            value="@mjoyshuvo"
-            external
-            icon={<GithubIcon className="h-4 w-4" />}
-          />
-        </ul>
+          <div className="relative">
+            <p className="flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-ink-faint">
+              <span
+                className="h-1.5 w-1.5 shrink-0 rounded-full bg-teal"
+                aria-hidden="true"
+              />
+              {profile.status}
+            </p>
+
+            <p className="mt-5 max-w-xl font-serif text-2xl leading-snug font-bold tracking-tight sm:text-3xl">
+              Bring me the slow one.
+            </p>
+
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-soft">
+              I&apos;m always happy to talk about backend architecture, data
+              pipelines, agentic systems, or whatever is quietly costing your
+              team its afternoons.
+            </p>
+
+            {/* The email is the primary action; everything else is a footnote. */}
+            <a
+              href={`mailto:${profile.email}`}
+              className="group mt-8 inline-flex items-center gap-3 rounded-full bg-teal px-6 py-3 text-sm font-medium text-on-teal transition-[background-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-teal-strong hover:shadow-[0_8px_20px_-10px_var(--teal)] sm:text-base"
+            >
+              <Mail className="h-4 w-4" aria-hidden="true" />
+              {profile.email}
+              <ArrowUpRight
+                className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                aria-hidden="true"
+              />
+            </a>
+
+            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-rule pt-6 text-sm">
+              <SocialLink
+                href={profile.links.linkedin}
+                label="in/mrityunjoy-das"
+              >
+                <LinkedinIcon className="h-4 w-4" />
+              </SocialLink>
+              <SocialLink href={profile.links.github} label="@mjoyshuvo">
+                <GithubIcon className="h-4 w-4" />
+              </SocialLink>
+
+              <span className="flex w-full items-center gap-1.5 text-ink-faint sm:ml-auto sm:w-auto">
+                <MapPin className="h-4 w-4" aria-hidden="true" />
+                {profile.location}
+              </span>
+            </div>
+          </div>
+        </div>
       </Reveal>
     </Section>
   );
 }
 
-function ContactRow({
+function SocialLink({
   href,
   label,
-  value,
-  icon,
-  external,
+  children,
 }: {
   href: string;
   label: string;
-  value: string;
-  icon: React.ReactNode;
-  external?: boolean;
+  children: React.ReactNode;
 }) {
   return (
-    <li>
-      <a
-        href={href}
-        {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-        className="flex items-center gap-3 rounded-lg border border-rule bg-paper-raised px-4 py-3 transition-colors hover:border-teal"
-      >
-        <span className="text-teal">{icon}</span>
-        <span className="min-w-0">
-          <span className="block text-xs uppercase tracking-wider text-ink-faint">{label}</span>
-          <span className="block truncate text-sm text-ink">{value}</span>
-        </span>
-      </a>
-    </li>
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group inline-flex items-center gap-2 text-ink-soft transition-colors hover:text-teal"
+    >
+      <span className="text-ink-faint transition-colors group-hover:text-teal">
+        {children}
+      </span>
+      <span className="border-b border-transparent pb-0.5 transition-colors group-hover:border-teal">
+        {label}
+      </span>
+    </a>
   );
 }
