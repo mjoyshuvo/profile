@@ -16,7 +16,7 @@ export function Hero() {
       aria-labelledby="name-heading"
       className="flex min-h-[calc(100svh-3.5rem)] items-center py-8 sm:py-12 lg:py-16"
     >
-      <div className="mx-auto grid w-full max-w-6xl gap-7 px-5 sm:gap-10 sm:px-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-16">
+      <div className="mx-auto grid w-full max-w-6xl gap-6 px-5 sm:gap-10 sm:px-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-16">
         {/* Statement */}
         <div className="min-w-0 lg:order-1">
           <Reveal>
@@ -49,7 +49,7 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.14}>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-ink-soft sm:mt-8 sm:text-xl">
+            <p className="mt-5 max-w-2xl text-[0.9375rem] leading-relaxed text-ink-soft sm:mt-8 sm:text-lg">
               {profile.supportingLine}
             </p>
             <p className="mt-3 flex items-center gap-1.5 text-sm text-ink-faint">
@@ -59,7 +59,7 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.2}>
-            <div className="mt-7 flex flex-wrap items-center gap-2.5 sm:mt-8">
+            <div className="mt-6 flex flex-wrap items-center gap-2.5 sm:mt-8">
               <a
                 href="#contact"
                 className="group inline-flex items-center gap-2 rounded-full bg-teal px-5 py-2.5 text-sm font-medium text-on-teal transition-colors hover:bg-teal-strong"
@@ -95,23 +95,27 @@ export function Hero() {
               // paper with no frame. `portrait-ink` gives it a paper card on
               // the dark palette — inverting it would read as a photo negative.
               width={640}
-              height={799}
-              sizes="(min-width: 1024px) 320px, 160px"
+              height={603}
+              sizes="(min-width: 1024px) 320px, 176px"
               priority
-              className="portrait-ink h-28 w-auto sm:h-40 lg:h-96"
+              className="portrait-ink w-28 sm:w-44 lg:w-80"
             />
           </Reveal>
 
           <Reveal delay={0.24}>
-            <dl className="mt-5 grid grid-cols-3 gap-x-4 border-t border-rule pt-4 lg:mt-7 lg:pt-5">
+            {/* Rows, not columns. Three equal columns holding "Backend" and
+                "AI" leave ragged gaps that read as broken spacing; stacking
+                them aligns both edges. */}
+            <dl className="mt-4 divide-y divide-rule border-y border-rule sm:mt-5 lg:mt-7">
               {disciplines.map((d) => (
-                <div key={d.name}>
-                  <dt className="font-serif text-lg font-bold tracking-tight sm:text-xl">
+                <div
+                  key={d.name}
+                  className="flex items-baseline justify-between gap-4 py-2 sm:py-2.5"
+                >
+                  <dt className="font-serif text-base font-bold tracking-tight">
                     {d.name}
                   </dt>
-                  <dd className="mt-1 text-xs leading-snug text-ink-faint">
-                    {d.detail}
-                  </dd>
+                  <dd className="text-xs text-ink-faint">{d.detail}</dd>
                 </div>
               ))}
             </dl>

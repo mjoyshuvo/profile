@@ -8,9 +8,9 @@ export const profile = {
   status: "At Cefalo — open to select work",
   /** The statement. Last line renders in the accent colour. */
   triad: ["Engineer.", "Mentor.", "Builder."],
-  /** One line, carrying what I actually do. Anything longer stops being read. */
+  /** The supporting paragraph under the statement. */
   supportingLine:
-    "Ten years taking on other people's slowest systems — pipelines, services, search — and handing them back fast and dependable.",
+    "Backend and Data Engineer with 10 years of experience building scalable systems and robust data pipelines. Passionate about solving complex technical challenges while actively mentoring the next generation of engineering talent.",
   /**
    * The supporting line is deliberately less literal than a search engine needs,
    * so <meta> and JSON-LD get their own keyword-carrying sentence.
