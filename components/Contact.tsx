@@ -22,16 +22,10 @@ export function Contact() {
           />
 
           <div className="relative">
-            <p className="flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-ink-faint">
-              <span
-                className="h-1.5 w-1.5 shrink-0 rounded-full bg-teal"
-                aria-hidden="true"
-              />
-              {profile.status}
-            </p>
-
-            <p className="mt-5 max-w-xl font-serif text-2xl leading-snug font-bold tracking-tight sm:text-3xl">
-              Bring me the slow one.
+            {/* The availability line lives in the hero; repeating it here
+                would say the same thing twice on one page. */}
+            <p className="max-w-xl font-serif text-2xl leading-snug font-bold tracking-tight sm:text-3xl">
+              Let&apos;s talk about your project.
             </p>
 
             <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-soft">
