@@ -17,7 +17,6 @@ export const profile = {
    */
   metaDescription:
     "Staff Software Engineer with 10 years in backend, data, and AI engineering — ETL pipelines, FastAPI and Django services, and agentic systems, for Norwegian clients including Veyt and Ferdia.",
-  navSubtitle: "Staff Software Engineer",
   location: "Dhaka, Bangladesh",
   email: "mjoyshuvo@gmail.com",
   resumePath: "/Mrityunjoy_Das_Resume.pdf",

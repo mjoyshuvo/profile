@@ -3,12 +3,11 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { profile } from "@/content/profile";
-import { ThemeToggle } from "./ThemeToggle";
 
 const links = [
   { href: "#experience", label: "Experience" },
-  { href: "#writing", label: "Writing" },
   { href: "#skills", label: "Skills" },
+  { href: "#writing", label: "Writing" },
   { href: "#education", label: "Education" },
   { href: "#contact", label: "Contact" },
 ];
@@ -58,13 +57,8 @@ export function Nav() {
             // paper — otherwise the ink disappears on the dark palette.
             className="h-8 w-8 shrink-0 rounded-full bg-[#efece4] object-cover object-[50%_18%] ring-1 ring-rule"
           />
-          <span className="min-w-0 leading-tight">
-            <span className="block font-serif text-base font-semibold tracking-tight transition-colors group-hover:text-teal">
-              {profile.name}
-            </span>
-            <span className="hidden text-[0.625rem] uppercase tracking-[0.14em] text-ink-faint sm:block">
-              {profile.navSubtitle}
-            </span>
+          <span className="min-w-0 font-serif text-base font-semibold tracking-tight transition-colors group-hover:text-teal">
+            {profile.name}
           </span>
         </a>
 
@@ -86,7 +80,6 @@ export function Nav() {
               </li>
             ))}
           </ul>
-          <ThemeToggle />
         </div>
       </nav>
     </header>

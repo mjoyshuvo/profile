@@ -24,8 +24,8 @@ export default function Home() {
       <main id="main" className="w-full flex-1">
         <Hero />
         <Experience />
-        <Writing />
         <Skills />
+        <Writing />
         <Education />
         <Contact />
       </main>
