@@ -1,4 +1,4 @@
-import { Mail, Phone } from "lucide-react";
+import { Mail } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./BrandIcons";
 import { profile } from "@/content/profile";
 import { Reveal } from "./Reveal";
@@ -19,12 +19,6 @@ export function Contact() {
             label="Email"
             value={profile.email}
             icon={<Mail className="h-4 w-4" aria-hidden="true" />}
-          />
-          <ContactRow
-            href={`tel:${profile.phone}`}
-            label="Phone"
-            value={profile.phone}
-            icon={<Phone className="h-4 w-4" aria-hidden="true" />}
           />
           <ContactRow
             href={profile.links.linkedin}

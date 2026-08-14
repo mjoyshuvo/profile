@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Analytics } from "@vercel/analytics/next";
 import { Inter, Source_Serif_4 } from "next/font/google";
 import { SITE_URL, profile } from "@/content/profile";
 import { personJsonLd } from "@/lib/seo";
@@ -84,7 +85,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd()) }}
         />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col">
+        {children}
+        {/* Cookieless page counts, so there's some signal on whether the site
+            actually gets read. No personal data leaves the page. */}
+        <Analytics />
+      </body>
     </html>
   );
 }

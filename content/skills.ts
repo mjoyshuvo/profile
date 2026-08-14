@@ -3,31 +3,31 @@ export type SkillGroup = {
   items: string[];
 };
 
+/**
+ * Three groups on purpose. Longer lists read as a keyword dump and dilute the
+ * backend/data positioning — anything I'd not want to be interviewed on stays out.
+ */
 export const skillGroups: SkillGroup[] = [
   {
-    label: "Languages & Frameworks",
-    items: ["Python", "Django", "FastAPI", "Flask", "jQuery", "Flutter"],
+    label: "Backend & Languages",
+    items: ["Python", "Django", "FastAPI", "Flask", "PostgreSQL", "MySQL", "MongoDB", "Redis"],
   },
   {
-    // Review these — added to reflect the agentic/AI coaching work at Cefalo.
-    label: "AI & Agentic Systems",
-    items: ["Agentic Workflows", "LLM Integration", "Agent Architecture", "AI Coaching"],
+    label: "Data & Agentic Systems",
+    items: [
+      "ETL",
+      "Prefect",
+      "Celery",
+      "Elasticsearch",
+      "Apache Superset",
+      "Agentic Workflows",
+      "LLM Integration",
+      "Agent Architecture",
+    ],
   },
   {
-    label: "Data & Messaging",
-    items: ["ETL", "Prefect", "Celery", "Elastic Search", "Apache Superset"],
-  },
-  {
-    label: "Infrastructure & Cloud",
-    items: ["Docker", "AWS Lambda", "Keycloak", "CI/CD", "Microservices"],
-  },
-  {
-    label: "Datastores",
-    items: ["PostgreSQL", "MySQL", "MongoDB", "Redis"],
-  },
-  {
-    label: "Tooling",
-    items: ["Git", "Jira"],
+    label: "Infrastructure",
+    items: ["Docker", "AWS", "Microservices", "Keycloak", "CI/CD", "Git"],
   },
 ];
 

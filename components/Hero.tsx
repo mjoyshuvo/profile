@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { Download, Mail, MapPin, Phone } from "lucide-react";
+import { Download, Mail, MapPin } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./BrandIcons";
-import { profile, stats } from "@/content/profile";
+import { profile } from "@/content/profile";
 import { Reveal } from "./Reveal";
 
 export function Hero() {
@@ -46,25 +46,6 @@ export function Hero() {
         </p>
       </Reveal>
 
-      <Reveal delay={0.14}>
-        <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-6 border-y border-rule py-6 sm:grid-cols-4">
-          {stats.map((stat) => (
-            <div key={stat.label}>
-              <dt className="sr-only">
-                {stat.label} at {stat.context}
-              </dt>
-              <dd>
-                <span className="block font-serif text-2xl font-bold text-teal sm:text-3xl">
-                  {stat.value}
-                </span>
-                <span className="mt-1 block text-sm leading-snug text-ink-soft">{stat.label}</span>
-                <span className="mt-0.5 block text-xs text-ink-faint">{stat.context}</span>
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </Reveal>
-
       <Reveal delay={0.2}>
         <p className="mt-9 max-w-2xl text-base leading-relaxed text-ink-soft">{profile.summary}</p>
         <p className="mt-4 max-w-2xl text-base leading-relaxed text-ink-soft">
@@ -91,9 +72,6 @@ export function Hero() {
           </IconLink>
           <IconLink href={profile.links.github} label="GitHub" external>
             <GithubIcon className="h-4 w-4" />
-          </IconLink>
-          <IconLink href={`tel:${profile.phone}`} label={profile.phone}>
-            <Phone className="h-4 w-4" aria-hidden="true" />
           </IconLink>
         </div>
       </Reveal>

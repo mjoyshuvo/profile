@@ -19,7 +19,6 @@ export function personJsonLd() {
     image: `${SITE_URL}${profile.photo}`,
     jobTitle: profile.title,
     email: `mailto:${profile.email}`,
-    telephone: profile.phone,
     description: profile.subheadline,
     address: {
       "@type": "PostalAddress",

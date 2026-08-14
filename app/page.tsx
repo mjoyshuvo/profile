@@ -4,6 +4,7 @@ import { Experience } from "@/components/Experience";
 import { Hero } from "@/components/Hero";
 import { Nav } from "@/components/Nav";
 import { Skills } from "@/components/Skills";
+import { Writing } from "@/components/Writing";
 import { profile } from "@/content/profile";
 
 export const dynamic = "force-static";
@@ -23,6 +24,7 @@ export default function Home() {
       <main id="main" className="mx-auto w-full max-w-4xl flex-1 px-5 sm:px-8">
         <Hero />
         <Experience />
+        <Writing />
         <Skills />
         <Education />
         <Contact />
