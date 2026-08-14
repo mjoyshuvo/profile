@@ -15,7 +15,7 @@ export const profile = {
   email: "mjoyshuvo@gmail.com",
   phone: "+8801671567068",
   resumePath: "/Mrityunjoy_Das_Resume.pdf",
-  photo: "/headshot.jpg",
+  photo: "/mrityunjoy-das-portrait.jpg",
   links: {
     linkedin: "https://www.linkedin.com/in/mrityunjoy-das/",
     github: "https://github.com/mjoyshuvo",

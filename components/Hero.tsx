@@ -12,10 +12,14 @@ export function Hero() {
           <Image
             src={profile.photo}
             alt={`Portrait of ${profile.name}`}
-            width={124}
-            height={124}
+            // Source is a 4:5 portrait; the circle is square. Anchoring the
+            // crop to the top keeps the face centred in the circle instead of
+            // pushing it into the upper third.
+            width={360}
+            height={450}
+            sizes="(min-width: 640px) 124px, 96px"
             priority
-            className="h-24 w-24 shrink-0 rounded-full object-cover ring-1 ring-rule sm:h-31 sm:w-31"
+            className="h-24 w-24 shrink-0 rounded-full object-cover object-top ring-1 ring-rule sm:h-31 sm:w-31"
           />
 
           <div className="min-w-0">
