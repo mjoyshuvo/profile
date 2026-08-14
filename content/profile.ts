@@ -35,14 +35,8 @@ export const profile = {
   },
 } as const;
 
-/**
- * The three disciplines, side by side. Each cell is the same two-line shape —
- * discipline over "Engineer" — so the row stays even however short the word.
- */
+/** The three disciplines, side by side under the portrait. */
 export const disciplines = ["Backend", "Data", "AI"];
-
-/** Shared second line under each discipline, so the row reads evenly. */
-export const disciplineSuffix = "Engineer";
 
 /** Every profile URL that belongs to this person, for JSON-LD `sameAs`. */
 export const sameAs: string[] = [

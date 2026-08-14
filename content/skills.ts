@@ -4,7 +4,7 @@ export type SkillGroup = {
 };
 
 /**
- * Three groups on purpose. Longer lists read as a keyword dump and dilute the
+ * Grouped tightly on purpose. Longer lists read as a keyword dump and dilute the
  * backend/data positioning — anything I'd not want to be interviewed on stays out.
  */
 export const skillGroups: SkillGroup[] = [
@@ -13,16 +13,18 @@ export const skillGroups: SkillGroup[] = [
     items: ["Python", "Django", "FastAPI", "Flask", "PostgreSQL", "MySQL", "MongoDB", "Redis"],
   },
   {
-    label: "Data & Agentic Systems",
+    label: "Data Engineering",
+    items: ["ETL", "Prefect", "Celery", "Elasticsearch", "Apache Superset"],
+  },
+  {
+    label: "Agentic & AI",
     items: [
-      "ETL",
-      "Prefect",
-      "Celery",
-      "Elasticsearch",
-      "Apache Superset",
+      "Claude Code",
+      "MCP",
+      "Agent Architecture",
       "Agentic Workflows",
       "LLM Integration",
-      "Agent Architecture",
+      "Prompt Engineering",
     ],
   },
   {

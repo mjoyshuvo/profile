@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { ArrowRight, Download, MapPin } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./BrandIcons";
-import { disciplineSuffix, disciplines, profile } from "@/content/profile";
+import { disciplines, profile } from "@/content/profile";
 import { Reveal } from "./Reveal";
 
 export function Hero() {
@@ -62,7 +62,7 @@ export function Hero() {
             <div className="mt-6 flex flex-wrap items-center gap-2.5 sm:mt-8">
               <a
                 href="#contact"
-                className="group inline-flex items-center gap-2 rounded-full bg-teal px-5 py-2.5 text-sm font-medium text-on-teal transition-colors hover:bg-teal-strong"
+                className="group inline-flex items-center gap-2 rounded-full bg-teal px-5 py-2.5 text-sm font-medium text-on-teal transition-[background-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-teal-strong hover:shadow-[0_6px_16px_-8px_var(--teal)]"
               >
                 Get in touch
                 <ArrowRight
@@ -103,20 +103,20 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.24}>
-            {/* Side by side. Every cell carries the same "Engineer" second
-                line, so the row reads evenly however short the discipline. */}
-            <dl className="mt-4 grid grid-cols-3 gap-x-4 border-t border-rule pt-4 sm:mt-5 lg:mt-7 lg:pt-5">
-              {disciplines.map((d) => (
-                <div key={d} className="text-center">
-                  <dt className="font-serif text-base font-bold tracking-tight sm:text-lg">
-                    {d}
-                  </dt>
-                  <dd className="mt-0.5 text-[0.6875rem] uppercase tracking-[0.14em] text-ink-faint">
-                    {disciplineSuffix}
-                  </dd>
-                </div>
+            {/* One centred line, dot-separated. "Engineer" is left to the nav's
+                role line — repeating it under each word read as a stutter. */}
+            <ul className="mt-4 flex items-center justify-center gap-3 border-t border-rule pt-4 font-serif text-base font-bold tracking-tight sm:mt-5 sm:text-lg lg:mt-7 lg:pt-5">
+              {disciplines.map((d, i) => (
+                <li key={d} className="flex items-center gap-3">
+                  {i > 0 ? (
+                    <span className="text-ink-faint/60" aria-hidden="true">
+                      ·
+                    </span>
+                  ) : null}
+                  {d}
+                </li>
               ))}
-            </dl>
+            </ul>
           </Reveal>
         </div>
       </div>
@@ -142,7 +142,7 @@ function IconLink({
       href={href}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       {...(download ? { download: true } : {})}
-      className="inline-flex items-center gap-2 rounded-full border border-rule px-4 py-2.5 text-sm text-ink-soft transition-colors hover:border-teal hover:text-teal"
+      className="group inline-flex items-center gap-2 rounded-full border border-rule px-4 py-2.5 text-sm text-ink-soft transition-[color,border-color,background-color,transform] duration-200 hover:-translate-y-0.5 hover:border-teal hover:bg-teal-wash/50 hover:text-teal"
     >
       {children}
       {label}
