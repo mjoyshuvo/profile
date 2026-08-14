@@ -18,7 +18,7 @@ export type Role = {
   endDate?: string;
   location: string;
   /** Client the work was delivered for, when it wasn't in-house. */
-  client?: { name: string; url?: string; blurb: string };
+  client?: { name: string; url?: string; blurb: string; logo?: string };
   /**
    * LinkedIn-style position stack, newest first. A single-entry stack renders
    * the same as the old flat role, so nothing special-cases the common case.

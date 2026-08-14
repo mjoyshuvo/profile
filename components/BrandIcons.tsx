@@ -14,6 +14,21 @@ export function GithubIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
+/**
+ * Norway, at 22:16 — the official proportions. Drawn rather than fetched so it
+ * stays crisp at 16px and costs no request. Fixed colours on purpose: a flag
+ * that changed with the theme would no longer be the flag.
+ */
+export function NorwayFlag(props: SVGProps<SVGSVGElement>) {
+  return (
+    <svg viewBox="0 0 22 16" aria-hidden="true" {...props}>
+      <rect width="22" height="16" fill="#ba0c2f" />
+      <path d="M6 0h4v16H6z M0 6h22v4H0z" fill="#fff" />
+      <path d="M7 0h2v16H7z M0 7h22v2H0z" fill="#00205b" />
+    </svg>
+  );
+}
+
 export function LinkedinIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...props}>
