@@ -22,7 +22,7 @@ const pageTitle = `${profile.name} — ${profile.title}`;
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: pageTitle,
-  description: profile.subheadline,
+  description: profile.metaDescription,
   alternates: { canonical: "/" },
   authors: [{ name: profile.name, url: SITE_URL }],
   creator: profile.name,
@@ -41,14 +41,14 @@ export const metadata: Metadata = {
     type: "profile",
     url: SITE_URL,
     title: pageTitle,
-    description: profile.subheadline,
+    description: profile.metaDescription,
     siteName: profile.name,
     locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
     title: pageTitle,
-    description: profile.subheadline,
+    description: profile.metaDescription,
   },
   robots: {
     index: true,

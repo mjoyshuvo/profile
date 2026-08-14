@@ -2,12 +2,21 @@ export const SITE_URL = "https://mrityunjoy.com";
 
 export const profile = {
   name: "Mrityunjoy Das",
-  /** Kept for metadata and JSON-LD; deliberately not shown as the hero subtitle. */
+  /** Kept for metadata and JSON-LD; the hero leads with the triad instead. */
   title: "Staff Software Engineer",
-  headline: "I don't just ship code. I make slow systems fast and fragile ones dependable.",
-  /** One sentence, carrying the proof. Anything longer stops being read. */
-  subheadline:
-    "9+ years of Python backend and data engineering — pipelines and services for Norwegian clients like Veyt and Ferdia, now designing agentic systems that hold up in production, not just in demos.",
+  /** Shown as a small status row above the statement. */
+  status: "At Cefalo — open to select work",
+  /** The statement. Last line renders in the accent colour. */
+  triad: ["Engineer.", "Mentor.", "Builder."],
+  /** One line, carrying what I actually do. Anything longer stops being read. */
+  supportingLine:
+    "Ten years taking on other people's slowest systems — pipelines, services, search — and handing them back fast and dependable.",
+  /**
+   * The supporting line is deliberately less literal than a search engine needs,
+   * so <meta> and JSON-LD get their own keyword-carrying sentence.
+   */
+  metaDescription:
+    "Staff Software Engineer with 10 years in backend, data, and AI engineering — ETL pipelines, FastAPI and Django services, and agentic systems, for Norwegian clients including Veyt and Ferdia.",
   location: "Dhaka, Bangladesh",
   email: "mjoyshuvo@gmail.com",
   resumePath: "/Mrityunjoy_Das_Resume.pdf",
@@ -18,6 +27,17 @@ export const profile = {
     githubWork: "https://github.com/shuvo-cefalo",
   },
 } as const;
+
+/**
+ * The three disciplines, in the reference's three-column shape. Captions carry
+ * real tools rather than invented per-discipline year counts — the ten years
+ * is stated once, in the supporting line.
+ */
+export const disciplines = [
+  { name: "Backend", detail: "FastAPI · Django" },
+  { name: "Data", detail: "ETL · Prefect" },
+  { name: "AI", detail: "Agents · MCP" },
+];
 
 /** Every profile URL that belongs to this person, for JSON-LD `sameAs`. */
 export const sameAs: string[] = [

@@ -1,73 +1,111 @@
 import Image from "next/image";
-import { Download, Mail, MapPin } from "lucide-react";
+import { ArrowRight, Download, MapPin } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./BrandIcons";
-import { profile } from "@/content/profile";
+import { disciplines, profile } from "@/content/profile";
 import { Reveal } from "./Reveal";
 
 export function Hero() {
-  return (
-    <section id="top" aria-labelledby="name-heading" className="pt-12 pb-4 sm:pt-20">
-      <Reveal>
-        <div className="flex flex-col items-start gap-7 sm:flex-row sm:items-center sm:gap-9">
-          <Image
-            src={profile.photo}
-            alt={`Portrait of ${profile.name}`}
-            // Source is a 4:5 portrait; the circle is square. Anchoring the
-            // crop to the top keeps the face centred in the circle instead of
-            // pushing it into the upper third.
-            width={360}
-            height={450}
-            sizes="(min-width: 640px) 124px, 96px"
-            priority
-            className="h-24 w-24 shrink-0 rounded-full object-cover object-top ring-1 ring-rule sm:h-31 sm:w-31"
-          />
+  const lines = profile.triad;
+  const lastLine = lines.length - 1;
 
-          <div className="min-w-0">
+  return (
+    <section id="top" aria-labelledby="name-heading" className="pt-10 pb-6 sm:pt-16 lg:pt-20">
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-12">
+        {/* Statement */}
+        <div className="min-w-0 lg:order-1">
+          <Reveal>
+            <p className="flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-ink-faint">
+              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-teal" aria-hidden="true" />
+              {profile.status}
+            </p>
+          </Reveal>
+
+          <Reveal delay={0.08}>
             <h1
               id="name-heading"
-              className="font-serif text-4xl font-bold tracking-tight sm:text-5xl"
+              className="mt-6 font-serif text-6xl font-bold leading-[0.9] tracking-tight sm:text-7xl lg:text-8xl"
             >
-              {profile.name}
+              {/* The visible heading is the statement; the name lives in the
+                  sticky nav. Screen readers and crawlers still get both. */}
+              <span className="sr-only">{profile.name} — </span>
+              {lines.map((line, i) => (
+                <span
+                  key={line}
+                  className={`block ${i === lastLine ? "text-teal" : ""}`}
+                >
+                  {line}
+                </span>
+              ))}
             </h1>
-            <p className="mt-1.5 flex items-center gap-1.5 text-sm text-ink-faint">
+          </Reveal>
+
+          <Reveal delay={0.14}>
+            <p className="mt-7 max-w-xl text-base leading-relaxed text-ink-soft sm:text-lg">
+              {profile.supportingLine}
+            </p>
+            <p className="mt-3 flex items-center gap-1.5 text-sm text-ink-faint">
               <MapPin className="h-4 w-4" aria-hidden="true" />
               {profile.location}
             </p>
-          </div>
+          </Reveal>
+
+          <Reveal delay={0.2}>
+            <div className="mt-8 flex flex-wrap items-center gap-2.5">
+              <a
+                href="#contact"
+                className="group inline-flex items-center gap-2 rounded-full bg-teal px-5 py-2.5 text-sm font-medium text-on-teal transition-colors hover:bg-teal-strong"
+              >
+                Get in touch
+                <ArrowRight
+                  className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </a>
+
+              <IconLink href={profile.resumePath} label="Résumé" download>
+                <Download className="h-4 w-4" aria-hidden="true" />
+              </IconLink>
+              <IconLink href={profile.links.linkedin} label="LinkedIn" external>
+                <LinkedinIcon className="h-4 w-4" />
+              </IconLink>
+              <IconLink href={profile.links.github} label="GitHub" external>
+                <GithubIcon className="h-4 w-4" />
+              </IconLink>
+            </div>
+          </Reveal>
         </div>
-      </Reveal>
 
-      <Reveal delay={0.08}>
-        <p className="mt-9 max-w-3xl font-serif text-2xl leading-snug font-semibold tracking-tight sm:text-3xl">
-          {profile.headline}
-        </p>
-        <p className="mt-4 max-w-2xl text-base leading-relaxed text-ink-soft sm:text-lg">
-          {profile.subheadline}
-        </p>
-      </Reveal>
+        {/* Portrait + proof. Sits first on mobile so the reader meets the face
+            before the statement; returns to the right-hand column at lg. */}
+        <div className="order-first lg:order-2 lg:w-64">
+          <Reveal delay={0.06}>
+            <Image
+              src={profile.photo}
+              alt={`Portrait of ${profile.name}`}
+              // Source is a 4:5 portrait cropped to a square. Anchoring to the
+              // top keeps the face centred instead of pushing it upward.
+              width={360}
+              height={450}
+              sizes="(min-width: 1024px) 256px, 128px"
+              priority
+              className="h-32 w-32 rounded-2xl object-cover object-top ring-1 ring-rule lg:h-64 lg:w-64"
+            />
+          </Reveal>
 
-      <Reveal delay={0.26}>
-        <div className="mt-8 flex flex-wrap items-center gap-2.5">
-          <a
-            href={profile.resumePath}
-            download
-            className="inline-flex items-center gap-2 rounded-full bg-teal px-4 py-2 text-sm font-medium text-on-teal transition-colors hover:bg-teal-strong"
-          >
-            <Download className="h-4 w-4" aria-hidden="true" />
-            Download résumé (PDF)
-          </a>
-
-          <IconLink href={`mailto:${profile.email}`} label={profile.email}>
-            <Mail className="h-4 w-4" aria-hidden="true" />
-          </IconLink>
-          <IconLink href={profile.links.linkedin} label="LinkedIn" external>
-            <LinkedinIcon className="h-4 w-4" />
-          </IconLink>
-          <IconLink href={profile.links.github} label="GitHub" external>
-            <GithubIcon className="h-4 w-4" />
-          </IconLink>
+          <Reveal delay={0.24}>
+            <dl className="mt-6 grid grid-cols-3 gap-x-4 border-t border-rule pt-5 lg:mt-7">
+              {disciplines.map((d) => (
+                <div key={d.name}>
+                  <dt className="font-serif text-lg font-bold tracking-tight sm:text-xl">
+                    {d.name}
+                  </dt>
+                  <dd className="mt-1 text-xs leading-snug text-ink-faint">{d.detail}</dd>
+                </div>
+              ))}
+            </dl>
+          </Reveal>
         </div>
-      </Reveal>
+      </div>
     </section>
   );
 }
@@ -76,18 +114,21 @@ function IconLink({
   href,
   label,
   external,
+  download,
   children,
 }: {
   href: string;
   label: string;
   external?: boolean;
+  download?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <a
       href={href}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className="inline-flex items-center gap-2 rounded-full border border-rule px-4 py-2 text-sm text-ink-soft transition-colors hover:border-teal hover:text-teal"
+      {...(download ? { download: true } : {})}
+      className="inline-flex items-center gap-2 rounded-full border border-rule px-4 py-2.5 text-sm text-ink-soft transition-colors hover:border-teal hover:text-teal"
     >
       {children}
       {label}
