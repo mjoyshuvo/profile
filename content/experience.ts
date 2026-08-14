@@ -37,6 +37,7 @@ export const experience: Role[] = [
     client: {
       name: "Veyt",
       url: "https://veyt.com/",
+      logo: "/logo-veyt.svg",
       blurb:
         "Norwegian market intelligence provider for green certificate and carbon markets, formerly Greenfact.",
     },
@@ -75,6 +76,8 @@ export const experience: Role[] = [
     location: "Dhaka, Bangladesh",
     client: {
       name: "Ferdia",
+      url: "https://www.ferdia.no/",
+      logo: "/logo-ferdia.svg",
       blurb:
         "Norwegian platform that lets bus companies and travel organisers run and connect their operations.",
     },

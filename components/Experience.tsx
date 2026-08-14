@@ -114,26 +114,28 @@ export function Experience() {
  * the card keeps the same shape either way.
  */
 function ClientMark({ client }: { client: NonNullable<Role["client"]> }) {
+  // Both marks are wordmarks drawn for a light ground, and one is green — so
+  // the chip carries its own light surface in either theme rather than being
+  // inverted, which would misrepresent the brand colour.
   const base =
-    "flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-md border border-rule bg-paper";
+    "flex h-9 shrink-0 items-center justify-center rounded-md border border-rule bg-[#f5f3ee]";
 
   if (client.logo) {
     return (
-      <span className={base}>
+      <span className={`${base} w-24 px-2`}>
         <Image
           src={client.logo}
           alt={`${client.name} logo`}
-          width={72}
-          height={72}
-          sizes="36px"
-          className="h-full w-full object-contain p-1"
+          width={160}
+          height={54}
+          className="h-4 w-auto max-w-full object-contain"
         />
       </span>
     );
   }
 
   return (
-    <span className={base} aria-hidden="true">
+    <span className={`${base} w-9`} aria-hidden="true">
       <span className="font-serif text-sm font-bold text-ink-faint">
         {client.name.charAt(0)}
       </span>
