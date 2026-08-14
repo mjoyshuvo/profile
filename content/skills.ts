@@ -9,6 +9,11 @@ export const skillGroups: SkillGroup[] = [
     items: ["Python", "Django", "FastAPI", "Flask", "jQuery", "Flutter"],
   },
   {
+    // Review these — added to reflect the agentic/AI coaching work at Cefalo.
+    label: "AI & Agentic Systems",
+    items: ["Agentic Workflows", "LLM Integration", "Agent Architecture", "AI Coaching"],
+  },
+  {
     label: "Data & Messaging",
     items: ["ETL", "Prefect", "Celery", "Elastic Search", "Apache Superset"],
   },

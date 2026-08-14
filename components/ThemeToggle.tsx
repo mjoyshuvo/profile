@@ -4,9 +4,12 @@ import { Moon, Sun } from "lucide-react";
 
 type Theme = "light" | "dark";
 
-function systemTheme(): Theme {
-  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
-}
+/**
+ * Light is the site default and the OS preference is deliberately ignored, so
+ * an unset theme always means light. Reading the OS here instead would make
+ * the first click a no-op for anyone on a dark-mode machine.
+ */
+const DEFAULT_THEME: Theme = "light";
 
 /**
  * Stateless by design. The active theme lives on <html data-theme>, so the
@@ -16,7 +19,7 @@ function systemTheme(): Theme {
 export function ThemeToggle() {
   function toggle() {
     const current =
-      (document.documentElement.getAttribute("data-theme") as Theme | null) ?? systemTheme();
+      (document.documentElement.getAttribute("data-theme") as Theme | null) ?? DEFAULT_THEME;
     const next: Theme = current === "dark" ? "light" : "dark";
 
     document.documentElement.setAttribute("data-theme", next);

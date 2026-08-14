@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Download, Mail, MapPin, Phone } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./BrandIcons";
-import { profile } from "@/content/profile";
+import { profile, stats } from "@/content/profile";
 import { Reveal } from "./Reveal";
 
 export function Hero() {
@@ -25,7 +25,6 @@ export function Hero() {
             >
               {profile.name}
             </h1>
-            <p className="mt-2 text-lg font-medium text-teal sm:text-xl">{profile.title}</p>
             <p className="mt-1.5 flex items-center gap-1.5 text-sm text-ink-faint">
               <MapPin className="h-4 w-4" aria-hidden="true" />
               {profile.location}
@@ -35,13 +34,41 @@ export function Hero() {
       </Reveal>
 
       <Reveal delay={0.08}>
-        <p className="mt-8 max-w-2xl text-base leading-relaxed text-ink-soft sm:text-lg">
-          {profile.tagline}
+        <p className="mt-9 max-w-3xl font-serif text-2xl leading-snug font-semibold tracking-tight sm:text-3xl">
+          {profile.headline}
         </p>
-        <p className="mt-4 max-w-2xl text-base leading-relaxed text-ink-soft">{profile.summary}</p>
+        <p className="mt-4 max-w-2xl text-base leading-relaxed text-ink-soft sm:text-lg">
+          {profile.subheadline}
+        </p>
       </Reveal>
 
-      <Reveal delay={0.16}>
+      <Reveal delay={0.14}>
+        <dl className="mt-10 grid grid-cols-2 gap-x-6 gap-y-6 border-y border-rule py-6 sm:grid-cols-4">
+          {stats.map((stat) => (
+            <div key={stat.label}>
+              <dt className="sr-only">
+                {stat.label} at {stat.context}
+              </dt>
+              <dd>
+                <span className="block font-serif text-2xl font-bold text-teal sm:text-3xl">
+                  {stat.value}
+                </span>
+                <span className="mt-1 block text-sm leading-snug text-ink-soft">{stat.label}</span>
+                <span className="mt-0.5 block text-xs text-ink-faint">{stat.context}</span>
+              </dd>
+            </div>
+          ))}
+        </dl>
+      </Reveal>
+
+      <Reveal delay={0.2}>
+        <p className="mt-9 max-w-2xl text-base leading-relaxed text-ink-soft">{profile.summary}</p>
+        <p className="mt-4 max-w-2xl text-base leading-relaxed text-ink-soft">
+          {profile.summarySecondary}
+        </p>
+      </Reveal>
+
+      <Reveal delay={0.26}>
         <div className="mt-8 flex flex-wrap items-center gap-2.5">
           <a
             href={profile.resumePath}

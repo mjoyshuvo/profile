@@ -19,10 +19,9 @@ need to touch JSX to update the CV:
 
 | File | What it holds |
 |---|---|
-| `content/profile.ts` | Name, title, tagline, summary, contact details, social links |
+| `content/profile.ts` | Name, headline, summary, stat row, contact details, social links |
 | `content/experience.ts` | Roles, dates, and bullet points |
 | `content/skills.ts` | Skills, grouped by category |
-| `content/projects.ts` | Project cards (seeded from github.com/mjoyshuvo) |
 | `content/education.ts` | Degrees |
 
 `public/Mrityunjoy_Das_Resume.pdf` is the downloadable résumé — replace the file
@@ -59,9 +58,12 @@ These are deliberate — please keep them when changing the site:
 3. **The scroll reveal must never hide content.** The hidden state is scoped to
    `html.js` and disabled under `prefers-reduced-motion`, so a reader without
    JavaScript or with motion reduced sees the full page.
-4. **Colour tokens only.** Never hardcode a colour in a component — add a token
-   in `globals.css` and define it in all three palette blocks (`:root`, the
-   `prefers-color-scheme: dark` block, and `[data-theme="dark"]`).
+4. **Light is the default theme.** The OS `prefers-color-scheme` is deliberately
+   ignored — dark applies only when the reader picks it via the toggle, which
+   stores `data-theme` on `<html>`.
+5. **Colour tokens only.** Never hardcode a colour in a component — add a token
+   in `globals.css` and define it in both palette blocks (`:root` and
+   `[data-theme="dark"]`).
 
 ## Deployment
 

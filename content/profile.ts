@@ -2,11 +2,15 @@ export const SITE_URL = "https://mrityunjoy.com";
 
 export const profile = {
   name: "Mrityunjoy Das",
+  /** Kept for metadata and JSON-LD; deliberately not shown as the hero subtitle. */
   title: "Staff Software Engineer",
-  tagline:
-    "Backend and data engineer with 9+ years building Python services and data pipelines — currently at Cefalo, working on energy-market data for a Norwegian client.",
+  headline: "I don't just ship code. I make slow systems fast and fragile ones dependable.",
+  subheadline:
+    "9+ years of backend and data engineering — now designing agentic workflows and coaching a team at Cefalo to build better agent architecture.",
   summary:
-    "I design and optimise backend systems and ETL pipelines: FastAPI and Django services, Prefect workflows, Dockerised deployments on AWS. Most of my work is making slow things fast and fragile things dependable — a 75% cut in pipeline processing time, 50% faster container builds, 60% better response times through caching.",
+    "Most of the work I'm proud of started as someone else's bottleneck. A pipeline that took too long, a service that fell over under load, a search that never found anything. I dig into why, then fix the cause rather than the symptom — usually in Python, across FastAPI and Django services, Prefect workflows, and Dockerised deployments on AWS.",
+  summarySecondary:
+    "Lately that same instinct has gone into agentic systems: designing workflows where LLMs do real work reliably, and coaching engineers at Cefalo on how to architect them so they hold up in production rather than only in a demo.",
   location: "Dhaka, Bangladesh",
   email: "mjoyshuvo@gmail.com",
   phone: "+8801671567068",
@@ -20,6 +24,17 @@ export const profile = {
     stackoverflow: "",
   },
 } as const;
+
+/**
+ * Headline numbers, each traceable to a specific role in content/experience.ts.
+ * Shown as a stat row under the hero.
+ */
+export const stats = [
+  { value: "75%", label: "faster data pipelines", context: "Cefalo" },
+  { value: "60%", label: "better response times", context: "Brainstation-23" },
+  { value: "50%", label: "shorter container builds", context: "Cefalo" },
+  { value: "42%", label: "improved search accuracy", context: "InfoSapex" },
+];
 
 /** Every profile URL that belongs to this person, for JSON-LD `sameAs`. */
 export const sameAs: string[] = [

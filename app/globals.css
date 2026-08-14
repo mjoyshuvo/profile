@@ -22,24 +22,8 @@
   --shadow: 0 1px 2px rgb(26 26 26 / 0.04), 0 8px 24px -12px rgb(26 26 26 / 0.12);
 }
 
-/* Dark palette. Applied when the system prefers dark AND the reader has not
-   explicitly chosen light, and again for an explicit dark choice below. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #101413;
-    --paper-raised: #171d1c;
-    --ink: #ecebe6;
-    --ink-soft: #b3b6b3;
-    --ink-faint: #8a8f8c;
-    --rule: #2a3230;
-    --teal: #2dd4bf;
-    --teal-strong: #5eead4;
-    --teal-wash: #16302c;
-    --on-teal: #06201d;
-    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px -12px rgb(0 0 0 / 0.6);
-  }
-}
-
+/* Dark palette. Light is the default for everyone, so this applies only when
+   the reader explicitly picks dark via the toggle — never from the OS setting. */
 :root[data-theme="dark"] {
   --paper: #101413;
   --paper-raised: #171d1c;
@@ -76,12 +60,6 @@ html {
   color-scheme: light;
 }
 
-@media (prefers-color-scheme: dark) {
-  html:not([data-theme="light"]) {
-    color-scheme: dark;
-  }
-}
-
 html[data-theme="dark"] {
   color-scheme: dark;
 }
@@ -108,16 +86,6 @@ body {
 
 .theme-icon-moon {
   display: block;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .theme-icon-sun {
-    display: block;
-  }
-
-  :root:not([data-theme="light"]) .theme-icon-moon {
-    display: none;
-  }
 }
 
 :root[data-theme="dark"] .theme-icon-sun {

@@ -20,7 +20,7 @@ export function personJsonLd() {
     jobTitle: profile.title,
     email: `mailto:${profile.email}`,
     telephone: profile.phone,
-    description: profile.tagline,
+    description: profile.subheadline,
     address: {
       "@type": "PostalAddress",
       addressLocality: "Dhaka",

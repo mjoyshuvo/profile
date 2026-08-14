@@ -26,6 +26,7 @@ export const experience: Role[] = [
       "Successfully reduced data processing time by 75% on some pipelines by using multiprocessing and optimizing code.",
       "Optimized Dockerfile that reduced build time to 50%.",
       "Built different data pipelines using ETL.",
+      "Serving as an AI coach, guiding a team to improve their agentic architecture and adopt agentic workflows that hold up in production.",
     ],
   },
   {
