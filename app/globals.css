@@ -1,0 +1,187 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   Light palette — the CV's paper: cream ground, ink text, a single teal accent.
+   Every token gets its value here first so nothing depends on a media query.
+--------------------------------------------------------------------------- */
+:root {
+  --paper: #faf9f6;
+  --paper-raised: #ffffff;
+  --ink: #1a1a1a;
+  --ink-soft: #4b4b4b;
+  /* 5.1:1 on --paper. Used for dates and labels at small sizes, so it has to
+     clear WCAG AA on its own. */
+  --ink-faint: #6b6b6b;
+  --rule: #e2e0da;
+  --teal: #0f766e;
+  --teal-strong: #115e56;
+  --teal-wash: #e6f2f0;
+  /* Text placed on a --teal fill. Dark mode's teal is light, so white would
+     drop to ~1.9:1 there — this flips with the palette. */
+  --on-teal: #ffffff;
+  --shadow: 0 1px 2px rgb(26 26 26 / 0.04), 0 8px 24px -12px rgb(26 26 26 / 0.12);
+}
+
+/* Dark palette. Applied when the system prefers dark AND the reader has not
+   explicitly chosen light, and again for an explicit dark choice below. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #101413;
+    --paper-raised: #171d1c;
+    --ink: #ecebe6;
+    --ink-soft: #b3b6b3;
+    --ink-faint: #8a8f8c;
+    --rule: #2a3230;
+    --teal: #2dd4bf;
+    --teal-strong: #5eead4;
+    --teal-wash: #16302c;
+    --on-teal: #06201d;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px -12px rgb(0 0 0 / 0.6);
+  }
+}
+
+:root[data-theme="dark"] {
+  --paper: #101413;
+  --paper-raised: #171d1c;
+  --ink: #ecebe6;
+  --ink-soft: #b3b6b3;
+  --ink-faint: #8a8f8c;
+  --rule: #2a3230;
+  --teal: #2dd4bf;
+  --teal-strong: #5eead4;
+  --teal-wash: #16302c;
+  --on-teal: #06201d;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px -12px rgb(0 0 0 / 0.6);
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-raised: var(--paper-raised);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-ink-faint: var(--ink-faint);
+  --color-rule: var(--rule);
+  --color-teal: var(--teal);
+  --color-teal-strong: var(--teal-strong);
+  --color-teal-wash: var(--teal-wash);
+  --color-on-teal: var(--on-teal);
+  --font-sans: var(--font-inter);
+  --font-serif: var(--font-source-serif);
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Sticky nav is 3.5rem; keep anchored headings clear of it. */
+  scroll-padding-top: 5rem;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) {
+    color-scheme: dark;
+  }
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible {
+  outline: 2px solid var(--teal);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Theme-toggle icon. Both icons are in the DOM and CSS picks one, so the right
+   icon is showing before hydration and can never disagree with the palette.
+   Light shows the moon (what you'd switch to); dark shows the sun. */
+.theme-icon-sun {
+  display: none;
+}
+
+.theme-icon-moon {
+  display: block;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-icon-sun {
+    display: block;
+  }
+
+  :root:not([data-theme="light"]) .theme-icon-moon {
+    display: none;
+  }
+}
+
+:root[data-theme="dark"] .theme-icon-sun {
+  display: block;
+}
+
+:root[data-theme="dark"] .theme-icon-moon {
+  display: none;
+}
+
+:root[data-theme="light"] .theme-icon-sun {
+  display: none;
+}
+
+:root[data-theme="light"] .theme-icon-moon {
+  display: block;
+}
+
+/* Scroll reveal. The hidden state is scoped to `html.js`, which the inline
+   head script sets — so with JavaScript off the content is simply visible
+   instead of stuck at opacity 0. */
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0s);
+}
+
+.js [data-reveal][data-revealed] {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  /* Never hide content from a reader who asked for less motion. */
+  .js [data-reveal] {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Print: strip the chrome so Cmd-P yields a clean one-page résumé. */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+}
