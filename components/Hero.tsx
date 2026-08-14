@@ -46,13 +46,6 @@ export function Hero() {
         </p>
       </Reveal>
 
-      <Reveal delay={0.2}>
-        <p className="mt-9 max-w-2xl text-base leading-relaxed text-ink-soft">{profile.summary}</p>
-        <p className="mt-4 max-w-2xl text-base leading-relaxed text-ink-soft">
-          {profile.summarySecondary}
-        </p>
-      </Reveal>
-
       <Reveal delay={0.26}>
         <div className="mt-8 flex flex-wrap items-center gap-2.5">
           <a

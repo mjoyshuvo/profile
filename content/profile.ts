@@ -5,12 +5,9 @@ export const profile = {
   /** Kept for metadata and JSON-LD; deliberately not shown as the hero subtitle. */
   title: "Staff Software Engineer",
   headline: "I don't just ship code. I make slow systems fast and fragile ones dependable.",
+  /** One sentence, carrying the proof. Anything longer stops being read. */
   subheadline:
-    "9+ years of backend and data engineering — now designing agentic workflows and coaching a team at Cefalo to build better agent architecture.",
-  summary:
-    "Most of the work I'm proud of started as someone else's bottleneck. A pipeline that took too long, a service that fell over under load, a search that never found anything. I dig into why, then fix the cause rather than the symptom — usually in Python, across FastAPI and Django services, Prefect workflows, and Dockerised deployments on AWS.",
-  summarySecondary:
-    "Lately that same instinct has gone into agentic systems: designing workflows where LLMs do real work reliably, and architecting them so they hold up in production rather than only in a demo.",
+    "9+ years of Python backend and data engineering — pipelines and services for Norwegian clients like Veyt and Ferdia, now designing agentic systems that hold up in production, not just in demos.",
   location: "Dhaka, Bangladesh",
   email: "mjoyshuvo@gmail.com",
   resumePath: "/Mrityunjoy_Das_Resume.pdf",
