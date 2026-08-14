@@ -142,6 +142,13 @@ body {
   }
 }
 
+/* The hero portrait is near-black line art on transparency, so on the dark
+   palette it has to flip to light ink. Inverting alpha-only artwork is safe —
+   there is no background to turn white. */
+:root[data-theme="dark"] .portrait-ink {
+  filter: invert(1);
+}
+
 /* Print: strip the chrome so Cmd-P yields a clean one-page résumé. */
 @media print {
   .no-print {

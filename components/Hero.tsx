@@ -80,15 +80,15 @@ export function Hero() {
         <div className="order-first lg:order-2 lg:w-64">
           <Reveal delay={0.06}>
             <Image
-              src={profile.photo}
+              src={profile.sketch}
               alt={`Portrait of ${profile.name}`}
-              // Source is a 4:5 portrait cropped to a square. Anchoring to the
-              // top keeps the face centred instead of pushing it upward.
-              width={360}
-              height={450}
+              // Line art on transparency — no frame, no crop. `portrait-ink`
+              // inverts the ink in dark mode so it stays visible.
+              width={720}
+              height={855}
               sizes="(min-width: 1024px) 256px, 128px"
               priority
-              className="h-32 w-32 rounded-2xl object-cover object-top ring-1 ring-rule lg:h-64 lg:w-64"
+              className="portrait-ink h-36 w-auto lg:h-72"
             />
           </Reveal>
 

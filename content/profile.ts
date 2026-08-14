@@ -20,7 +20,13 @@ export const profile = {
   location: "Dhaka, Bangladesh",
   email: "mjoyshuvo@gmail.com",
   resumePath: "/Mrityunjoy_Das_Resume.pdf",
+  /** Photograph — used for OpenGraph and JSON-LD, where a real face is wanted. */
   photo: "/mrityunjoy-das-portrait.jpg",
+  /**
+   * Pencil-sketch treatment of the same portrait, drawn on transparency so it
+   * sits on the paper with no frame. Near-black ink; dark mode inverts it in CSS.
+   */
+  sketch: "/mrityunjoy-das-sketch.png",
   links: {
     linkedin: "https://www.linkedin.com/in/mrityunjoy-das/",
     github: "https://github.com/mjoyshuvo",
