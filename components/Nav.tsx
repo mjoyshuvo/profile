@@ -40,7 +40,7 @@ export function Nav() {
     <header className="no-print sticky top-0 z-50 border-b border-rule bg-paper/85 backdrop-blur-md">
       <nav
         aria-label="Section navigation"
-        className="mx-auto flex h-14 max-w-4xl items-center justify-between gap-4 px-5 sm:px-8"
+        className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8"
       >
         <a
           href="#top"

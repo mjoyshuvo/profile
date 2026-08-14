@@ -142,11 +142,14 @@ body {
   }
 }
 
-/* The hero portrait is near-black line art on transparency, so on the dark
-   palette it has to flip to light ink. Inverting alpha-only artwork is safe —
-   there is no background to turn white. */
+/* The hero portrait is graphite line art keyed onto transparency. On the light
+   palette it sits straight on the paper. On the dark palette it gets its own
+   sheet of paper instead of being inverted — inverting a drawn face turns it
+   into a photo negative, which reads as uncanny rather than as chalk. */
 :root[data-theme="dark"] .portrait-ink {
-  filter: invert(1);
+  background-color: #efece4;
+  border-radius: 0.75rem;
+  padding: 0.5rem;
 }
 
 /* Print: strip the chrome so Cmd-P yields a clean one-page résumé. */

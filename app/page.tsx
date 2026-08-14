@@ -21,7 +21,7 @@ export default function Home() {
 
       <Nav />
 
-      <main id="main" className="mx-auto w-full max-w-4xl flex-1 px-5 sm:px-8">
+      <main id="main" className="w-full flex-1">
         <Hero />
         <Experience />
         <Writing />
