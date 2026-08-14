@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { ArrowRight, Download, MapPin } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./BrandIcons";
-import { disciplines, profile } from "@/content/profile";
+import { disciplineSuffix, disciplines, profile } from "@/content/profile";
 import { Reveal } from "./Reveal";
 
 export function Hero() {
@@ -103,19 +103,17 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.24}>
-            {/* Rows, not columns. Three equal columns holding "Backend" and
-                "AI" leave ragged gaps that read as broken spacing; stacking
-                them aligns both edges. */}
-            <dl className="mt-4 divide-y divide-rule border-y border-rule sm:mt-5 lg:mt-7">
+            {/* Side by side. Every cell carries the same "Engineer" second
+                line, so the row reads evenly however short the discipline. */}
+            <dl className="mt-4 grid grid-cols-3 gap-x-4 border-t border-rule pt-4 sm:mt-5 lg:mt-7 lg:pt-5">
               {disciplines.map((d) => (
-                <div
-                  key={d.name}
-                  className="flex items-baseline justify-between gap-4 py-2 sm:py-2.5"
-                >
-                  <dt className="font-serif text-base font-bold tracking-tight">
-                    {d.name}
+                <div key={d}>
+                  <dt className="font-serif text-base font-bold tracking-tight sm:text-lg">
+                    {d}
                   </dt>
-                  <dd className="text-xs text-ink-faint">{d.detail}</dd>
+                  <dd className="mt-0.5 text-[0.6875rem] uppercase tracking-[0.14em] text-ink-faint">
+                    {disciplineSuffix}
+                  </dd>
                 </div>
               ))}
             </dl>

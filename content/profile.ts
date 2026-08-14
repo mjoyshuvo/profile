@@ -17,6 +17,7 @@ export const profile = {
    */
   metaDescription:
     "Staff Software Engineer with 10 years in backend, data, and AI engineering — ETL pipelines, FastAPI and Django services, and agentic systems, for Norwegian clients including Veyt and Ferdia.",
+  navSubtitle: "Backend · Data · AI",
   location: "Dhaka, Bangladesh",
   email: "mjoyshuvo@gmail.com",
   resumePath: "/Mrityunjoy_Das_Resume.pdf",
@@ -35,15 +36,13 @@ export const profile = {
 } as const;
 
 /**
- * The three disciplines, in the reference's three-column shape. Captions carry
- * real tools rather than invented per-discipline year counts — the ten years
- * is stated once, in the supporting line.
+ * The three disciplines, side by side. Each cell is the same two-line shape —
+ * discipline over "Engineer" — so the row stays even however short the word.
  */
-export const disciplines = [
-  { name: "Backend", detail: "FastAPI · Django" },
-  { name: "Data", detail: "ETL · Prefect" },
-  { name: "AI", detail: "Agents · MCP" },
-];
+export const disciplines = ["Backend", "Data", "AI"];
+
+/** Shared second line under each discipline, so the row reads evenly. */
+export const disciplineSuffix = "Engineer";
 
 /** Every profile URL that belongs to this person, for JSON-LD `sameAs`. */
 export const sameAs: string[] = [

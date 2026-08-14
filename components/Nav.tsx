@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { profile } from "@/content/profile";
 import { ThemeToggle } from "./ThemeToggle";
@@ -26,7 +27,9 @@ export function Nav() {
       (entries) => {
         const visible = entries
           .filter((e) => e.isIntersecting)
-          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+          .sort(
+            (a, b) => a.boundingClientRect.top - b.boundingClientRect.top,
+          )[0];
         if (visible) setActive(`#${visible.target.id}`);
       },
       { rootMargin: "-25% 0px -60% 0px" },
@@ -42,11 +45,27 @@ export function Nav() {
         aria-label="Section navigation"
         className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8"
       >
-        <a
-          href="#top"
-          className="font-serif text-base font-semibold tracking-tight transition-colors hover:text-teal"
-        >
-          {profile.name}
+        {/* Masthead: avatar, name, and the disciplines as a role line. */}
+        <a href="#top" className="group flex min-w-0 items-center gap-2.5">
+          <Image
+            src={profile.sketch}
+            alt=""
+            aria-hidden="true"
+            width={640}
+            height={603}
+            sizes="32px"
+            // The sketch is transparent line art, so the coin carries its own
+            // paper — otherwise the ink disappears on the dark palette.
+            className="h-8 w-8 shrink-0 rounded-full bg-[#efece4] object-cover object-[50%_18%] ring-1 ring-rule"
+          />
+          <span className="min-w-0 leading-tight">
+            <span className="block font-serif text-base font-semibold tracking-tight transition-colors group-hover:text-teal">
+              {profile.name}
+            </span>
+            <span className="hidden text-[0.625rem] uppercase tracking-[0.14em] text-ink-faint sm:block">
+              {profile.navSubtitle}
+            </span>
+          </span>
         </a>
 
         <div className="flex items-center gap-1 sm:gap-2">
