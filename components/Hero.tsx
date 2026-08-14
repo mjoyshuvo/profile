@@ -105,9 +105,9 @@ export function Hero() {
           <Reveal delay={0.24}>
             {/* One centred line, dot-separated. "Engineer" is left to the nav's
                 role line — repeating it under each word read as a stutter. */}
-            <ul className="mt-4 flex items-center justify-center gap-3 border-t border-rule pt-4 font-serif text-base font-bold tracking-tight sm:mt-5 sm:text-lg lg:mt-7 lg:pt-5">
+            <ul className="mt-4 flex items-center justify-center gap-4 border-t border-rule pt-4 sm:gap-6 font-serif text-base font-bold tracking-tight sm:mt-5 sm:text-lg lg:mt-7 lg:pt-5">
               {disciplines.map((d, i) => (
-                <li key={d} className="flex items-center gap-3">
+                <li key={d} className="flex items-center gap-4 sm:gap-6">
                   {i > 0 ? (
                     <span className="text-ink-faint/60" aria-hidden="true">
                       ·
