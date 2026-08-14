@@ -107,7 +107,7 @@ export function Hero() {
                 line, so the row reads evenly however short the discipline. */}
             <dl className="mt-4 grid grid-cols-3 gap-x-4 border-t border-rule pt-4 sm:mt-5 lg:mt-7 lg:pt-5">
               {disciplines.map((d) => (
-                <div key={d}>
+                <div key={d} className="text-center">
                   <dt className="font-serif text-base font-bold tracking-tight sm:text-lg">
                     {d}
                   </dt>
