@@ -1,4 +1,4 @@
-export const SITE_URL = "https://mrityunjoydas.com";
+export const SITE_URL = "https://mrityunjoy.com";
 
 export const profile = {
   name: "Mrityunjoy Das",

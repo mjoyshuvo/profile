@@ -35,7 +35,7 @@ export default function OpengraphImage() {
         >
           Python · Data pipelines · Backend architecture — Dhaka, Bangladesh
         </div>
-        <div style={{ fontSize: 24, color: "#767676", marginTop: "auto" }}>mrityunjoydas.com</div>
+        <div style={{ fontSize: 24, color: "#767676", marginTop: "auto" }}>mrityunjoy.com</div>
       </div>
     ),
     size,

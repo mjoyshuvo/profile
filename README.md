@@ -1,9 +1,9 @@
-# mrityunjoydas.com
+# mrityunjoy.com
 
 Personal CV site for Mrityunjoy Das — a single scrolling page built to read well
 to people, search engines, and applicant-tracking systems.
 
-Live: https://mrityunjoydas.com
+Live: https://mrityunjoy.com
 
 ## Stack
 
