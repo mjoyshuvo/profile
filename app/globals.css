@@ -199,6 +199,31 @@ body {
   transform: none;
 }
 
+/* Timeline rule. Draws downward as the section arrives, then stops — a
+   timeline drawn in time order says what it is. Deliberately one-shot: the
+   page already carries enough looping motion, and a rule that never settles
+   would leave the eye nowhere to rest.
+
+   Scoped to `.js`, so with scripting off the line is simply there. */
+.timeline::before {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  width: 1px;
+  background-color: var(--rule);
+}
+
+.js .timeline::before {
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 1.1s var(--ease-soft);
+}
+
+.js .timeline[data-revealed]::before {
+  transform: scaleY(1);
+}
+
 /* ---------------------------------------------------------------------------
    Pulse ring. A ring that expands out of a dot and fades, on a loop. Used by
    the hero's availability lamp and by the experience timeline nodes.
@@ -454,7 +479,8 @@ html:not(.js) .rec-counter {
     transition: none;
   }
 
-  .js .st-w {
+  .js .st-w,
+  .js .timeline::before {
     transform: none;
     transition: none;
   }

@@ -13,7 +13,15 @@ export function Experience() {
       title="Experience"
       icon={<Briefcase className="h-6 w-6" />}
     >
-      <ol className="relative space-y-10 border-l border-rule pl-6 sm:pl-8">
+      {/* `hold` fires the rule without the list itself moving. The rule is a
+          ::before on the <ol> rather than a child element — an <ol> may only
+          contain <li>, and constraint 2 in the README is there so parsers can
+          read this list. */}
+      <Reveal
+        mode="hold"
+        as="ol"
+        className="timeline relative space-y-10 pl-6 sm:pl-8"
+      >
         {experience.map((role, i) => (
           <li key={`${role.company}-${role.start}`} className="relative">
             {/* Timeline node. The ring has to start wider than the dot's
@@ -122,7 +130,7 @@ export function Experience() {
             </Reveal>
           </li>
         ))}
-      </ol>
+      </Reveal>
     </Section>
   );
 }
