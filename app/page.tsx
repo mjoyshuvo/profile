@@ -35,7 +35,6 @@ export default function Home() {
           <p>
             © {new Date().getFullYear()} {profile.name}
           </p>
-          <p>Built with Next.js · Deployed on Vercel</p>
         </div>
       </footer>
     </>
