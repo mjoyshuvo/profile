@@ -72,25 +72,48 @@ export function Hero() {
             <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-8">
               <a
                 href="#contact"
-                className="group inline-flex items-center gap-2 rounded-full bg-teal px-5 py-2.5 text-sm font-medium text-on-teal transition-[background-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-teal-strong hover:shadow-[0_6px_16px_-8px_var(--teal)]"
+                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-teal px-5 py-2.5 text-sm font-medium text-on-teal transition-[background-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-teal-strong hover:shadow-[0_6px_16px_-8px_var(--teal)]"
               >
-                Get in touch
+                {/* A light passing over the fill. Needs the clipping parent
+                    above, or it sweeps out across the page. */}
+                <span
+                  aria-hidden="true"
+                  className="cta-sheen pointer-events-none absolute inset-y-0 -left-8 w-8 bg-on-teal/25 blur-[6px]"
+                />
+                <span className="relative">Get in touch</span>
                 <ArrowRight
-                  className="h-4 w-4 transition-transform group-hover:translate-x-0.5"
+                  className="cta-arrow relative h-4 w-4 transition-transform group-hover:translate-x-0.5"
                   aria-hidden="true"
                 />
               </a>
 
-              <IconLink href={profile.resumePath} label="Résumé" download>
+              {/* Staggered so the row reads as a wave rather than three lamps
+                  blinking together. */}
+              <IconLink
+                href={profile.resumePath}
+                label="Résumé"
+                download
+                delay={0}
+              >
                 <Download
                   className="h-[1.125rem] w-[1.125rem]"
                   aria-hidden="true"
                 />
               </IconLink>
-              <IconLink href={profile.links.linkedin} label="LinkedIn" external>
+              <IconLink
+                href={profile.links.linkedin}
+                label="LinkedIn"
+                external
+                delay={0.5}
+              >
                 <LinkedinIcon className="h-[1.125rem] w-[1.125rem]" />
               </IconLink>
-              <IconLink href={profile.links.github} label="GitHub" external>
+              <IconLink
+                href={profile.links.github}
+                label="GitHub"
+                external
+                delay={1}
+              >
                 <GithubIcon className="h-[1.125rem] w-[1.125rem]" />
               </IconLink>
             </div>
@@ -125,12 +148,15 @@ function IconLink({
   label,
   external,
   download,
+  delay = 0,
   children,
 }: {
   href: string;
   label: string;
   external?: boolean;
   download?: boolean;
+  /** Seconds, to offset this link's border breathe from its neighbours. */
+  delay?: number;
   children: React.ReactNode;
 }) {
   return (
@@ -138,7 +164,8 @@ function IconLink({
       href={href}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       {...(download ? { download: true } : {})}
-      className="group relative inline-grid h-11 w-11 place-items-center rounded-full border border-rule text-ink-soft transition-[color,border-color,background-color,transform] duration-200 hover:-translate-y-0.5 hover:border-teal hover:bg-teal-wash/50 hover:text-teal"
+      style={{ animationDelay: `${delay}s` }}
+      className="cta-breathe group relative inline-grid h-11 w-11 place-items-center rounded-full border border-rule text-ink-soft transition-[color,background-color,transform] duration-200 hover:-translate-y-0.5 hover:border-teal hover:bg-teal-wash/50 hover:text-teal"
     >
       {children}
       {/* Real text, not an aria-label: it names the link for assistive tech and

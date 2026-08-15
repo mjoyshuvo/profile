@@ -199,6 +199,69 @@ body {
   transform: none;
 }
 
+/* ---------------------------------------------------------------------------
+   Hero call-to-action row.
+--------------------------------------------------------------------------- */
+
+/* A light sweeping across the teal fill. Skewed so the edge reads as a
+   highlight rather than a moving band, and held off-screen for most of the
+   cycle so it passes occasionally instead of strobing. */
+@keyframes cta-sheen {
+  0% {
+    transform: translateX(-140%) skewX(-20deg);
+  }
+  55%,
+  100% {
+    transform: translateX(320%) skewX(-20deg);
+  }
+}
+
+.cta-sheen {
+  animation: cta-sheen 4.5s ease-in-out infinite;
+}
+
+/* The arrow keeps nudging toward the thing it points at. */
+@keyframes cta-arrow {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(3px);
+  }
+}
+
+.cta-arrow {
+  animation: cta-arrow 1.8s ease-in-out infinite;
+}
+
+/* On hover the animation is dropped rather than paused: a paused animation
+   still holds its computed transform and would beat the hover translate. */
+.group:hover .cta-arrow {
+  animation: none;
+}
+
+/* The secondary links breathe on their border, which is a far bigger target
+   for the eye than nudging an 18px glyph would be. */
+@keyframes cta-breathe {
+  0%,
+  100% {
+    border-color: var(--rule);
+  }
+  50% {
+    border-color: var(--teal);
+  }
+}
+
+.cta-breathe {
+  animation: cta-breathe 3.2s ease-in-out infinite;
+}
+
+.cta-breathe:hover,
+.cta-breathe:focus-visible {
+  animation: none;
+}
+
 /* Timeline rule. Draws downward as the section arrives, then stops — a
    timeline drawn in time order says what it is. Deliberately one-shot: the
    page already carries enough looping motion, and a rule that never settles
@@ -492,6 +555,19 @@ html:not(.js) .rec-counter {
   /* Ends at opacity 0, so the blanket rule would leave the ring permanently
      invisible rather than simply still. Kill it by name and let the lamp sit
      as a solid dot. */
+  .cta-sheen,
+  .cta-arrow,
+  .cta-breathe {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* The sheen sits off-screen at rest; without killing it the blanket rule
+     would park it mid-sweep across the button. */
+  .cta-sheen {
+    display: none !important;
+  }
+
   .pulse-ring {
     animation: none !important;
     opacity: 0.5 !important;
