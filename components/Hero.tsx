@@ -59,7 +59,7 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.2}>
-            <div className="mt-6 flex flex-wrap items-center gap-2.5 sm:mt-8">
+            <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-8">
               <a
                 href="#contact"
                 className="group inline-flex items-center gap-2 rounded-full bg-teal px-5 py-2.5 text-sm font-medium text-on-teal transition-[background-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-teal-strong hover:shadow-[0_6px_16px_-8px_var(--teal)]"
@@ -72,13 +72,16 @@ export function Hero() {
               </a>
 
               <IconLink href={profile.resumePath} label="Résumé" download>
-                <Download className="h-4 w-4" aria-hidden="true" />
+                <Download
+                  className="h-[1.125rem] w-[1.125rem]"
+                  aria-hidden="true"
+                />
               </IconLink>
               <IconLink href={profile.links.linkedin} label="LinkedIn" external>
-                <LinkedinIcon className="h-4 w-4" />
+                <LinkedinIcon className="h-[1.125rem] w-[1.125rem]" />
               </IconLink>
               <IconLink href={profile.links.github} label="GitHub" external>
-                <GithubIcon className="h-4 w-4" />
+                <GithubIcon className="h-[1.125rem] w-[1.125rem]" />
               </IconLink>
             </div>
           </Reveal>
@@ -103,16 +106,16 @@ export function Hero() {
           </Reveal>
 
           <Reveal delay={0.24}>
-            {/* One centred line, dot-separated. "Engineer" is left to the nav's
-                role line — repeating it under each word read as a stutter. */}
-            <ul className="mt-4 flex items-center gap-4 border-t border-rule pt-4 text-xs uppercase tracking-[0.16em] text-ink-soft sm:mt-5 sm:gap-6 lg:mt-7 lg:justify-center lg:pt-5">
-              {disciplines.map((d, i) => (
-                <li key={d} className="flex items-center gap-4 sm:gap-6">
-                  {i > 0 ? (
-                    <span className="text-ink-faint/60" aria-hidden="true">
-                      ·
-                    </span>
-                  ) : null}
+            {/* A ruled stack rather than a dot-separated line: the separator is
+                then the same hairline used everywhere else on the page.
+                "Engineer" is left to the nav's role line — repeating it under
+                each word read as a stutter. */}
+            <ul className="mt-4 border-t border-rule text-xs uppercase tracking-[0.16em] text-ink-soft sm:mt-5 lg:mt-7">
+              {disciplines.map((d) => (
+                <li
+                  key={d}
+                  className="border-b border-rule py-2 last:border-b-0 sm:py-2.5"
+                >
                   {d}
                 </li>
               ))}
@@ -142,10 +145,15 @@ function IconLink({
       href={href}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       {...(download ? { download: true } : {})}
-      className="group inline-flex items-center gap-2 rounded-full border border-rule px-4 py-2.5 text-sm text-ink-soft transition-[color,border-color,background-color,transform] duration-200 hover:-translate-y-0.5 hover:border-teal hover:bg-teal-wash/50 hover:text-teal"
+      className="group relative inline-grid h-11 w-11 place-items-center rounded-full border border-rule text-ink-soft transition-[color,border-color,background-color,transform] duration-200 hover:-translate-y-0.5 hover:border-teal hover:bg-teal-wash/50 hover:text-teal"
     >
       {children}
-      {label}
+      {/* Real text, not an aria-label: it names the link for assistive tech and
+          fades in under the button on hover or keyboard focus. Absolutely
+          positioned so three icons stay a tight row at every width. */}
+      <span className="pointer-events-none absolute top-full left-1/2 mt-1.5 -translate-x-1/2 translate-y-[-3px] text-[0.625rem] whitespace-nowrap uppercase tracking-[0.1em] text-ink-faint opacity-0 transition-[opacity,transform] duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
+        {label}
+      </span>
     </a>
   );
 }

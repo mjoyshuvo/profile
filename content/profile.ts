@@ -34,8 +34,8 @@ export const profile = {
   },
 } as const;
 
-/** The three disciplines, side by side under the portrait. */
-export const disciplines = ["Backend", "Data", "AI"];
+/** The three disciplines, stacked on ruled lines under the portrait. */
+export const disciplines = ["Backend", "Data engineering", "AI"];
 
 /** Every profile URL that belongs to this person, for JSON-LD `sameAs`. */
 export const sameAs: string[] = [
