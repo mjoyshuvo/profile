@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ArrowDown, Briefcase, ExternalLink } from "lucide-react";
+import { ArrowDown, Briefcase, ExternalLink, MapPin } from "lucide-react";
 import { NorwayFlag } from "./BrandIcons";
 import { experience, type Position, type Role } from "@/content/experience";
 import { projects } from "@/content/projects";
@@ -43,18 +43,22 @@ export function Experience() {
                   )}
                 </h3>
 
-                <p className="shrink-0 text-sm text-ink-faint">
+                {/* Monospace and uppercase, matching the meta lines on the
+                    project cards — dates and places are data, and setting them
+                    like data keeps them from competing with the company name. */}
+                <p className="flex shrink-0 flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">
                   <time dateTime={role.startDate}>{role.start}</time>
-                  {" – "}
-                  {role.endDate ? (
-                    <time dateTime={role.endDate}>{role.end}</time>
-                  ) : (
-                    role.end
-                  )}
-                  <span className="mx-1.5" aria-hidden="true">
-                    |
+                  <span aria-hidden="true" className="text-rule">
+                    &rarr;
                   </span>
-                  {role.location}
+                  <DateEnd end={role.end} endDate={role.endDate} />
+                  <span aria-hidden="true" className="text-rule">
+                    /
+                  </span>
+                  <span className="inline-flex items-center gap-1">
+                    <MapPin className="h-3 w-3" aria-hidden="true" />
+                    {role.location}
+                  </span>
                 </p>
               </div>
 
@@ -111,6 +115,23 @@ export function Experience() {
         ))}
       </ol>
     </Section>
+  );
+}
+
+/**
+ * The right-hand side of a date range. An ongoing role gets a teal badge rather
+ * than the word in running text — it is the one piece of this metadata a reader
+ * actually scans for, and there is no `<time>` to wrap it in anyway.
+ */
+function DateEnd({ end, endDate }: { end: string; endDate?: string }) {
+  if (endDate) {
+    return <time dateTime={endDate}>{end}</time>;
+  }
+
+  return (
+    <span className="rounded-full bg-teal-wash px-2 py-0.5 font-medium text-teal">
+      {end}
+    </span>
   );
 }
 
@@ -196,14 +217,12 @@ function PositionEntry({
       ) : null}
 
       <p className="text-[0.9375rem] font-medium text-ink">{position.title}</p>
-      <p className="mt-0.5 text-sm text-ink-faint">
+      <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">
         <time dateTime={position.startDate}>{position.start}</time>
-        {" – "}
-        {position.endDate ? (
-          <time dateTime={position.endDate}>{position.end}</time>
-        ) : (
-          position.end
-        )}
+        <span aria-hidden="true" className="text-rule">
+          &rarr;
+        </span>
+        <DateEnd end={position.end} endDate={position.endDate} />
       </p>
 
       {position.bullets?.length ? (

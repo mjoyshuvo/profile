@@ -69,7 +69,7 @@ export function Nav() {
         aria-label="Section navigation"
         className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8"
       >
-        {/* Masthead: avatar, name, and the disciplines as a role line. */}
+        {/* Masthead: avatar and name. */}
         <a href="#top" className="group flex min-w-0 items-center gap-2.5">
           <Image
             src={profile.sketch}

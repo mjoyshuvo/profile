@@ -1,5 +1,4 @@
 import { Contact } from "@/components/Contact";
-import { DisciplineTicker } from "@/components/DisciplineTicker";
 import { Education } from "@/components/Education";
 import { Experience } from "@/components/Experience";
 import { Hero } from "@/components/Hero";
@@ -27,7 +26,6 @@ export default function Home() {
 
       <main id="main" className="w-full flex-1">
         <Hero />
-        <DisciplineTicker />
         <Identity />
         <Experience />
         <Projects />
