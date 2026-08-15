@@ -11,10 +11,10 @@ export type Project = {
    */
   company: string;
   period: string;
-  /** The problem, in one sentence. */
-  problem: string;
-  /** The approach, in one or two. */
-  approach: string;
+  /** What the product is, and who depends on it. */
+  product: string;
+  /** My part in it — written in the first person, because it is mine. */
+  work: string;
   /**
    * The one number worth remembering. Optional — a hackathon build has no
    * production metric, and inventing one to fill the slot would be worse than
@@ -25,10 +25,9 @@ export type Project = {
 };
 
 /**
- * Deliberately short. Experience already lists what changed, with the numbers
- * an ATS parser needs; these say what the system was and what the interesting
- * decision was. Two sentences each is the budget — if a case needs more, it
- * wants to be a written piece in `content/writing.ts` instead.
+ * Each entry says what the product is and what I did on it. Experience still
+ * carries the dated bullets an ATS parser reads; this is where the product gets
+ * described to a human.
  */
 export const projects: Project[] = [
   {
@@ -38,10 +37,10 @@ export const projects: Project[] = [
     clientUrl: "https://veyt.com/",
     company: "Cefalo",
     period: "2022 – present",
-    problem:
-      "The pipelines feed every product line — carbon, guarantees of origin, power purchase agreements and renewable fuels — and analysts act on the curves the same day they are published, so ingestion failures have to surface before a customer finds them.",
-    approach:
-      "Python ETL publishing timeseries, timeseries groups and forecast curves from upstream sources with differing schedules and formats. Processing time on the slowest jobs came down 50% through multiprocessing and removing serial code paths; Docker layer caching took 40% off build times.",
+    product:
+      "Veyt sells market intelligence across every green-energy market it covers — carbon, guarantees of origin, power purchase agreements and renewable fuels. Traders and analysts act on the published curves the same day they land.",
+    work:
+      "I build and run the pipelines feeding all of it: Python ETL publishing timeseries, timeseries groups and forecast curves from upstream sources that each define a schedule and a format differently. I cut processing time on the slowest jobs by 50% with multiprocessing and by removing the code paths that forced them to run serially, and took 40% off build times by reworking the Docker layers.",
     metric: { value: "500+", label: "pipelines in production" },
     tech: ["Python", "ETL", "Timeseries", "PostgreSQL", "Docker"],
   },
@@ -50,10 +49,10 @@ export const projects: Project[] = [
     name: "Agentic tooling — MCP servers and a RAG service",
     company: "Cefalo",
     period: "2026 – present",
-    problem:
-      "Recurring engineering work was too small to justify bespoke automation and too frequent to keep doing by hand. Internally, HR answers were spread across documents nobody searched.",
-    approach:
-      "MCP servers giving agents authenticated, typed access to the systems behind Veyt's projects, with agentic workflows built on top of them and coaching for the teams that now run them. The same stack went into a RAG service for the Cefalo HR portal at a company hackathon: documents chunked and embedded into a Pinecone vector database, retrieval and prompt orchestration in LangChain, and LangGraph for the queries that need more than one lookup.",
+    product:
+      "Internal tooling for Cefalo's engineering teams: MCP servers that give agents authenticated, typed access to the systems behind Veyt's projects, and a retrieval service that answers questions against the company's HR portal.",
+    work:
+      "I built the MCP servers and the agentic workflows on top of them, and I coach the teams that now run them day to day. The RAG service came out of a company hackathon — documents chunked and embedded into a Pinecone vector database, retrieval and prompt orchestration in LangChain, and LangGraph for the queries that need more than one lookup before they can be answered.",
     metric: { value: "Hrs/wk", label: "returned to the team" },
     tech: [
       "MCP",
@@ -72,10 +71,10 @@ export const projects: Project[] = [
     clientUrl: "https://www.ferdia.no/",
     company: "Brain Station 23",
     period: "2021 – 2022",
-    problem:
-      "A multi-tenant booking platform where every slow query degraded all operators at once, built by a team of eight that needed the service boundaries settled to work in parallel.",
-    approach:
-      "Microservice architecture with the tenancy boundary enforced in a single layer, query profiling and rewrites across the paths carrying load, and a Redis cache layer on the remainder. Overall performance improved 50%, with response times on the hottest paths down close to 60%.",
+    product:
+      "A Norwegian platform that lets bus companies and travel organisers run and connect their operations — booking, fleet and scheduling, multi-tenant across every operator using it.",
+    work:
+      "I led eight engineers through the microservice split, keeping the tenancy boundary in a single layer instead of letting it leak into every service. I profiled and rewrote the queries carrying real load, then put Redis in front of what was left — overall performance up 50%, and the hottest paths close to 60% faster.",
     metric: { value: "~60%", label: "faster on the hottest paths" },
     tech: ["Python", "Microservices", "Redis", "PostgreSQL"],
   },
@@ -84,10 +83,10 @@ export const projects: Project[] = [
     name: "Search and async processing",
     company: "InfoSapex Limited",
     period: "2016 – 2020",
-    problem:
-      "Django products used daily by large corporate customers, where search quality was the main complaint and long-running work was blocking the request cycle.",
-    approach:
-      "Replaced the search backend with ElasticSearch, tuning analysers and field weighting for a 42% accuracy gain, and moved the blocking work onto Celery and CeleryBeat.",
+    product:
+      "Django products used daily by some of Bangladesh's largest corporates — a document management system, an online booking platform, and BRAC TBCP.",
+    work:
+      "I replaced the search backend with ElasticSearch, where most of the work went into analysers and field weighting rather than the swap itself, for a 42% accuracy gain. I moved the long-running jobs onto Celery and CeleryBeat so requests stopped waiting on work nobody was watching, and rewrote the worst of the front-end code where it was the real cause of a slow page.",
     metric: { value: "+42%", label: "search accuracy" },
     tech: ["Django", "ElasticSearch", "Celery"],
   },

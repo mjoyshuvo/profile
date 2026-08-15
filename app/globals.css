@@ -28,6 +28,7 @@
   --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
   --dur-reveal: 0.5s;
   --dur-word: 0.62s;
+  --marquee-duration: 46s;
 }
 
 /* Dark palette. Light is the default for everyone, so this applies only when
@@ -200,6 +201,86 @@ body {
 }
 
 /* ---------------------------------------------------------------------------
+   Discipline ticker. Both rows live in one track, so translating the track by
+   half its width lands exactly one copy along and the loop is seamless.
+--------------------------------------------------------------------------- */
+.marquee {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Edge fades. Both stops resolve against --paper, so there is no grey midpoint
+   and the fade flips with the palette on its own. */
+.marquee::before,
+.marquee::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  z-index: 1;
+  width: 3.5rem;
+  pointer-events: none;
+}
+
+.marquee::before {
+  left: 0;
+  background: linear-gradient(to right, var(--paper), transparent);
+}
+
+.marquee::after {
+  right: 0;
+  background: linear-gradient(to left, var(--paper), transparent);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+}
+
+.marquee-row {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+}
+
+/* The animation exists only with JavaScript, because the pause button exists
+   only with JavaScript — WCAG 2.2.2 wants a stop mechanism for anything that
+   moves on its own, so the motion and its control appear together. */
+.js .marquee-track {
+  animation: marquee-slide var(--marquee-duration) linear infinite;
+  will-change: transform;
+}
+
+.js .marquee:hover .marquee-track,
+.js .marquee:focus-within .marquee-track,
+.js .marquee-track[data-paused] {
+  animation-play-state: paused;
+}
+
+@keyframes marquee-slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* Without JavaScript there is nothing to pause, so drop the duplicate row and
+   let the reader scroll the strip by hand instead. */
+html:not(.js) .marquee {
+  overflow-x: auto;
+}
+
+html:not(.js) .marquee-row[aria-hidden="true"] {
+  display: none;
+}
+
+html:not(.js) .marquee::before,
+html:not(.js) .marquee::after {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------------
    Recommendation deck. Without JavaScript the quotes are a plain stacked list
    and every one is readable — the tab rail is what's hidden, not the content.
    With JavaScript they collapse into a single grid cell and the rail drives
@@ -248,6 +329,69 @@ body {
 html:not(.js) .rec-rail,
 html:not(.js) .rec-counter {
   display: none;
+}
+
+/* Collapsed quote. A long recommendation starts at a fixed height and opens
+   from a native <details>, so the full text is reachable with scripting off —
+   this is a disclosure, not the scroll reveal, and the words are in the DOM
+   either way. */
+.rec-quote {
+  /* Positioned so the fade below anchors to the clipped edge of the quote
+     rather than to the card, which would put it over the toggle. */
+  position: relative;
+  max-height: 15rem;
+  overflow: hidden;
+  transition: max-height 0.45s var(--ease-soft);
+}
+
+/* `:has()` lets the toggle drive its sibling, which is what keeps this free of
+   JavaScript. The open height is a ceiling, not a measurement — max-height
+   can't transition to `content`, and no quote comes close to 120rem. */
+.rec-body:has(.rec-expand[open]) .rec-quote {
+  max-height: 120rem;
+}
+
+/* Fade the clipped edge so it reads as "continues" rather than "cut off". */
+.rec-quote::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 5rem;
+  pointer-events: none;
+  background: linear-gradient(to top, var(--paper-raised), transparent);
+  transition: opacity 0.3s var(--ease-soft);
+}
+
+.rec-body:has(.rec-expand[open]) .rec-quote::after {
+  opacity: 0;
+}
+
+.rec-expand {
+  margin-top: 1rem;
+}
+
+/* The default disclosure triangle would sit outside the pill. */
+.rec-expand summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.rec-expand summary::-webkit-details-marker {
+  display: none;
+}
+
+.rec-expand[open] .rec-more,
+.rec-expand:not([open]) .rec-less {
+  display: none;
+}
+
+.rec-chevron {
+  transition: transform 0.3s var(--ease-soft);
+}
+
+.rec-expand[open] .rec-chevron {
+  transform: rotate(180deg);
 }
 
 /* ---------------------------------------------------------------------------
@@ -303,9 +447,30 @@ html:not(.js) .rec-counter {
     transition: none;
   }
 
-  /* The blanket rule below forces every animation to its final frame rather
-     than skipping it, so any new @keyframes must be neutralised here by name.
-     This one would otherwise paint a full bar regardless of scroll position. */
+  /* The blanket rule below forces every animation to its FINAL frame rather
+     than skipping it, so every @keyframes must be neutralised here by name.
+     The ticker would otherwise park at translateX(-50%) with the visible copy
+     scrolled off the side; the progress bar would paint full regardless of
+     scroll position. */
+  .js .marquee-track {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .marquee {
+    overflow-x: auto;
+  }
+
+  .marquee-row[aria-hidden="true"],
+  .marquee-pause {
+    display: none;
+  }
+
+  .marquee::before,
+  .marquee::after {
+    display: none;
+  }
+
   .scroll-progress {
     display: none;
   }

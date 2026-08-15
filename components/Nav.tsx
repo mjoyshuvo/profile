@@ -5,15 +5,16 @@ import { useEffect, useState } from "react";
 import { profile } from "@/content/profile";
 
 /**
- * Six labels need roughly 520px, which is too tight at `md` alongside the
- * masthead — so the row appears at `lg`.
+ * Six labels, one of them long, need roughly 600px — too tight at `md`
+ * alongside the masthead, so the row appears at `lg`. Writing is reachable by
+ * scrolling; it lost its slot to Recommendations.
  */
 const links = [
-  { href: "#identity", label: "Approach" },
+  { href: "#identity", label: "About" },
   { href: "#experience", label: "Experience" },
   { href: "#projects", label: "Work" },
+  { href: "#recommendations", label: "Recommendations" },
   { href: "#skills", label: "Skills" },
-  { href: "#writing", label: "Writing" },
   { href: "#contact", label: "Contact" },
 ];
 

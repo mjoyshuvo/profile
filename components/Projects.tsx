@@ -1,5 +1,6 @@
 import { ExternalLink, Layers } from "lucide-react";
 import { projects, type Project } from "@/content/projects";
+import { CardWash } from "./CardWash";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
 
@@ -31,12 +32,7 @@ export function Projects() {
 function ProjectCard({ project, index }: { project: Project; index: number }) {
   return (
     <article className="group relative overflow-hidden rounded-2xl border border-rule bg-paper-raised transition-[border-color,box-shadow,transform] duration-200 hover:border-teal [@media(hover:hover)]:hover:-translate-y-0.5 [@media(hover:hover)]:hover:shadow-[var(--shadow)]">
-      {/* Soft teal bloom in the corner, the same decorative idiom as the
-          contact panel. Lifts slightly on hover rather than sitting loud. */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute -top-24 -right-24 h-56 w-56 rounded-full bg-teal/[0.07] blur-3xl transition-colors duration-300 group-hover:bg-teal/[0.12]"
-      />
+      <CardWash />
 
       <div className="relative p-5 sm:p-7">
         <div className="gap-7 lg:grid lg:grid-cols-[1fr_13rem] lg:items-start">
@@ -90,13 +86,11 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               </a>
             </p>
 
-            {/* Problem and Approach are label-and-value pairs, so they get the
-                element that says so — which is also the structure an ATS reads.
-                Experience carries the quantified outcomes; these carry the
-                decision. */}
+            {/* Label-and-value pairs, so they get the element that says so —
+                which is also the structure an ATS reads. */}
             <dl className="mt-5 space-y-4">
-              <Field label="Problem">{project.problem}</Field>
-              <Field label="Approach">{project.approach}</Field>
+              <Field label="Product">{project.product}</Field>
+              <Field label="What I did">{project.work}</Field>
             </dl>
           </div>
 
@@ -137,7 +131,7 @@ function Field({
   children: React.ReactNode;
 }) {
   return (
-    <div className="sm:grid sm:grid-cols-[5.5rem_1fr] sm:gap-4">
+    <div className="sm:grid sm:grid-cols-[7rem_1fr] sm:gap-4">
       <dt className="pt-0.5 font-mono text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">
         {label}
       </dt>

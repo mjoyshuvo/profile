@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { ArrowRight, Download, MapPin } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./BrandIcons";
-import { disciplines, profile } from "@/content/profile";
+import { profile } from "@/content/profile";
 import { Reveal } from "./Reveal";
 
 export function Hero() {
@@ -105,22 +105,6 @@ export function Hero() {
             />
           </Reveal>
 
-          <Reveal delay={0.24}>
-            {/* A ruled stack rather than a dot-separated line: the separator is
-                then the same hairline used everywhere else on the page.
-                "Engineer" is left to the nav's role line — repeating it under
-                each word read as a stutter. */}
-            <ul className="mt-4 border-t border-rule text-xs uppercase tracking-[0.16em] text-teal sm:mt-5 lg:mt-7">
-              {disciplines.map((d) => (
-                <li
-                  key={d}
-                  className="border-b border-rule py-2 last:border-b-0 sm:py-2.5"
-                >
-                  {d}
-                </li>
-              ))}
-            </ul>
-          </Reveal>
         </div>
       </div>
     </section>

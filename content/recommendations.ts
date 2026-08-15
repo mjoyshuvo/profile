@@ -34,7 +34,7 @@ export const recommendations: Recommendation[] = [
     id: "erik-ormevik",
     name: "Erik Ormevik",
     title: "Product Owner & Frontend Developer at Ferdia",
-    relation: "Worked with Mrityunjoy at a different company",
+    relation: "Worked with me at Ferdia",
     date: "July 2022",
     dateISO: "2022-07-14",
     avatar: "/recommenders/erik-ormevik.jpg",
