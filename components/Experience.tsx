@@ -16,11 +16,20 @@ export function Experience() {
       <ol className="relative space-y-10 border-l border-rule pl-6 sm:pl-8">
         {experience.map((role, i) => (
           <li key={`${role.company}-${role.start}`} className="relative">
-            {/* Timeline node */}
+            {/* Timeline node. The ring has to start wider than the dot's
+                4px paper collar, or it expands entirely underneath it and
+                never shows. Staggered per role so the timeline ripples down
+                rather than blinking in unison. */}
             <span
-              className="absolute -left-[calc(1.5rem+4.5px)] top-2 h-2 w-2 rounded-full bg-teal ring-4 ring-paper sm:-left-[calc(2rem+4.5px)]"
+              className="absolute top-2 -left-[calc(1.5rem+4.5px)] grid h-2 w-2 place-items-center sm:-left-[calc(2rem+4.5px)]"
               aria-hidden="true"
-            />
+            >
+              <span
+                className="pulse-ring absolute -inset-1.5 rounded-full bg-teal"
+                style={{ animationDelay: `${i * 0.45}s` }}
+              />
+              <span className="relative h-2 w-2 rounded-full bg-teal ring-4 ring-paper" />
+            </span>
 
             <Reveal delay={i * 0.05}>
               <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">

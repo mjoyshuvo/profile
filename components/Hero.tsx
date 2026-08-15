@@ -30,7 +30,7 @@ export function Hero() {
                 className="relative grid h-3.5 w-3.5 shrink-0 place-items-center"
                 aria-hidden="true"
               >
-                <span className="status-pulse absolute inset-0 rounded-full bg-teal" />
+                <span className="pulse-ring absolute inset-0 rounded-full bg-teal" />
                 <span className="absolute inset-0 rounded-full bg-teal/20" />
                 <span className="absolute inset-[3px] rounded-full bg-teal/40" />
                 <span className="relative h-1.5 w-1.5 rounded-full bg-teal shadow-[0_0_6px_var(--teal)]" />

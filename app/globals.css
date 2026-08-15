@@ -200,18 +200,18 @@ body {
 }
 
 /* ---------------------------------------------------------------------------
-   Availability lamp. A ring that expands out of the dot and fades, on a loop.
+   Pulse ring. A ring that expands out of a dot and fades, on a loop. Used by
+   the hero's availability lamp and by the experience timeline nodes.
 
-   No pause control, unlike the ticker, and the distinction is deliberate:
-   WCAG 2.2.2 governs moving *information*. This ring is `aria-hidden` and
-   carries nothing — the status is in the sentence beside it — so removing the
-   motion removes nothing. It also stops dead under reduced motion.
+   No pause control: WCAG 2.2.2 governs moving *information*, and every one of
+   these sits inside an aria-hidden wrapper carrying nothing the text beside it
+   does not. Stop them and nothing is lost. They halt under reduced motion.
 --------------------------------------------------------------------------- */
 /* Linear, with the opacity stops written out. The site's --ease-soft curve is a
    hard ease-out: on a loop it throws the ring to full size in the first
    quarter and then holds it invisible, which reads as an occasional blip
    rather than a lamp. An even fade is what makes it look alive. */
-@keyframes status-pulse {
+@keyframes pulse-ring {
   0% {
     transform: scale(0.9);
     opacity: 0.55;
@@ -231,8 +231,8 @@ body {
   }
 }
 
-.status-pulse {
-  animation: status-pulse 2s linear infinite;
+.pulse-ring {
+  animation: pulse-ring 2s linear infinite;
 }
 
 /* ---------------------------------------------------------------------------
@@ -466,7 +466,7 @@ html:not(.js) .rec-counter {
   /* Ends at opacity 0, so the blanket rule would leave the ring permanently
      invisible rather than simply still. Kill it by name and let the lamp sit
      as a solid dot. */
-  .status-pulse {
+  .pulse-ring {
     animation: none !important;
     opacity: 0.5 !important;
     transform: none !important;
