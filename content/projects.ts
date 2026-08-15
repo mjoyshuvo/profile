@@ -1,7 +1,3 @@
-/** Which system diagram to draw. A closed union rather than a component
- *  reference, so `content/` stays free of JSX. */
-export type DiagramKey = "pipeline" | "agent" | "multi-tenant" | "search";
-
 export type Project = {
   /** Anchor slug — the card renders as id={`project-${slug}`}. */
   slug: string;
@@ -26,7 +22,6 @@ export type Project = {
    */
   metric?: { value: string; label: string };
   tech: string[];
-  diagram: DiagramKey;
 };
 
 /**
@@ -49,7 +44,6 @@ export const projects: Project[] = [
       "Python ETL publishing timeseries, timeseries groups and forecast curves from upstream sources with differing schedules and formats. Processing time on the slowest jobs came down 50% through multiprocessing and removing serial code paths; Docker layer caching took 40% off build times.",
     metric: { value: "500+", label: "pipelines in production" },
     tech: ["Python", "ETL", "Timeseries", "PostgreSQL", "Docker"],
-    diagram: "pipeline",
   },
   {
     slug: "agentic-workflows",
@@ -60,7 +54,7 @@ export const projects: Project[] = [
       "Recurring engineering work was too small to justify bespoke automation and too frequent to keep doing by hand. Internally, HR answers were spread across documents nobody searched.",
     approach:
       "MCP servers giving agents authenticated, typed access to the systems behind Veyt's projects, with agentic workflows built on top of them and coaching for the teams that now run them. The same stack went into a RAG service for the Cefalo HR portal at a company hackathon: documents chunked and embedded into a Pinecone vector database, retrieval and prompt orchestration in LangChain, and LangGraph for the queries that need more than one lookup.",
-    metric: { value: "Hours", label: "returned to the team each week" },
+    metric: { value: "Hrs/wk", label: "returned to the team" },
     tech: [
       "MCP",
       "Claude Code",
@@ -70,7 +64,6 @@ export const projects: Project[] = [
       "Pinecone",
       "RAG",
     ],
-    diagram: "agent",
   },
   {
     slug: "ferdia-booking",
@@ -85,7 +78,6 @@ export const projects: Project[] = [
       "Microservice architecture with the tenancy boundary enforced in a single layer, query profiling and rewrites across the paths carrying load, and a Redis cache layer on the remainder. Overall performance improved 50%, with response times on the hottest paths down close to 60%.",
     metric: { value: "~60%", label: "faster on the hottest paths" },
     tech: ["Python", "Microservices", "Redis", "PostgreSQL"],
-    diagram: "multi-tenant",
   },
   {
     slug: "infosapex-search",
@@ -98,6 +90,5 @@ export const projects: Project[] = [
       "Replaced the search backend with ElasticSearch, tuning analysers and field weighting for a 42% accuracy gain, and moved the blocking work onto Celery and CeleryBeat.",
     metric: { value: "+42%", label: "search accuracy" },
     tech: ["Django", "ElasticSearch", "Celery"],
-    diagram: "search",
   },
 ];
