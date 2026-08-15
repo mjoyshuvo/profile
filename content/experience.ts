@@ -48,7 +48,7 @@ export const experience: Role[] = [
         end: "Present",
         startDate: "2026-01-01",
         bullets: [
-          "Coach engineers on agentic architecture — turning demo-grade LLM workflows into ones that survive production traffic and failure modes.",
+          "Coach Cefalo teams on agentic workflows to automate their repetitive work.",
           "Built MCP tools that give agents first-class access to the systems behind Veyt's projects, rather than leaving them to guess.",
           "Designed agentic workflows that take the repetitive work off the team — the recurring tasks that quietly consumed hours every week now run themselves.",
           "Set the technical direction for data engineering work across the Veyt account.",
