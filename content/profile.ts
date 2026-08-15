@@ -10,7 +10,7 @@ export const profile = {
   triad: ["Engineer.", "Mentor.", "Builder."],
   /** The supporting paragraph under the statement. */
   supportingLine:
-    "Backend and Data Engineer with 10 years of experience building scalable systems and robust data pipelines. Passionate about solving complex technical challenges while actively mentoring the next generation of engineering talent.",
+    "I have spent ten years on backend systems and the data pipelines behind them. I like the problems that turn out to be design decisions rather than bugs, and I spend a good part of my week making sure the engineers around me can solve them too.",
   /**
    * The supporting line is deliberately less literal than a search engine needs,
    * so <meta> and JSON-LD get their own keyword-carrying sentence.
