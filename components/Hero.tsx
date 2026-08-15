@@ -21,15 +21,16 @@ export function Hero() {
         <div className="min-w-0 lg:order-1">
           <Reveal>
             <p className="flex items-center gap-2.5 text-xs tracking-[0.18em] text-ink-faint uppercase">
-              {/* A signal lamp rather than a bullet: a solid core, a soft halo
-                  around it, and a glow that carries the teal onto the paper.
-                  Deliberately static — a pulsing dot moves on its own, and this
-                  page's rule is that anything which does needs a pause control
-                  (see README). A status light does not warrant one. */}
+              {/* A signal lamp rather than a bullet: a solid core with a glow,
+                  two static halos, and a ring pulsing out of it on a loop.
+                  The whole lamp is aria-hidden — the availability is in the
+                  sentence beside it — so the motion carries no information and
+                  needs no pause control. It stops under reduced motion. */}
               <span
                 className="relative grid h-3.5 w-3.5 shrink-0 place-items-center"
                 aria-hidden="true"
               >
+                <span className="status-pulse absolute inset-0 rounded-full bg-teal" />
                 <span className="absolute inset-0 rounded-full bg-teal/20" />
                 <span className="absolute inset-[3px] rounded-full bg-teal/40" />
                 <span className="relative h-1.5 w-1.5 rounded-full bg-teal shadow-[0_0_6px_var(--teal)]" />

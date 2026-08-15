@@ -201,6 +201,42 @@ body {
 }
 
 /* ---------------------------------------------------------------------------
+   Availability lamp. A ring that expands out of the dot and fades, on a loop.
+
+   No pause control, unlike the ticker, and the distinction is deliberate:
+   WCAG 2.2.2 governs moving *information*. This ring is `aria-hidden` and
+   carries nothing — the status is in the sentence beside it — so removing the
+   motion removes nothing. It also stops dead under reduced motion.
+--------------------------------------------------------------------------- */
+/* Linear, with the opacity stops written out. The site's --ease-soft curve is a
+   hard ease-out: on a loop it throws the ring to full size in the first
+   quarter and then holds it invisible, which reads as an occasional blip
+   rather than a lamp. An even fade is what makes it look alive. */
+@keyframes status-pulse {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.55;
+  }
+  40% {
+    transform: scale(1.5);
+    opacity: 0.3;
+  }
+  75% {
+    transform: scale(2);
+    opacity: 0.06;
+  }
+  90%,
+  100% {
+    transform: scale(2.1);
+    opacity: 0;
+  }
+}
+
+.status-pulse {
+  animation: status-pulse 2s linear infinite;
+}
+
+/* ---------------------------------------------------------------------------
    Discipline ticker. Both rows live in one track, so translating the track by
    half its width lands exactly one copy along and the loop is seamless.
 --------------------------------------------------------------------------- */
@@ -454,6 +490,15 @@ html:not(.js) .rec-counter {
      scroll position. */
   .js .marquee-track {
     animation: none !important;
+    transform: none !important;
+  }
+
+  /* Ends at opacity 0, so the blanket rule would leave the ring permanently
+     invisible rather than simply still. Kill it by name and let the lamp sit
+     as a solid dot. */
+  .status-pulse {
+    animation: none !important;
+    opacity: 0.5 !important;
     transform: none !important;
   }
 

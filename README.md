@@ -108,10 +108,18 @@ scroll())`. Deliberately not a scroll listener: that would put main-thread work
   frame, not to nothing.** Any new `@keyframes` must therefore be neutralised
   there by name, or it ships in its end state for the readers who asked for
   less motion.
-- Anything that moves **on its own**, rather than in response to the reader's
-  own scroll, needs a keyboard-reachable pause control to meet WCAG 2.2.2.
-  Hover-pause does not count, and Lighthouse does not check — the score would
-  stay at 100 while the page regressed. Nothing on the page does this today.
+- Two things move on their own, and they are treated differently on purpose.
+  WCAG 2.2.2 governs moving **information**, so the test is what is lost if the
+  motion stops.
+  - **The discipline ticker** carries words, so it ships a keyboard-reachable
+    pause button. Hover-pause alone would not count — it is unreachable by
+    keyboard and by touch — and Lighthouse does not check, so the score would
+    stay at 100 while the page regressed. The animation is scoped to `html.js`,
+    the same condition as the button, so motion and control cannot ship apart.
+  - **The availability lamp** in the hero is `aria-hidden` and says nothing the
+    sentence beside it does not, so it pulses without a control. If it ever
+    starts carrying meaning, it needs one.
+  - Both stop dead under `prefers-reduced-motion`, by name, per the rule above.
 
 ## Deployment
 
