@@ -20,11 +20,20 @@ export function Hero() {
         {/* Statement */}
         <div className="min-w-0 lg:order-1">
           <Reveal>
-            <p className="flex items-center gap-2 text-xs uppercase tracking-[0.18em] text-ink-faint">
+            <p className="flex items-center gap-2.5 text-xs tracking-[0.18em] text-ink-faint uppercase">
+              {/* A signal lamp rather than a bullet: a solid core, a soft halo
+                  around it, and a glow that carries the teal onto the paper.
+                  Deliberately static — a pulsing dot moves on its own, and this
+                  page's rule is that anything which does needs a pause control
+                  (see README). A status light does not warrant one. */}
               <span
-                className="h-1.5 w-1.5 shrink-0 rounded-full bg-teal"
+                className="relative grid h-3.5 w-3.5 shrink-0 place-items-center"
                 aria-hidden="true"
-              />
+              >
+                <span className="absolute inset-0 rounded-full bg-teal/20" />
+                <span className="absolute inset-[3px] rounded-full bg-teal/40" />
+                <span className="relative h-1.5 w-1.5 rounded-full bg-teal shadow-[0_0_6px_var(--teal)]" />
+              </span>
               {profile.status}
             </p>
           </Reveal>
@@ -104,7 +113,6 @@ export function Hero() {
               className="portrait-ink w-28 sm:w-44 lg:w-80"
             />
           </Reveal>
-
         </div>
       </div>
     </section>
