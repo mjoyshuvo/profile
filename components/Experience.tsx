@@ -1,7 +1,8 @@
 import Image from "next/image";
-import { Briefcase, ExternalLink } from "lucide-react";
+import { ArrowDown, Briefcase, ExternalLink } from "lucide-react";
 import { NorwayFlag } from "./BrandIcons";
 import { experience, type Position, type Role } from "@/content/experience";
+import { projects } from "@/content/projects";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
 
@@ -75,8 +76,12 @@ export function Experience() {
                 ))}
               </div>
 
+              {/* Derived from the project list rather than hand-maintained, so
+                  removing a case study can't leave a dead anchor behind. */}
+              <CaseStudyLinks company={role.company} />
+
               {role.client ? (
-                <div className="mt-4 flex items-start gap-3 rounded-lg border border-rule bg-paper-raised px-4 py-3">
+                <div className="mt-4 flex max-w-3xl items-start gap-3 rounded-lg border border-rule bg-paper-raised px-4 py-3">
                   <ClientMark client={role.client} />
                   <p className="text-sm leading-relaxed text-ink-soft">
                     <span className="inline-flex items-center gap-1.5 font-medium text-ink">
@@ -106,6 +111,37 @@ export function Experience() {
         ))}
       </ol>
     </Section>
+  );
+}
+
+/**
+ * Links from a role to the case studies delivered under it. Matched on
+ * `Project.company`, so the two sections can't drift apart: delete a project
+ * and its link disappears with it.
+ */
+function CaseStudyLinks({ company }: { company: string }) {
+  const matches = projects.filter((project) => project.company === company);
+  if (matches.length === 0) return null;
+
+  return (
+    <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1.5">
+      {matches.map((project) => (
+        <li key={project.slug}>
+          <a
+            href={`#project-${project.slug}`}
+            className="group inline-flex items-center gap-1.5 text-sm text-ink-faint transition-colors hover:text-teal"
+          >
+            <ArrowDown
+              className="h-3.5 w-3.5 transition-transform group-hover:translate-y-0.5"
+              aria-hidden="true"
+            />
+            <span className="border-b border-transparent pb-0.5 transition-colors group-hover:border-teal">
+              {project.name}
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
   );
 }
 
@@ -175,7 +211,7 @@ function PositionEntry({
           {position.bullets.map((bullet) => (
             <li
               key={bullet}
-              className="relative pl-5 text-[0.9375rem] leading-relaxed text-ink-soft"
+              className="relative max-w-[68ch] pl-5 text-[0.9375rem] leading-relaxed text-ink-soft"
             >
               <span
                 className="absolute left-0 top-[0.6em] h-1.5 w-1.5 rounded-full bg-teal/60"

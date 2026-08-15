@@ -4,12 +4,36 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { profile } from "@/content/profile";
 
+/**
+ * Six labels need roughly 520px, which is too tight at `md` alongside the
+ * masthead — so the row appears at `lg`.
+ */
 const links = [
+  { href: "#identity", label: "Approach" },
   { href: "#experience", label: "Experience" },
+  { href: "#projects", label: "Work" },
   { href: "#skills", label: "Skills" },
   { href: "#writing", label: "Writing" },
-  { href: "#education", label: "Education" },
   { href: "#contact", label: "Contact" },
+];
+
+/**
+ * Every section the scrollspy watches — deliberately a superset of `links`.
+ *
+ * Building the observer from `links` alone meant a section with no nav entry
+ * was never observed, so the last-lit pill stayed lit while the reader was
+ * somewhere else entirely. Watching everything means those sections simply
+ * clear the highlight, which is the honest answer.
+ */
+const spySections = [
+  "#identity",
+  "#experience",
+  "#projects",
+  "#recommendations",
+  "#skills",
+  "#writing",
+  "#education",
+  "#contact",
 ];
 
 export function Nav() {
@@ -18,8 +42,8 @@ export function Nav() {
   // Scrollspy. Purely decorative — the links are plain anchors and work with
   // JavaScript disabled.
   useEffect(() => {
-    const sections = links
-      .map((l) => document.querySelector<HTMLElement>(l.href))
+    const sections = spySections
+      .map((href) => document.querySelector<HTMLElement>(href))
       .filter((el): el is HTMLElement => el !== null);
 
     const observer = new IntersectionObserver(
@@ -63,7 +87,7 @@ export function Nav() {
         </a>
 
         <div className="flex items-center gap-1 sm:gap-2">
-          <ul className="hidden items-center gap-1 md:flex">
+          <ul className="hidden items-center gap-1 lg:flex">
             {links.map((link) => (
               <li key={link.href}>
                 <a
@@ -82,6 +106,12 @@ export function Nav() {
           </ul>
         </div>
       </nav>
+
+      {/* Scroll progress. CSS-only — a JS scroll listener would put per-frame
+          work on the main thread for a decorative hairline. Engines without
+          scroll-driven animations never show it, which is a fine outcome for
+          something purely decorative. */}
+      <span className="scroll-progress no-print" aria-hidden="true" />
     </header>
   );
 }

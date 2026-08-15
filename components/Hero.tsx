@@ -110,7 +110,7 @@ export function Hero() {
                 then the same hairline used everywhere else on the page.
                 "Engineer" is left to the nav's role line — repeating it under
                 each word read as a stutter. */}
-            <ul className="mt-4 border-t border-rule text-xs uppercase tracking-[0.16em] text-ink-soft sm:mt-5 lg:mt-7">
+            <ul className="mt-4 border-t border-rule text-xs uppercase tracking-[0.16em] text-teal sm:mt-5 lg:mt-7">
               {disciplines.map((d) => (
                 <li
                   key={d}

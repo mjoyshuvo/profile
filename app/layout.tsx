@@ -77,7 +77,14 @@ const themeScript = `
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${inter.variable} ${sourceSerif.variable} h-full`}>
+    // The head script below adds `js` and may set `data-theme` before React
+    // hydrates — that's the whole point of running it pre-paint. Both land on
+    // this element, so React must be told not to flag the difference.
+    <html
+      lang="en"
+      className={`${inter.variable} ${sourceSerif.variable} h-full`}
+      suppressHydrationWarning
+    >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <script

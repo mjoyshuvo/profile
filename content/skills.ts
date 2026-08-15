@@ -10,7 +10,14 @@ export type SkillGroup = {
 export const skillGroups: SkillGroup[] = [
   {
     label: "Backend & Languages",
-    items: ["Python", "Django", "FastAPI", "Flask", "PostgreSQL", "MySQL", "MongoDB", "Redis"],
+    items: ["Python", "Django", "FastAPI", "Flask"],
+  },
+  {
+    // Its own group rather than a tail on the backend list: the relational,
+    // document, key-value and vector stores are a distinct competency, and
+    // burying them under "Backend" undersold them.
+    label: "Databases",
+    items: ["PostgreSQL", "MySQL", "MongoDB", "Redis", "Pinecone"],
   },
   {
     label: "Data Engineering",
@@ -25,6 +32,9 @@ export const skillGroups: SkillGroup[] = [
       "Agentic Workflows",
       "LLM Integration",
       "Prompt Engineering",
+      "RAG",
+      "LangChain",
+      "LangGraph",
     ],
   },
   {

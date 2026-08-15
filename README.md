@@ -9,7 +9,8 @@ Live: https://mrityunjoy.com
 
 - **Next.js 16** (App Router, TypeScript) — every route is statically prerendered
 - **Tailwind CSS v4** with CSS custom properties for the light/dark palette
-- **IntersectionObserver + CSS transitions** for the scroll reveal (no animation library)
+- **IntersectionObserver + CSS transitions and keyframes** for all motion, plus a
+  scroll-driven progress bar behind `@supports` (no animation library)
 - **lucide-react** for UI icons; brand marks are inlined in `components/BrandIcons.tsx`
 
 ## Editing the content
@@ -17,12 +18,22 @@ Live: https://mrityunjoy.com
 All copy lives in `content/` — the components are presentational, so you never
 need to touch JSX to update the CV:
 
-| File | What it holds |
-|---|---|
-| `content/profile.ts` | Name, headline, summary, stat row, contact details, social links |
-| `content/experience.ts` | Roles, dates, and bullet points |
-| `content/skills.ts` | Skills, grouped by category |
-| `content/education.ts` | Degrees |
+| File                         | What it holds                                                    |
+| ---------------------------- | ---------------------------------------------------------------- |
+| `content/profile.ts`         | Name, headline, summary, stat row, contact details, social links |
+| `content/identity.ts`        | The three Engineering identity pillars                           |
+| `content/experience.ts`      | Roles, dates, and bullet points                                  |
+| `content/projects.ts`        | Case studies for Products and systems                            |
+| `content/recommendations.ts` | Transcribed LinkedIn recommendations                             |
+| `content/skills.ts`          | Skills, grouped by category                                      |
+| `content/education.ts`       | Degrees                                                          |
+| `content/writing.ts`         | Published pieces                                                 |
+
+Adding a recommendation means appending one entry to `content/recommendations.ts`.
+The section renders a single quote as a plain card with no client JavaScript; at
+two or more it becomes a tabbed deck with an avatar rail on its own. `avatar` is
+optional — without a file it falls back to an initials monogram, so words can
+land before photos do.
 
 `public/Mrityunjoy_Das_Resume.pdf` is the downloadable résumé — replace the file
 to publish a new version; the link and filename stay the same.
@@ -52,18 +63,55 @@ npm run build && npm start
 These are deliberate — please keep them when changing the site:
 
 1. **Everything renders server-side.** No content may depend on client-side
-   JavaScript. `curl localhost:3000 | grep Greenfact` must find the text.
+   JavaScript. `curl localhost:3000 | grep Greenfact` must find the text, and so
+   must a fragment of every recommendation — including the ones the deck is not
+   currently showing.
 2. **One `<h1>`**, an `<h2>` per section, real `<ul>/<li>` bullets. ATS parsers
    read the markup, not the design.
 3. **The scroll reveal must never hide content.** The hidden state is scoped to
    `html.js` and disabled under `prefers-reduced-motion`, so a reader without
    JavaScript or with motion reduced sees the full page.
 4. **Light is the default theme.** The OS `prefers-color-scheme` is deliberately
-   ignored — dark applies only when the reader picks it via the toggle, which
-   stores `data-theme` on `<html>`.
+   ignored — dark applies only when `data-theme` is set on `<html>`.
+   (`components/ThemeToggle.tsx` still exists but is mounted nowhere, so today
+   that only happens via a stored `localStorage.theme`.)
 5. **Colour tokens only.** Never hardcode a colour in a component — add a token
    in `globals.css` and define it in both palette blocks (`:root` and
-   `[data-theme="dark"]`).
+   `[data-theme="dark"]`). The system diagrams in `components/SystemDiagrams.tsx`
+   follow this by stroking `currentColor` only.
+6. **One width for every section.** The nav, hero, every `<Section>` and the
+   footer all use `max-w-6xl px-5 sm:px-8`, so the page has a single left edge.
+   Long-form text is capped at `max-w-[68ch]` inside that container rather than
+   by narrowing the container itself.
+
+### Animation
+
+All motion is CSS driven by one `IntersectionObserver` in `components/Reveal.tsx`.
+No library, and nothing here may start depending on one.
+
+- `Reveal` has three modes. `rise` fades and lifts the block. `stagger` leaves
+  the block still and lifts its direct children on an `nth-child` ladder in
+  `globals.css`, **capped at seven** — past that the ladder out-runs the scroll.
+  `hold` has no motion of its own and exists only to tell the words inside a
+  heading when they are on screen. `as` picks the tag, so the wrapper can be a
+  `ul`/`ol` instead of emitting a `div` inside a list.
+- `components/SplitWords.tsx` splits section headings into per-word masks. **The
+  space between words must stay a plain text node between the masks.** Put it
+  inside a mask and `overflow: hidden` collapses it, which quietly turns
+  "Products and systems" into "Productsandsystems" for copy-paste and for the
+  accessible name. Note this does mean a multi-word heading is no longer one
+  contiguous string in the raw HTML — grep the DOM's text, not the markup.
+- The scroll progress bar is CSS-only behind `@supports (animation-timeline:
+scroll())`. Deliberately not a scroll listener: that would put main-thread work
+  on every frame for a decorative hairline.
+- **The `prefers-reduced-motion` block forces every animation to its _final_
+  frame, not to nothing.** Any new `@keyframes` must therefore be neutralised
+  there by name, or it ships in its end state for the readers who asked for
+  less motion.
+- Anything that moves **on its own**, rather than in response to the reader's
+  own scroll, needs a keyboard-reachable pause control to meet WCAG 2.2.2.
+  Hover-pause does not count, and Lighthouse does not check — the score would
+  stay at 100 while the page regressed. Nothing on the page does this today.
 
 ## Deployment
 

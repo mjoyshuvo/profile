@@ -19,7 +19,15 @@
   /* Text placed on a --teal fill. Dark mode's teal is light, so white would
      drop to ~1.9:1 there — this flips with the palette. */
   --on-teal: #ffffff;
-  --shadow: 0 1px 2px rgb(26 26 26 / 0.04), 0 8px 24px -12px rgb(26 26 26 / 0.12);
+  --shadow:
+    0 1px 2px rgb(26 26 26 / 0.04), 0 8px 24px -12px rgb(26 26 26 / 0.12);
+
+  /* Motion. Not palette values, so they stay out of the dark block and out of
+     `@theme` — they'd generate colour utilities that mean nothing. One named
+     easing curve for the whole site so new rules can't quietly drift. */
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-reveal: 0.5s;
+  --dur-word: 0.62s;
 }
 
 /* Dark palette. Light is the default for everyone, so this applies only when
@@ -111,8 +119,8 @@ body {
   opacity: 0;
   transform: translateY(16px);
   transition:
-    opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity var(--dur-reveal) var(--ease-soft),
+    transform var(--dur-reveal) var(--ease-soft);
   transition-delay: var(--reveal-delay, 0s);
 }
 
@@ -121,16 +129,185 @@ body {
   transform: none;
 }
 
+/* Staggered reveal. One observed container and a pure-CSS ladder, so a ten-item
+   list costs one IntersectionObserver rather than ten React components.
+   Note `> *` catches every direct child, decorative spans included — check the
+   target's children before reaching for this. */
+.js [data-reveal-stagger] > * {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity var(--dur-reveal) var(--ease-soft),
+    transform var(--dur-reveal) var(--ease-soft);
+  transition-delay: calc(var(--reveal-step, 0.06s) * var(--reveal-i, 0));
+}
+
+.js [data-reveal-stagger][data-revealed] > * {
+  opacity: 1;
+  transform: none;
+}
+
+.js [data-reveal-stagger] > *:nth-child(2) {
+  --reveal-i: 1;
+}
+.js [data-reveal-stagger] > *:nth-child(3) {
+  --reveal-i: 2;
+}
+.js [data-reveal-stagger] > *:nth-child(4) {
+  --reveal-i: 3;
+}
+.js [data-reveal-stagger] > *:nth-child(5) {
+  --reveal-i: 4;
+}
+.js [data-reveal-stagger] > *:nth-child(6) {
+  --reveal-i: 5;
+}
+.js [data-reveal-stagger] > *:nth-child(7) {
+  --reveal-i: 6;
+}
+
+/* Capped: past the seventh item the ladder out-runs the reader's scroll and the
+   last items are still faded out by the time they're on screen. */
+.js [data-reveal-stagger] > *:nth-child(n + 8) {
+  --reveal-i: 7;
+}
+
+/* Per-word heading rise. Each word gets its own clip box so it can slide up
+   from behind it. The mask's padding clears descenders and the corners the
+   rotation throws out; the negative margins cancel that padding back out so the
+   heading's metrics are unchanged. */
+.js .st-mask {
+  display: inline-block;
+  overflow: hidden;
+  /* An inline-block with overflow:hidden aligns on its bottom margin edge.
+     Say so rather than depending on the default. */
+  vertical-align: bottom;
+  padding: 0.08em 0.06em 0.16em;
+  margin: 0 -0.06em -0.16em;
+}
+
+.js .st-w {
+  display: inline-block;
+  transform: translateY(115%) rotate(3deg);
+  transition: transform var(--dur-word) var(--ease-soft);
+  transition-delay: calc(var(--w, 0) * 0.045s);
+}
+
+/* `data-reveal-hold` has no motion of its own — it exists only to give the
+   observer something to flip so these words know when to rise. */
+.js [data-reveal-hold][data-revealed] .st-w {
+  transform: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Recommendation deck. Without JavaScript the quotes are a plain stacked list
+   and every one is readable — the tab rail is what's hidden, not the content.
+   With JavaScript they collapse into a single grid cell and the rail drives
+   which sits on top.
+
+   Stacked in one cell rather than toggled with `display: none`, so the
+   container is always as tall as the longest quote. Switching a two-line quote
+   for a ten-line one then can't jerk the page.
+--------------------------------------------------------------------------- */
+.rec-stack > * + * {
+  margin-top: 1.5rem;
+}
+
+.js .rec-stack {
+  display: grid;
+  align-items: start;
+}
+
+.js .rec-stack > * + * {
+  margin-top: 0;
+}
+
+.js .rec-stack > [data-rec-panel] {
+  grid-area: 1 / 1;
+  /* `visibility`, not `opacity` alone: an opacity-0 panel stays in the
+     accessibility tree, and a tabpanel that is off-screen must not. The zero
+     duration is delayed so the outgoing panel can finish fading first. */
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.3s var(--ease-soft),
+    visibility 0s linear 0.3s;
+}
+
+.js .rec-stack > [data-rec-panel][data-active] {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transition:
+    opacity 0.3s var(--ease-soft),
+    visibility 0s;
+}
+
+/* The rail and the counter only mean anything once they can be clicked. */
+html:not(.js) .rec-rail,
+html:not(.js) .rec-counter {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Scroll progress. CSS-only on purpose: a JS scroll listener would run
+   main-thread work on every frame of every scroll, and this page had no scroll
+   handlers at all. Not gated on `html.js`, because it needs no JavaScript —
+   engines without scroll-driven animations simply never show it.
+--------------------------------------------------------------------------- */
+@keyframes scroll-progress-grow {
+  from {
+    scale: 0 1;
+  }
+  to {
+    scale: 1 1;
+  }
+}
+
+.scroll-progress {
+  display: none;
+}
+
+@supports (animation-timeline: scroll()) {
+  .scroll-progress {
+    display: block;
+    position: absolute;
+    inset-inline: 0;
+    /* Sits on the header's own bottom rule. */
+    bottom: -1px;
+    height: 2px;
+    background-color: var(--teal);
+    transform-origin: left center;
+    scale: 0 1;
+    animation: scroll-progress-grow linear both;
+    animation-timeline: scroll(root block);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
 
   /* Never hide content from a reader who asked for less motion. */
-  .js [data-reveal] {
+  .js [data-reveal],
+  .js [data-reveal-stagger] > * {
     opacity: 1;
     transform: none;
     transition: none;
+  }
+
+  .js .st-w {
+    transform: none;
+    transition: none;
+  }
+
+  /* The blanket rule below forces every animation to its final frame rather
+     than skipping it, so any new @keyframes must be neutralised here by name.
+     This one would otherwise paint a full bar regardless of scroll position. */
+  .scroll-progress {
+    display: none;
   }
 
   *,

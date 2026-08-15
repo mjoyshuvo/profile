@@ -39,7 +39,7 @@ export const experience: Role[] = [
       url: "https://veyt.com/",
       logo: "/logo-veyt.svg",
       blurb:
-        "Norwegian market intelligence provider for green certificate and carbon markets, formerly Greenfact.",
+        "Norwegian market intelligence provider covering carbon, guarantees of origin, power purchase agreements and renewable fuels. Formerly Greenfact.",
     },
     positions: [
       {
@@ -52,6 +52,7 @@ export const experience: Role[] = [
           "Built MCP tools that give agents first-class access to the systems behind Veyt's projects, rather than leaving them to guess.",
           "Designed agentic workflows that take the repetitive work off the team — the recurring tasks that quietly consumed hours every week now run themselves.",
           "Set the technical direction for data engineering work across the Veyt account.",
+          "Built a RAG service for the Cefalo HR portal at a company hackathon, using LangChain, LangGraph and a Pinecone vector database.",
         ],
       },
       {
@@ -63,7 +64,7 @@ export const experience: Role[] = [
         bullets: [
           "Cut processing time on the slowest pipelines by 50%, by moving the work to multiprocessing and removing the code paths that made it serial in the first place.",
           "Reworked the Dockerfile and brought build times down by 40%, which took a slow feedback loop out of every deploy.",
-          "Designed and built the ETL pipelines behind the platform's market data.",
+          "Built and run 500+ data pipelines producing the timeseries, timeseries groups and forecast data behind the platform's market intelligence.",
         ],
       },
     ],

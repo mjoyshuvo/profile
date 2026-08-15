@@ -1,25 +1,54 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
+
+/**
+ * `rise`    — the block itself fades and rises. The original behaviour.
+ * `stagger` — the block doesn't move; its direct children rise on a CSS ladder.
+ * `hold`    — no motion at all. A trigger scope, used by the per-word heading
+ *             rise so the words know when they're on screen.
+ */
+type RevealMode = "rise" | "stagger" | "hold";
+
+/** Small closed set, so the reveal can wrap a list without emitting a `div`
+ *  inside a `ul` and the markup stays valid for the parsers that read it. */
+type RevealTag = "div" | "ul" | "ol" | "dl" | "p";
+
+const ATTR: Record<RevealMode, string> = {
+  rise: "data-reveal",
+  stagger: "data-reveal-stagger",
+  hold: "data-reveal-hold",
+};
 
 type RevealProps = {
   children: ReactNode;
-  /** Stagger successive items in a list. Seconds. */
+  /** Seconds before this block starts. Only meaningful for `rise`. */
   delay?: number;
+  /** Seconds between successive children. Only meaningful for `stagger`. */
+  step?: number;
+  mode?: RevealMode;
+  as?: RevealTag;
   className?: string;
 };
 
 /**
- * The only animation in the site: a short fade-and-rise as an element scrolls
- * into view, once.
+ * The site's only animation trigger: a one-shot IntersectionObserver that marks
+ * an element as on-screen and then disconnects. All the motion lives in CSS.
  *
- * The hidden state lives in CSS behind an `html.js` class that the inline head
- * script sets, so a reader without JavaScript never sees the hidden state at
- * all — the content simply renders. Reduced-motion readers get the same
- * treatment via a media query in globals.css.
+ * The hidden state lives in `globals.css` behind an `html.js` class that the
+ * inline head script sets, so a reader without JavaScript never sees the hidden
+ * state at all — the content simply renders. Reduced-motion readers get the
+ * same treatment via a media query.
  */
-export function Reveal({ children, delay = 0, className }: RevealProps) {
-  const ref = useRef<HTMLDivElement>(null);
+export function Reveal({
+  children,
+  delay = 0,
+  step,
+  mode = "rise",
+  as: Tag = "div",
+  className,
+}: RevealProps) {
+  const ref = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const el = ref.current;
@@ -48,14 +77,19 @@ export function Reveal({ children, delay = 0, className }: RevealProps) {
     return () => observer.disconnect();
   }, []);
 
+  const style: Record<string, string> = {};
+  if (delay) style["--reveal-delay"] = `${delay}s`;
+  if (step) style["--reveal-step"] = `${step}s`;
+
   return (
-    <div
-      ref={ref}
-      data-reveal=""
+    <Tag
+      // One ref type across a closed set of tags; each is an HTMLElement.
+      ref={ref as React.Ref<never>}
+      {...{ [ATTR[mode]]: "" }}
       className={className}
-      style={delay ? ({ "--reveal-delay": `${delay}s` } as React.CSSProperties) : undefined}
+      style={Object.keys(style).length ? (style as CSSProperties) : undefined}
     >
       {children}
-    </div>
+    </Tag>
   );
 }
