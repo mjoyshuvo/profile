@@ -108,7 +108,11 @@ scroll())`. Deliberately not a scroll listener: that would put main-thread work
   frame, not to nothing.** Any new `@keyframes` must therefore be neutralised
   there by name, or it ships in its end state for the readers who asked for
   less motion.
-- One thing moves on its own: the **availability lamp** in the hero. It pulses
+- The **section icons** drift their own SVG shapes on a stagger, so each mark
+  moves out of its own construction — Layers ripples through three chevrons,
+  Mail through envelope and flap. One rule in `globals.css` covers all eight;
+  no per-icon code.
+- The other thing that moves on its own is the **availability lamp** in the hero. It pulses
   without a pause control because WCAG 2.2.2 governs moving _information_, and
   the lamp is `aria-hidden` and says nothing the sentence beside it does not —
   stop it and nothing is lost. It still stops under `prefers-reduced-motion`.

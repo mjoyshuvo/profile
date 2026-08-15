@@ -236,6 +236,53 @@ body {
 }
 
 /* ---------------------------------------------------------------------------
+   Section icons. Each lucide icon is a handful of sibling shapes — three
+   chevrons for Layers, a circle and a needle for Compass, an envelope and its
+   flap for Mail. Drifting those siblings on a stagger makes every icon move in
+   a way that comes out of its own construction, rather than bolting the same
+   spin onto eight different marks.
+
+   `transform-box: fill-box` so the transform resolves against each shape's own
+   box rather than the whole SVG canvas. Like the availability lamp these are
+   inside an aria-hidden wrapper, so the motion carries nothing and needs no
+   pause control.
+--------------------------------------------------------------------------- */
+@keyframes icon-drift {
+  0%,
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  50% {
+    transform: translateY(-1.2px);
+    opacity: 0.72;
+  }
+}
+
+.section-icon svg > * {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: icon-drift 2.8s ease-in-out infinite;
+}
+
+/* Lucide marks top out at about six shapes; the ladder covers them all. */
+.section-icon svg > *:nth-child(2) {
+  animation-delay: 0.14s;
+}
+.section-icon svg > *:nth-child(3) {
+  animation-delay: 0.28s;
+}
+.section-icon svg > *:nth-child(4) {
+  animation-delay: 0.42s;
+}
+.section-icon svg > *:nth-child(5) {
+  animation-delay: 0.56s;
+}
+.section-icon svg > *:nth-child(n + 6) {
+  animation-delay: 0.7s;
+}
+
+/* ---------------------------------------------------------------------------
    Recommendation deck. Without JavaScript the quotes are a plain stacked list
    and every one is readable — the tab rail is what's hidden, not the content.
    With JavaScript they collapse into a single grid cell and the rail drives
@@ -412,6 +459,15 @@ html:not(.js) .rec-counter {
   .status-pulse {
     animation: none !important;
     opacity: 0.5 !important;
+    transform: none !important;
+  }
+
+  /* Both 0% and 100% are the resting state, so the blanket rule would land
+     these correctly by luck. Say it explicitly anyway — the next edit to the
+     keyframe should not be able to break it silently. */
+  .section-icon svg > * {
+    animation: none !important;
+    opacity: 1 !important;
     transform: none !important;
   }
 

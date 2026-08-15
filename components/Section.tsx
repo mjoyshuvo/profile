@@ -32,7 +32,7 @@ export function Section({ id, title, icon, children }: SectionProps) {
           className="mb-8 flex items-center gap-3 border-b border-rule pb-3"
         >
           {icon ? (
-            <span className="text-teal" aria-hidden="true">
+            <span className="section-icon text-teal" aria-hidden="true">
               {icon}
             </span>
           ) : null}
