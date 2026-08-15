@@ -9,7 +9,7 @@ export function Contact() {
     <Section
       id="contact"
       title="Get in touch"
-      icon={<Mail className="h-5 w-5" />}
+      icon={<Mail className="h-6 w-6" />}
     >
       <Reveal>
         {/* One panel rather than a grid of equal cards: email is the action

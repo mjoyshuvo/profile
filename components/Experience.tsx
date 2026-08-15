@@ -11,7 +11,7 @@ export function Experience() {
     <Section
       id="experience"
       title="Experience"
-      icon={<Briefcase className="h-5 w-5" />}
+      icon={<Briefcase className="h-6 w-6" />}
     >
       <ol className="relative space-y-10 border-l border-rule pl-6 sm:pl-8">
         {experience.map((role, i) => (

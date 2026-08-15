@@ -8,7 +8,7 @@ export function Identity() {
     <Section
       id="identity"
       title="Engineering identity"
-      icon={<Compass className="h-5 w-5" />}
+      icon={<Compass className="h-6 w-6" />}
     >
       {/* An <ol>: the items are genuinely ordinal, so the visible numerals and
           the markup should agree. One observed container drives the whole

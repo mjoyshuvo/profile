@@ -247,39 +247,49 @@ body {
    inside an aria-hidden wrapper, so the motion carries nothing and needs no
    pause control.
 --------------------------------------------------------------------------- */
-@keyframes icon-drift {
-  0%,
-  100% {
-    transform: translateY(0);
+/* Drawing the stroke rather than moving the shape. At 20px a translate of a
+   couple of SVG units is under two screen pixels — real, measurable, and
+   invisible. Dashing the stroke changes what is on screen rather than where it
+   is, so it reads at any size.
+
+   The dash length overshoots every lucide path (they run well under 100 user
+   units at 24x24), so each shape draws fully, holds, then clears. */
+@keyframes icon-draw {
+  0% {
+    stroke-dashoffset: 100;
+    opacity: 0.25;
+  }
+  30%,
+  62% {
+    stroke-dashoffset: 0;
     opacity: 1;
   }
-  50% {
-    transform: translateY(-1.2px);
-    opacity: 0.72;
+  100% {
+    stroke-dashoffset: -100;
+    opacity: 0.25;
   }
 }
 
 .section-icon svg > * {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: icon-drift 2.8s ease-in-out infinite;
+  stroke-dasharray: 100;
+  animation: icon-draw 3.4s ease-in-out infinite;
 }
 
 /* Lucide marks top out at about six shapes; the ladder covers them all. */
 .section-icon svg > *:nth-child(2) {
-  animation-delay: 0.14s;
+  animation-delay: 0.2s;
 }
 .section-icon svg > *:nth-child(3) {
-  animation-delay: 0.28s;
+  animation-delay: 0.4s;
 }
 .section-icon svg > *:nth-child(4) {
-  animation-delay: 0.42s;
+  animation-delay: 0.6s;
 }
 .section-icon svg > *:nth-child(5) {
-  animation-delay: 0.56s;
+  animation-delay: 0.8s;
 }
 .section-icon svg > *:nth-child(n + 6) {
-  animation-delay: 0.7s;
+  animation-delay: 1s;
 }
 
 /* ---------------------------------------------------------------------------
@@ -462,13 +472,14 @@ html:not(.js) .rec-counter {
     transform: none !important;
   }
 
-  /* Both 0% and 100% are the resting state, so the blanket rule would land
-     these correctly by luck. Say it explicitly anyway — the next edit to the
-     keyframe should not be able to break it silently. */
+  /* Ends at stroke-dashoffset -100, i.e. fully erased, so the blanket rule
+     would wipe every section icon off the page for reduced-motion readers.
+     Kill it by name and restore an undashed stroke. */
   .section-icon svg > * {
     animation: none !important;
+    stroke-dasharray: none !important;
+    stroke-dashoffset: 0 !important;
     opacity: 1 !important;
-    transform: none !important;
   }
 
   .scroll-progress {

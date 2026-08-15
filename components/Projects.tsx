@@ -9,7 +9,7 @@ export function Projects() {
     <Section
       id="projects"
       title="Products and systems"
-      icon={<Layers className="h-5 w-5" />}
+      icon={<Layers className="h-6 w-6" />}
     >
       <ul className="space-y-5 sm:space-y-6">
         {projects.map((project, i) => (

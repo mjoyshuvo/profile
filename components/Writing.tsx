@@ -5,7 +5,7 @@ import { Section } from "./Section";
 
 export function Writing() {
   return (
-    <Section id="writing" title="Writing" icon={<PenLine className="h-5 w-5" />}>
+    <Section id="writing" title="Writing" icon={<PenLine className="h-6 w-6" />}>
       <ul className="space-y-3">
         {writing.map((post, i) => (
           <li key={post.url}>

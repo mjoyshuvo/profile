@@ -17,7 +17,7 @@ export function Recommendations() {
     <Section
       id="recommendations"
       title="Recommendations"
-      icon={<MessageSquareQuote className="h-5 w-5" />}
+      icon={<MessageSquareQuote className="h-6 w-6" />}
     >
       <Reveal>
         {recommendations.length === 1 ? (

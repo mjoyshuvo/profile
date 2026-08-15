@@ -5,7 +5,7 @@ import { Section } from "./Section";
 
 export function Education() {
   return (
-    <Section id="education" title="Education" icon={<GraduationCap className="h-5 w-5" />}>
+    <Section id="education" title="Education" icon={<GraduationCap className="h-6 w-6" />}>
       <ul className="space-y-6">
         {education.map((degree, i) => (
           <li key={degree.degree}>

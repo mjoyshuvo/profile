@@ -5,7 +5,7 @@ import { Section } from "./Section";
 
 export function Skills() {
   return (
-    <Section id="skills" title="Skills" icon={<Wrench className="h-5 w-5" />}>
+    <Section id="skills" title="Skills" icon={<Wrench className="h-6 w-6" />}>
       <div className="space-y-7">
         {skillGroups.map((group, i) => (
           <Reveal key={group.label} delay={i * 0.05}>
