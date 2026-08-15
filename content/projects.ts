@@ -11,7 +11,7 @@ export type Project = {
    */
   company: string;
   period: string;
-  /** What the product is, who depends on it, and where I sat in it. */
+  /** What the product is, and who depends on it. */
   product: string;
   /** My part in it — written in the first person, because it is mine. */
   work: string;
@@ -38,7 +38,7 @@ export const projects: Project[] = [
     company: "Cefalo",
     period: "2022 – present",
     product:
-      "Veyt sells market intelligence across every green-energy market it covers — carbon, guarantees of origin, power purchase agreements and renewable fuels. My pipelines feed all of it, and traders act on the curves the same day they land.",
+      "Veyt sells market intelligence across every green-energy market it covers — carbon, guarantees of origin, power purchase agreements and renewable fuels. Traders and analysts act on the published curves the same day they land.",
     work:
       "I build and run the pipelines feeding all of it: Python ETL publishing timeseries, timeseries groups and forecast curves from upstream sources that each define a schedule and a format differently. I cut processing time on the slowest jobs by 50% with multiprocessing and by removing the code paths that forced them to run serially, and took 40% off build times by reworking the Docker layers.",
     metric: { value: "500+", label: "pipelines in production" },
@@ -50,7 +50,7 @@ export const projects: Project[] = [
     company: "Cefalo",
     period: "2026 – present",
     product:
-      "Internal tooling I built for Cefalo's engineering teams: MCP servers that give agents authenticated, typed access to the systems behind Veyt's projects, and a retrieval service that answers questions against the company's HR portal.",
+      "Internal tooling for Cefalo's engineering teams: MCP servers that give agents authenticated, typed access to the systems behind Veyt's projects, and a retrieval service that answers questions against the company's HR portal.",
     work:
       "I built the MCP servers and the agentic workflows on top of them, and I coach the teams that now run them day to day. The RAG service came out of a company hackathon — documents chunked and embedded into a Pinecone vector database, retrieval and prompt orchestration in LangChain, and LangGraph for the queries that need more than one lookup before they can be answered.",
     metric: { value: "Hrs/wk", label: "returned to the team" },
@@ -72,7 +72,7 @@ export const projects: Project[] = [
     company: "Brain Station 23",
     period: "2021 – 2022",
     product:
-      "A Norwegian platform that lets bus companies and travel organisers run and connect their operations — booking, fleet and scheduling, multi-tenant across every operator on it. I led the team that built it.",
+      "A Norwegian platform that lets bus companies and travel organisers run and connect their operations — booking, fleet and scheduling, multi-tenant across every operator using it.",
     work:
       "I led eight engineers through the microservice split, keeping the tenancy boundary in a single layer instead of letting it leak into every service. I profiled and rewrote the queries carrying real load, then put Redis in front of what was left — overall performance up 50%, and the hottest paths close to 60% faster.",
     metric: { value: "~60%", label: "faster on the hottest paths" },
@@ -84,7 +84,7 @@ export const projects: Project[] = [
     company: "InfoSapex Limited",
     period: "2016 – 2020",
     product:
-      "Django products used daily by some of Bangladesh's largest corporates — a document management system, an online booking platform, and BRAC TBCP. I worked across all three.",
+      "Django products used daily by some of Bangladesh's largest corporates — a document management system, an online booking platform, and BRAC TBCP.",
     work:
       "I replaced the search backend with ElasticSearch, where most of the work went into analysers and field weighting rather than the swap itself, for a 42% accuracy gain. I moved the long-running jobs onto Celery and CeleryBeat so requests stopped waiting on work nobody was watching, and rewrote the worst of the front-end code where it was the real cause of a slow page.",
     metric: { value: "+42%", label: "search accuracy" },
