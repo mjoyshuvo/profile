@@ -1,5 +1,6 @@
 import { ArrowUpRight, Mail, MapPin } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./BrandIcons";
+import { CardWash } from "./CardWash";
 import { profile } from "@/content/profile";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
@@ -14,12 +15,10 @@ export function Contact() {
       <Reveal>
         {/* One panel rather than a grid of equal cards: email is the action
             that matters, so it gets the weight and everything else recedes. */}
-        <div className="relative overflow-hidden rounded-2xl border border-rule bg-paper-raised p-7 sm:p-10">
-          {/* Soft teal bloom behind the top-right corner. Decorative only. */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -right-24 -top-24 h-64 w-64 rounded-full bg-teal/10 blur-3xl"
-          />
+        <div className="group relative overflow-hidden rounded-2xl border border-rule bg-paper-raised p-7 sm:p-10">
+          {/* The same corner wash every card on the page carries, so this panel
+              reads as part of the set rather than as its own treatment. */}
+          <CardWash />
 
           <div className="relative">
             {/* The availability line lives in the hero; repeating it here
@@ -37,12 +36,20 @@ export function Contact() {
             {/* The email is the primary action; everything else is a footnote. */}
             <a
               href={`mailto:${profile.email}`}
-              className="group mt-8 inline-flex items-center gap-3 rounded-full bg-teal px-6 py-3 text-sm font-medium text-on-teal transition-[background-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-teal-strong hover:shadow-[0_8px_20px_-10px_var(--teal)] sm:text-base"
+              className="group relative mt-8 inline-flex items-center gap-3 overflow-hidden rounded-full bg-teal px-6 py-3 text-sm font-medium text-on-teal transition-[background-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-teal-strong hover:shadow-[0_8px_20px_-10px_var(--teal)] sm:text-base"
             >
-              <Mail className="h-4 w-4" aria-hidden="true" />
-              {profile.email}
+              {/* Same passing light as the hero call to action — the two are
+                  the same button doing the same job at opposite ends of the
+                  page, so they move the same way. Needs the clipping parent
+                  above, or it sweeps out across the panel. */}
+              <span
+                aria-hidden="true"
+                className="cta-sheen pointer-events-none absolute inset-y-0 -left-8 w-8 bg-on-teal/25 blur-[6px]"
+              />
+              <Mail className="relative h-4 w-4" aria-hidden="true" />
+              <span className="relative">{profile.email}</span>
               <ArrowUpRight
-                className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                className="cta-arrow-diag relative h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
                 aria-hidden="true"
               />
             </a>

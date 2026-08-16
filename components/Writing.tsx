@@ -1,11 +1,16 @@
 import { ArrowUpRight, PenLine } from "lucide-react";
+import { CardWash } from "./CardWash";
 import { writing } from "@/content/writing";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
 
 export function Writing() {
   return (
-    <Section id="writing" title="Writing" icon={<PenLine className="h-6 w-6" />}>
+    <Section
+      id="writing"
+      title="Writing"
+      icon={<PenLine className="h-6 w-6" />}
+    >
       <ul className="space-y-3">
         {writing.map((post, i) => (
           <li key={post.url}>
@@ -14,9 +19,11 @@ export function Writing() {
                 href={post.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group block rounded-lg border border-rule bg-paper-raised px-4 py-4 transition-colors hover:border-teal"
+                className="group relative block overflow-hidden rounded-lg border border-rule bg-paper-raised px-4 py-4 transition-colors hover:border-teal"
               >
-                <span className="flex items-start justify-between gap-3">
+                {/* The same corner wash the project and contact cards carry. */}
+                <CardWash />
+                <span className="relative flex items-start justify-between gap-3">
                   <span className="font-serif text-lg font-semibold leading-snug transition-colors group-hover:text-teal">
                     {post.title}
                   </span>
@@ -25,10 +32,10 @@ export function Writing() {
                     aria-hidden="true"
                   />
                 </span>
-                <span className="mt-1.5 block text-[0.9375rem] leading-relaxed text-ink-soft">
+                <span className="relative mt-1.5 block text-[0.9375rem] leading-relaxed text-ink-soft">
                   {post.blurb}
                 </span>
-                <span className="mt-2 block text-xs uppercase tracking-wider text-ink-faint">
+                <span className="relative mt-2 block text-xs uppercase tracking-wider text-ink-faint">
                   {post.publisher}
                 </span>
               </a>

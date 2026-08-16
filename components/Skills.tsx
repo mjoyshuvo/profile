@@ -1,4 +1,5 @@
 import { Wrench } from "lucide-react";
+import { CardWash } from "./CardWash";
 import { skillGroups } from "@/content/skills";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
@@ -26,11 +27,14 @@ export function Skills() {
             </h3>
             <ul className="mt-3 flex flex-wrap gap-2 sm:mt-0">
               {group.items.map((skill) => (
+                // Each chip is its own small card, wash and all: the corner
+                // bloom at chip scale, brightening on its own hover.
                 <li
                   key={skill}
-                  className="rounded-full border border-rule bg-paper-raised px-3 py-1.5 text-sm text-ink-soft transition-colors hover:border-teal hover:text-teal"
+                  className="group relative overflow-hidden rounded-full border border-rule bg-paper-raised px-3 py-1.5 text-sm text-ink-soft transition-colors hover:border-teal hover:text-teal"
                 >
-                  {skill}
+                  <CardWash size="chip" />
+                  <span className="relative">{skill}</span>
                 </li>
               ))}
             </ul>

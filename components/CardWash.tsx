@@ -8,11 +8,20 @@
  *
  * Purely decorative, so `aria-hidden` and `pointer-events-none`.
  */
-export function CardWash() {
+export function CardWash({ size = "card" }: { size?: "card" | "chip" }) {
+  // A chip is two orders of magnitude smaller than a card, so the card's
+  // geometry scaled down rather than reused: same proportions — anchored off
+  // the top-right, about 40% of the width — at a blur the pill can hold.
+  // The chip lifts further on hover: at this size a 5-point step is invisible.
+  const geometry =
+    size === "chip"
+      ? "-top-5 -right-4 h-10 w-16 blur-lg group-hover:bg-teal/25"
+      : "-top-28 -right-24 h-72 w-[34rem] blur-3xl group-hover:bg-teal/15";
+
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none absolute -top-28 -right-24 h-72 w-[34rem] rounded-full bg-teal/10 blur-3xl transition-colors duration-300 group-hover:bg-teal/15"
+      className={`pointer-events-none absolute rounded-full bg-teal/10 transition-colors duration-300 ${geometry}`}
     />
   );
 }

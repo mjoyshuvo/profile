@@ -94,7 +94,10 @@ export function Nav() {
                 <a
                   href={link.href}
                   aria-current={active === link.href ? "true" : undefined}
-                  className={`rounded-full px-3 py-1.5 text-sm transition-colors hover:text-teal ${
+                  // Hovering fills the pill with the same teal wash the active
+                  // one carries, so the highlight the reader is about to move
+                  // to is the highlight they already see.
+                  className={`rounded-full px-3 py-1.5 text-sm transition-colors hover:bg-teal-wash/60 hover:text-teal ${
                     active === link.href
                       ? "bg-teal-wash text-teal"
                       : "text-ink-soft"

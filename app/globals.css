@@ -235,9 +235,26 @@ body {
   animation: cta-arrow 1.8s ease-in-out infinite;
 }
 
+/* The contact button's arrow points up and out rather than straight ahead, so
+   its nudge follows the same diagonal the hover translate uses. */
+@keyframes cta-arrow-diag {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(2px, -2px);
+  }
+}
+
+.cta-arrow-diag {
+  animation: cta-arrow-diag 1.8s ease-in-out infinite;
+}
+
 /* On hover the animation is dropped rather than paused: a paused animation
    still holds its computed transform and would beat the hover translate. */
-.group:hover .cta-arrow {
+.group:hover .cta-arrow,
+.group:hover .cta-arrow-diag {
   animation: none;
 }
 
@@ -557,6 +574,7 @@ html:not(.js) .rec-counter {
      as a solid dot. */
   .cta-sheen,
   .cta-arrow,
+  .cta-arrow-diag,
   .cta-breathe {
     animation: none !important;
     transform: none !important;

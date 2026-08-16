@@ -24,19 +24,23 @@ export function Experience() {
       >
         {experience.map((role, i) => (
           <li key={`${role.company}-${role.start}`} className="relative">
-            {/* Timeline node. The ring has to start wider than the dot's
+            {/* Timeline node. Only the role still running ripples — a pulse
+                means "live", and putting one on every closed role spent the
+                signal on nothing. The ring has to start wider than the dot's
                 4px paper collar, or it expands entirely underneath it and
-                never shows. Staggered per role so the timeline ripples down
-                rather than blinking in unison. */}
+                never shows. Past roles keep the dot, in the rule's grey. */}
             <span
               className="absolute top-2 -left-[calc(1.5rem+4.5px)] grid h-2 w-2 place-items-center sm:-left-[calc(2rem+4.5px)]"
               aria-hidden="true"
             >
+              {role.endDate ? null : (
+                <span className="pulse-ring absolute -inset-1.5 rounded-full bg-teal" />
+              )}
               <span
-                className="pulse-ring absolute -inset-1.5 rounded-full bg-teal"
-                style={{ animationDelay: `${i * 0.45}s` }}
+                className={`relative h-2 w-2 rounded-full ring-4 ring-paper ${
+                  role.endDate ? "bg-rule" : "bg-teal"
+                }`}
               />
-              <span className="relative h-2 w-2 rounded-full bg-teal ring-4 ring-paper" />
             </span>
 
             <Reveal delay={i * 0.05}>
@@ -62,16 +66,22 @@ export function Experience() {
 
                 {/* Monospace and uppercase, matching the meta lines on the
                     project cards — dates and places are data, and setting them
-                    like data keeps them from competing with the company name. */}
-                <p className="flex shrink-0 flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">
+                    like data keeps them from competing with the company name.
+                    Carried in a pill so the span reads as one object: the
+                    dash and the hairline divider do the joining work that
+                    an arrow and a slash used to do as characters, and they
+                    sit on the baseline instead of drifting above it. */}
+                <p className="inline-flex shrink-0 flex-wrap items-center gap-x-2.5 gap-y-1 self-start rounded-full border border-rule bg-paper-raised px-3 py-1 font-mono text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">
                   <time dateTime={role.startDate}>{role.start}</time>
-                  <span aria-hidden="true" className="text-rule">
-                    &rarr;
-                  </span>
+                  <span
+                    aria-hidden="true"
+                    className="h-px w-3 shrink-0 bg-rule"
+                  />
                   <DateEnd end={role.end} endDate={role.endDate} />
-                  <span aria-hidden="true" className="text-rule">
-                    /
-                  </span>
+                  <span
+                    aria-hidden="true"
+                    className="h-3 w-px shrink-0 bg-rule"
+                  />
                   <span className="inline-flex items-center gap-1">
                     <MapPin className="h-3 w-3" aria-hidden="true" />
                     {role.location}
@@ -234,11 +244,11 @@ function PositionEntry({
       ) : null}
 
       <p className="text-[0.9375rem] font-medium text-ink">{position.title}</p>
-      <p className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">
+      {/* No pill here — the same joining marks as the role line, but plain, so
+          the tenure stays the object and its positions read inside it. */}
+      <p className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">
         <time dateTime={position.startDate}>{position.start}</time>
-        <span aria-hidden="true" className="text-rule">
-          &rarr;
-        </span>
+        <span aria-hidden="true" className="h-px w-3 shrink-0 bg-rule" />
         <DateEnd end={position.end} endDate={position.endDate} />
       </p>
 
