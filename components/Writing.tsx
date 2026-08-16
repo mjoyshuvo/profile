@@ -35,7 +35,7 @@ export function Writing() {
                 <span className="relative mt-1.5 block text-[0.9375rem] leading-relaxed text-ink-soft">
                   {post.blurb}
                 </span>
-                <span className="relative mt-2 block text-xs uppercase tracking-wider text-ink-faint">
+                <span className="relative mt-2 block font-display text-xs font-semibold uppercase tracking-[0.14em] text-ink-faint">
                   {post.publisher}
                 </span>
               </a>

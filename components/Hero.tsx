@@ -20,7 +20,7 @@ export function Hero() {
         {/* Statement */}
         <div className="min-w-0 lg:order-1">
           <Reveal>
-            <p className="flex items-center gap-2.5 text-xs tracking-[0.18em] text-ink-faint uppercase">
+            <p className="flex items-center gap-2.5 font-display text-xs font-semibold tracking-[0.18em] text-ink-faint uppercase">
               {/* A signal lamp rather than a bullet: a solid core with a glow,
                   two static halos, and a ring pulsing out of it on a loop.
                   The whole lamp is aria-hidden — the availability is in the
@@ -76,7 +76,7 @@ export function Hero() {
             <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-8">
               <a
                 href="#contact"
-                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-teal px-5 py-2.5 text-sm font-bold text-on-teal transition-[background-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-teal-strong hover:shadow-[0_6px_16px_-8px_var(--teal)]"
+                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-teal px-5 py-2.5 font-display text-sm font-semibold text-on-teal transition-[background-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-teal-strong hover:shadow-[0_6px_16px_-8px_var(--teal)]"
               >
                 {/* A light passing over the fill. Needs the clipping parent
                     above, or it sweeps out across the page. */}
@@ -175,7 +175,7 @@ function IconLink({
       {/* Real text, not an aria-label: it names the link for assistive tech and
           fades in under the button on hover or keyboard focus. Absolutely
           positioned so three icons stay a tight row at every width. */}
-      <span className="pointer-events-none absolute top-full left-1/2 mt-1.5 -translate-x-1/2 translate-y-[-3px] text-[0.625rem] whitespace-nowrap uppercase tracking-[0.1em] text-ink-faint opacity-0 transition-[opacity,transform] duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
+      <span className="pointer-events-none absolute top-full left-1/2 mt-1.5 -translate-x-1/2 translate-y-[-3px] font-display text-[0.625rem] font-semibold whitespace-nowrap uppercase tracking-[0.1em] text-ink-faint opacity-0 transition-[opacity,transform] duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
         {label}
       </span>
     </a>

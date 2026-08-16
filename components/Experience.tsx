@@ -71,7 +71,7 @@ export function Experience() {
                     dash and the hairline divider do the joining work that
                     an arrow and a slash used to do as characters, and they
                     sit on the baseline instead of drifting above it. */}
-                <p className="inline-flex shrink-0 flex-wrap items-center gap-x-2.5 gap-y-1 self-start rounded-full border border-rule bg-paper-raised px-3 py-1 font-mono text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">
+                <p className="inline-flex shrink-0 flex-wrap items-center gap-x-2.5 gap-y-1 self-start rounded-full border border-rule bg-paper-raised px-3 py-1 font-display font-semibold text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">
                   <time dateTime={role.startDate}>{role.start}</time>
                   <span
                     aria-hidden="true"
@@ -115,7 +115,7 @@ export function Experience() {
                 <div className="mt-4 flex max-w-3xl items-start gap-3 rounded-lg border border-rule bg-paper-raised px-4 py-3">
                   <ClientMark client={role.client} />
                   <p className="text-sm leading-relaxed text-ink-soft">
-                    <span className="inline-flex items-center gap-1.5 font-bold text-ink">
+                    <span className="inline-flex items-center gap-1.5 font-display font-semibold text-ink">
                       {role.client.url ? (
                         <a
                           href={role.client.url}
@@ -156,7 +156,7 @@ function DateEnd({ end, endDate }: { end: string; endDate?: string }) {
   }
 
   return (
-    <span className="rounded-full bg-teal-wash px-2 py-0.5 font-bold text-teal">
+    <span className="rounded-full bg-teal-wash px-2 py-0.5 font-display font-semibold text-teal">
       {end}
     </span>
   );
@@ -177,7 +177,7 @@ function CaseStudyLinks({ company }: { company: string }) {
         <li key={project.slug}>
           <a
             href={`#project-${project.slug}`}
-            className="group inline-flex items-center gap-1.5 text-sm text-ink-faint transition-colors hover:text-teal"
+            className="group inline-flex items-center gap-1.5 font-display text-sm font-medium text-ink-faint transition-colors hover:text-teal"
           >
             <ArrowDown
               className="h-3.5 w-3.5 transition-transform group-hover:translate-y-0.5"
@@ -243,10 +243,10 @@ function PositionEntry({
         />
       ) : null}
 
-      <p className="text-[0.9375rem] font-bold text-ink">{position.title}</p>
+      <p className="font-display text-[0.9375rem] font-semibold text-ink">{position.title}</p>
       {/* No pill here — the same joining marks as the role line, but plain, so
           the tenure stays the object and its positions read inside it. */}
-      <p className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">
+      <p className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 font-display font-semibold text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">
         <time dateTime={position.startDate}>{position.start}</time>
         <span aria-hidden="true" className="h-px w-3 shrink-0 bg-rule" />
         <DateEnd end={position.end} endDate={position.endDate} />

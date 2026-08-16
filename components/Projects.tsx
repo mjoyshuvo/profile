@@ -51,7 +51,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           <div className="min-w-0">
             <div className="flex items-baseline gap-3">
               <span
-                className="font-mono text-xs font-semibold text-teal/50 tabular-nums"
+                className="font-display text-xs font-bold text-teal/50 tabular-nums"
                 aria-hidden="true"
               >
                 {String(index + 1).padStart(2, "0")}
@@ -61,7 +61,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               </h3>
             </div>
 
-            <p className="mt-2 font-mono text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase sm:ml-[calc(1.5rem+0.75rem)]">
+            <p className="mt-2 font-display font-semibold text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase sm:ml-[calc(1.5rem+0.75rem)]">
               {project.client ? (
                 <>
                   {project.clientUrl ? (
@@ -112,7 +112,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               <span className="font-display text-3xl leading-none font-bold text-teal tabular-nums sm:text-4xl lg:text-5xl">
                 {project.metric.value}
               </span>
-              <span className="font-mono text-[0.6875rem] leading-snug tracking-[0.08em] text-ink-faint uppercase lg:mt-3 lg:block">
+              <span className="font-display font-semibold text-[0.6875rem] leading-snug tracking-[0.08em] text-ink-faint uppercase lg:mt-3 lg:block">
                 {project.metric.label}
               </span>
             </p>
@@ -138,21 +138,17 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
             {project.tech.map((item) => (
               <li
                 key={item}
-                className="rounded-full border border-rule bg-paper px-2.5 py-1 font-mono text-[0.6875rem] text-ink-soft transition-colors group-hover:border-teal/30 hover:border-teal hover:text-teal"
+                className="rounded-full border border-rule bg-paper px-2.5 py-1 font-display text-[0.6875rem] font-medium text-ink-soft transition-colors group-hover:border-teal/30 hover:border-teal hover:text-teal"
               >
                 {item}
               </li>
             ))}
           </ul>
 
-          {/* The first card opens by default: the section should lead with a
-              worked example rather than four closed doors. */}
-          <Disclosure
-            more="Case study"
-            less="Close"
-            controls={bodyId}
-            defaultOpen={index === 0}
-          />
+          {/* Every card rests closed, including the first. Opening one by
+              default gave the section two different shapes and the top card
+              read as a different kind of thing than the three below it. */}
+          <Disclosure more="Case study" less="Close" controls={bodyId} />
         </div>
       </div>
     </article>
@@ -168,7 +164,7 @@ function Field({
 }) {
   return (
     <div className="sm:grid sm:grid-cols-[7rem_1fr] sm:gap-4">
-      <dt className="pt-0.5 font-mono text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">
+      <dt className="pt-0.5 font-display font-semibold text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">
         {label}
       </dt>
       <dd className="mt-1 max-w-[68ch] text-[0.9375rem] leading-relaxed text-ink-soft sm:mt-0">

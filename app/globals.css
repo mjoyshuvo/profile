@@ -515,8 +515,13 @@ html:not(.js) .rec-counter {
 
 /* Collapsed case study. Same clamp as the quote above: the prose is clipped,
    never removed, so it stays in the DOM and in the accessibility tree whether
-   or not the reader ever opens the card. The open height is a ceiling, not a
-   measurement — no case study comes close to 40rem. */
+   or not the reader ever opens the card.
+
+   The open height is a ceiling, not a measurement — max-height can't transition
+   to `content`. The tallest case study needs ~575px at 375px wide, so 48rem
+   leaves a couple of paragraphs of headroom. Overshooting is the safe
+   direction: too low silently clips the prose, too high only means the last
+   fraction of the transition has nothing left to reveal. */
 .proj-body {
   max-height: 0;
   overflow: hidden;
@@ -524,7 +529,7 @@ html:not(.js) .rec-counter {
 }
 
 .proj-card:has(.disclosure[open]) .proj-body {
-  max-height: 40rem;
+  max-height: 48rem;
 }
 
 /* ---------------------------------------------------------------------------

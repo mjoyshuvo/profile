@@ -73,9 +73,9 @@ export function RecommendationCard({
       <figcaption className="relative mt-6 flex items-center gap-3.5 border-t border-rule pt-5">
         <Avatar rec={rec} />
         <div className="min-w-0">
-          <p className="text-[0.9375rem] font-bold text-ink">{rec.name}</p>
+          <p className="font-display text-[0.9375rem] font-semibold text-ink">{rec.name}</p>
           <p className="text-sm text-ink-soft">{rec.title}</p>
-          <p className="mt-0.5 font-mono text-[0.6875rem] tracking-[0.06em] text-ink-faint uppercase">
+          <p className="mt-0.5 font-display font-semibold text-[0.6875rem] tracking-[0.06em] text-ink-faint uppercase">
             {rec.relation}
             <span className="mx-1.5" aria-hidden="true">
               ·

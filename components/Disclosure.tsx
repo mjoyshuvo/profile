@@ -31,7 +31,7 @@ export function Disclosure({
     <details className={`disclosure ${className ?? ""}`} open={defaultOpen}>
       <summary
         aria-controls={controls}
-        className="inline-flex items-center gap-1.5 rounded-full border border-rule bg-paper px-3 py-1.5 font-mono text-[0.6875rem] tracking-[0.08em] text-ink-soft uppercase transition-colors duration-200 hover:border-teal hover:text-teal"
+        className="inline-flex items-center gap-1.5 rounded-full border border-rule bg-paper px-3 py-1.5 font-display font-semibold text-[0.6875rem] tracking-[0.08em] text-ink-soft uppercase transition-colors duration-200 hover:border-teal hover:text-teal"
       >
         <span className="disclosure-more">{more}</span>
         <span className="disclosure-less">{less}</span>

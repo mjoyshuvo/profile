@@ -15,10 +15,13 @@ const poppins = Poppins({
   display: "swap",
 });
 
+// Lato sets running copy and nothing else — every bold, label and control on
+// the page is Poppins now, the way the reference splits them — so 400 is the
+// only weight it needs.
 const lato = Lato({
   variable: "--font-lato",
   subsets: ["latin"],
-  weight: ["400", "700"],
+  weight: ["400"],
   display: "swap",
 });
 

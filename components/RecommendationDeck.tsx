@@ -138,7 +138,7 @@ export function RecommendationDeck({ items }: { items: Recommendation[] }) {
         {/* Tabular numerals and zero-padding, so the counter can't change width
             and nudge the rail as you page through. */}
         <p
-          className="rec-counter ml-auto text-sm text-ink-faint tabular-nums"
+          className="rec-counter ml-auto font-display text-sm font-semibold text-ink-faint tabular-nums"
           aria-hidden="true"
         >
           <span className="text-ink">

@@ -102,7 +102,7 @@ export function Nav() {
                   // Hovering fills the pill with the same teal wash the active
                   // one carries, so the highlight the reader is about to move
                   // to is the highlight they already see.
-                  className={`rounded-full px-3 py-1.5 text-sm transition-colors hover:bg-teal-wash/60 hover:text-teal ${
+                  className={`rounded-full px-3 py-1.5 font-display text-sm font-medium transition-colors hover:bg-teal-wash/60 hover:text-teal ${
                     active === link.href
                       ? "bg-teal-wash text-teal"
                       : "text-ink-soft"

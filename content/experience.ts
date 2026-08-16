@@ -152,8 +152,8 @@ export const experience: Role[] = [
         startDate: "2017-01-01",
         endDate: "2019-12-31",
         bullets: [
-          "Built and maintained a Document Management System, an online booking platform, and BRAC TBCP.",
-          "Added features to the companion mobile app in Flutter.",
+          "Built and maintained a Document Management System, a hotel booking platform, and BRAC TBCP.",
+          "Added features to the booking platform's companion mobile app in Flutter.",
           "Cut page load time by 20% by rewriting the worst of the front-end code.",
         ],
       },

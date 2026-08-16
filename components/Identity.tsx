@@ -34,7 +34,7 @@ export function Identity() {
             </span>
 
             <div>
-              <p className="text-xs tracking-[0.18em] text-ink-faint uppercase">
+              <p className="font-display text-xs font-semibold tracking-[0.18em] text-ink-faint uppercase">
                 {pillar.eyebrow}
               </p>
               <h3 className="mt-1.5 font-display text-xl font-bold tracking-[-0.03em] sm:text-2xl">

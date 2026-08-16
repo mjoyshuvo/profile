@@ -41,7 +41,7 @@ export type Project = {
 export const projects: Project[] = [
   {
     slug: "veyt-market-data",
-    name: "Market-data platform",
+    name: "Data platform",
     client: "Veyt",
     clientUrl: "https://veyt.com/",
     company: "Cefalo",
@@ -95,14 +95,14 @@ export const projects: Project[] = [
   },
   {
     slug: "infosapex-products",
-    name: "Django products for Bangladeshi enterprises",
+    name: "Document management, hotel booking and BRAC TBCP",
     company: "InfoSapex Limited",
     period: "2016 – 2020",
-    gist: "A document management system, BRAC's TB control programme and an online booking platform, built in Django.",
+    gist: "Three Django products for Bangladesh's largest corporates, and the Flutter app that goes with the booking one.",
     product:
-      "Django products used daily by some of Bangladesh's largest corporates — a document management system, BRAC's TB Control Programme, and an online booking platform.",
-    work: "I built these products end to end. I replaced the search backend with ElasticSearch, where most of the work went into analysers and field weighting rather than the swap itself, for a 42% accuracy gain. I moved the long-running jobs onto Celery and CeleryBeat so requests stopped waiting on work nobody was watching, and rewrote the worst of the front-end code where it was the real cause of a slow page.",
+      "Django products used daily by some of Bangladesh's largest corporates — a document management system, BRAC's TB Control Programme, and a hotel booking platform with a companion mobile app.",
+    work: "I built these products end to end, and shipped features on the Flutter companion app alongside them. I replaced the search backend with ElasticSearch, where most of the work went into analysers and field weighting rather than the swap itself, for a 42% accuracy gain. I moved the long-running jobs onto Celery and CeleryBeat so requests stopped waiting on work nobody was watching, and rewrote the worst of the front-end code where it was the real cause of a slow page.",
     metric: { value: "+42%", label: "search accuracy" },
-    tech: ["Django", "ElasticSearch", "Celery"],
+    tech: ["Django", "Flutter", "ElasticSearch", "Celery"],
   },
 ];
