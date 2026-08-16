@@ -27,7 +27,7 @@ export function Identity() {
             {/* aria-hidden so a screen reader announcing list positions doesn't
                 read "one, oh-one". */}
             <span
-              className="font-serif text-3xl leading-none font-bold text-teal/30 sm:text-4xl"
+              className="font-display text-3xl leading-none font-bold text-teal/30 sm:text-4xl"
               aria-hidden="true"
             >
               {String(i + 1).padStart(2, "0")}
@@ -37,7 +37,7 @@ export function Identity() {
               <p className="text-xs tracking-[0.18em] text-ink-faint uppercase">
                 {pillar.eyebrow}
               </p>
-              <h3 className="mt-1.5 font-serif text-xl font-semibold tracking-tight sm:text-2xl">
+              <h3 className="mt-1.5 font-display text-xl font-bold tracking-[-0.03em] sm:text-2xl">
                 {pillar.title}
               </h3>
               {/* The section spans the full page width like every other, but

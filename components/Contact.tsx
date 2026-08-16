@@ -23,7 +23,7 @@ export function Contact() {
           <div className="relative">
             {/* The availability line lives in the hero; repeating it here
                 would say the same thing twice on one page. */}
-            <p className="max-w-xl font-serif text-2xl leading-snug font-bold tracking-tight sm:text-3xl">
+            <p className="max-w-xl font-display text-2xl leading-snug font-extrabold tracking-[-0.035em] sm:text-3xl">
               Let&apos;s talk about your project.
             </p>
 
@@ -36,7 +36,7 @@ export function Contact() {
             {/* The email is the primary action; everything else is a footnote. */}
             <a
               href={`mailto:${profile.email}`}
-              className="group relative mt-8 inline-flex items-center gap-3 overflow-hidden rounded-full bg-teal px-6 py-3 text-sm font-medium text-on-teal transition-[background-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-teal-strong hover:shadow-[0_8px_20px_-10px_var(--teal)] sm:text-base"
+              className="group relative mt-8 inline-flex items-center gap-3 overflow-hidden rounded-full bg-teal px-6 py-3 text-sm font-bold text-on-teal transition-[background-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-teal-strong hover:shadow-[0_8px_20px_-10px_var(--teal)] sm:text-base"
             >
               {/* Same passing light as the hero call to action — the two are
                   the same button doing the same job at opposite ends of the

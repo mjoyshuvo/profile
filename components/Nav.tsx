@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { profile } from "@/content/profile";
 
@@ -69,22 +68,28 @@ export function Nav() {
         aria-label="Section navigation"
         className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8"
       >
-        {/* Masthead: avatar and name. */}
-        <a href="#top" className="group flex min-w-0 items-center gap-2.5">
-          <Image
-            src={profile.sketch}
-            alt=""
+        {/* Masthead: the wordmark alone. The sketch used to sit beside it, but
+            it is the same drawing the hero shows at ten times the size a
+            screen-length below, and a pencil portrait at 32px is a grey smudge
+            rather than a face — it also needed its own cream coin to survive
+            the dark palette, so it read as a disc stuck on the paper. */}
+        <a href="#top" className="group flex min-w-0 items-center">
+          {/* A wordmark, not a byline: first name and a full stop, set heavy
+              and tight. The full name is a sentence, and a sentence in the
+              masthead competes with the six links beside it. The stop matches
+              the hero triad — "Engineer. Mentor. Builder." — so the page has
+              one idiom rather than two. The teal is on the stop alone, which
+              is as much accent as a 16px mark can carry. */}
+          <span
+            className="min-w-0 font-display text-lg font-bold tracking-[-0.03em] transition-colors group-hover:text-teal"
             aria-hidden="true"
-            width={640}
-            height={603}
-            sizes="32px"
-            // The sketch is transparent line art, so the coin carries its own
-            // paper — otherwise the ink disappears on the dark palette.
-            className="h-8 w-8 shrink-0 rounded-full bg-[#efece4] object-cover object-[50%_18%] ring-1 ring-rule"
-          />
-          <span className="min-w-0 font-serif text-base font-semibold tracking-tight transition-colors group-hover:text-teal">
-            {profile.name}
+          >
+            {profile.name.split(" ")[0]}
+            <span className="text-teal">.</span>
           </span>
+          {/* The mark says "Mrityunjoy"; the link still has to say where it
+              goes and who it belongs to. */}
+          <span className="sr-only">{profile.name} — back to top</span>
         </a>
 
         <div className="flex items-center gap-1 sm:gap-2">

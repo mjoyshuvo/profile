@@ -1,7 +1,8 @@
 import Image from "next/image";
-import { ChevronDown, Quote } from "lucide-react";
+import { Quote } from "lucide-react";
 import type { Recommendation } from "@/content/recommendations";
 import { CardWash } from "./CardWash";
+import { Disclosure } from "./Disclosure";
 
 /**
  * A quote long enough to be worth collapsing. Measured on the server from the
@@ -43,7 +44,10 @@ export function RecommendationCard({
           collapsed to a fixed height, and <details> — not JavaScript — opens
           it, so it stays reachable with scripting off. */}
       <div className={`relative ${isLong ? "rec-body" : ""}`}>
-        <blockquote className={isLong ? "rec-quote" : undefined}>
+        <blockquote
+          id={isLong ? `rec-quote-${rec.id}` : undefined}
+          className={isLong ? "rec-quote" : undefined}
+        >
           <div className="space-y-3.5">
             {rec.quote.map((paragraph) => (
               <p
@@ -57,23 +61,19 @@ export function RecommendationCard({
         </blockquote>
 
         {isLong ? (
-          <details className="rec-expand">
-            <summary className="inline-flex items-center gap-1.5 rounded-full border border-rule bg-paper px-3 py-1.5 font-mono text-[0.6875rem] tracking-[0.08em] text-ink-soft uppercase transition-colors duration-200 hover:border-teal hover:text-teal">
-              <span className="rec-more">See more</span>
-              <span className="rec-less">See less</span>
-              <ChevronDown
-                className="rec-chevron h-3.5 w-3.5"
-                aria-hidden="true"
-              />
-            </summary>
-          </details>
+          <Disclosure
+            className="mt-4"
+            more="See more"
+            less="See less"
+            controls={`rec-quote-${rec.id}`}
+          />
         ) : null}
       </div>
 
       <figcaption className="relative mt-6 flex items-center gap-3.5 border-t border-rule pt-5">
         <Avatar rec={rec} />
         <div className="min-w-0">
-          <p className="text-[0.9375rem] font-medium text-ink">{rec.name}</p>
+          <p className="text-[0.9375rem] font-bold text-ink">{rec.name}</p>
           <p className="text-sm text-ink-soft">{rec.title}</p>
           <p className="mt-0.5 font-mono text-[0.6875rem] tracking-[0.06em] text-ink-faint uppercase">
             {rec.relation}
@@ -115,7 +115,7 @@ function Avatar({ rec }: { rec: Recommendation }) {
 
   return (
     <span
-      className={`${base} bg-teal-wash font-serif text-sm font-semibold text-teal`}
+      className={`${base} bg-teal-wash font-display text-sm font-semibold text-teal`}
       aria-hidden="true"
     >
       {initials(rec.name)}

@@ -45,7 +45,7 @@ export function Experience() {
 
             <Reveal delay={i * 0.05}>
               <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
-                <h3 className="font-serif text-lg font-semibold sm:text-xl">
+                <h3 className="font-display text-lg font-bold tracking-[-0.02em] sm:text-xl">
                   {role.companyUrl ? (
                     <a
                       href={role.companyUrl}
@@ -115,7 +115,7 @@ export function Experience() {
                 <div className="mt-4 flex max-w-3xl items-start gap-3 rounded-lg border border-rule bg-paper-raised px-4 py-3">
                   <ClientMark client={role.client} />
                   <p className="text-sm leading-relaxed text-ink-soft">
-                    <span className="inline-flex items-center gap-1.5 font-medium text-ink">
+                    <span className="inline-flex items-center gap-1.5 font-bold text-ink">
                       {role.client.url ? (
                         <a
                           href={role.client.url}
@@ -156,7 +156,7 @@ function DateEnd({ end, endDate }: { end: string; endDate?: string }) {
   }
 
   return (
-    <span className="rounded-full bg-teal-wash px-2 py-0.5 font-medium text-teal">
+    <span className="rounded-full bg-teal-wash px-2 py-0.5 font-bold text-teal">
       {end}
     </span>
   );
@@ -220,7 +220,7 @@ function ClientMark({ client }: { client: NonNullable<Role["client"]> }) {
 
   return (
     <span className={`${base} w-9`} aria-hidden="true">
-      <span className="font-serif text-sm font-bold text-ink-faint">
+      <span className="font-display text-sm font-bold text-ink-faint">
         {client.name.charAt(0)}
       </span>
     </span>
@@ -243,7 +243,7 @@ function PositionEntry({
         />
       ) : null}
 
-      <p className="text-[0.9375rem] font-medium text-ink">{position.title}</p>
+      <p className="text-[0.9375rem] font-bold text-ink">{position.title}</p>
       {/* No pill here — the same joining marks as the role line, but plain, so
           the tenure stays the object and its positions read inside it. */}
       <p className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 font-mono text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">

@@ -24,7 +24,7 @@ export function Writing() {
                 {/* The same corner wash the project and contact cards carry. */}
                 <CardWash />
                 <span className="relative flex items-start justify-between gap-3">
-                  <span className="font-serif text-lg font-semibold leading-snug transition-colors group-hover:text-teal">
+                  <span className="font-display text-lg font-bold tracking-[-0.02em] leading-snug transition-colors group-hover:text-teal">
                     {post.title}
                   </span>
                   <ArrowUpRight

@@ -122,7 +122,7 @@ export function RecommendationDeck({ items }: { items: Recommendation[] }) {
                 />
               ) : (
                 <span
-                  className="font-serif text-xs font-semibold text-teal"
+                  className="font-display text-xs font-semibold text-teal"
                   aria-hidden="true"
                 >
                   {initials(rec.name)}

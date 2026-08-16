@@ -18,16 +18,16 @@ Live: https://mrityunjoy.com
 All copy lives in `content/` — the components are presentational, so you never
 need to touch JSX to update the CV:
 
-| File                         | What it holds                                                    |
-| ---------------------------- | ---------------------------------------------------------------- |
-| `content/profile.ts`         | Name, headline, summary, stat row, contact details, social links |
-| `content/identity.ts`        | The three Engineering identity pillars                           |
-| `content/experience.ts`      | Roles, dates, and bullet points                                  |
-| `content/projects.ts`        | Case studies for Products and systems                            |
-| `content/recommendations.ts` | Transcribed LinkedIn recommendations                             |
-| `content/skills.ts`          | Skills, grouped by category                                      |
-| `content/education.ts`       | Degrees                                                          |
-| `content/writing.ts`         | Published pieces                                                 |
+| File                         | What it holds                                                     |
+| ---------------------------- | ----------------------------------------------------------------- |
+| `content/profile.ts`         | Name, headline, summary, stat row, contact details, social links  |
+| `content/identity.ts`        | The three Engineering identity pillars                            |
+| `content/experience.ts`      | Roles, dates, and bullet points                                   |
+| `content/projects.ts`        | Case studies for Products and systems (`gist` is the resting row) |
+| `content/recommendations.ts` | Transcribed LinkedIn recommendations                              |
+| `content/skills.ts`          | Skills, grouped by category                                       |
+| `content/education.ts`       | Degrees                                                           |
+| `content/writing.ts`         | Published pieces                                                  |
 
 Adding a recommendation means appending one entry to `content/recommendations.ts`.
 The section renders a single quote as a plain card with no client JavaScript; at
@@ -77,8 +77,9 @@ These are deliberate — please keep them when changing the site:
    that only happens via a stored `localStorage.theme`.)
 5. **Colour tokens only.** Never hardcode a colour in a component — add a token
    in `globals.css` and define it in both palette blocks (`:root` and
-   `[data-theme="dark"]`). The system diagrams in `components/SystemDiagrams.tsx`
-   follow this by stroking `currentColor` only.
+   `[data-theme="dark"]`). The two exceptions are commented where they sit: the
+   client lettermark chip and the dark-mode sheet behind the hero portrait, both
+   of which need a fixed light ground in either palette.
 6. **One width for every section.** The nav, hero, every `<Section>` and the
    footer all use `max-w-6xl px-5 sm:px-8`, so the page has a single left edge.
    Long-form text is capped at `max-w-[68ch]` inside that container rather than
@@ -121,6 +122,24 @@ scroll())`. Deliberately not a scroll listener: that would put main-thread work
   touch, and Lighthouse does not check, so the score would sit at 100 while the
   page regressed. Scope the animation to `html.js` — the same condition as the
   button — so motion and control cannot ship apart.
+
+### Disclosures
+
+`components/Disclosure.tsx` is the "See more" on a long recommendation and the
+"Case study" on a project card. **The disclosed content deliberately sits outside
+the `<details>`** — inside a closed one it would be `display: none`, and both the
+quotes and the case studies have to stay in the DOM and in the accessibility tree
+whether or not anyone opens them. So the `<details>` is an empty, native,
+keyboard-reachable control, and `:has(.disclosure[open])` releases a `max-height`
+clamp on its sibling (`.rec-quote`, `.proj-body`).
+
+Two consequences worth knowing before changing it:
+
+- The open height is a **ceiling, not a measurement** — `max-height` cannot
+  transition to `content`. Prose longer than the ceiling gets silently clipped, so
+  raise it if a case study grows.
+- The clamp is a screen affordance. Every disclosure is forced open in
+  `@media print`, or Cmd-P would drop the case studies and truncate a quote.
 
 ## Deployment
 

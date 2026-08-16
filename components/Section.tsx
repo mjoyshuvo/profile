@@ -38,7 +38,7 @@ export function Section({ id, title, icon, children }: SectionProps) {
           ) : null}
           <h2
             id={`${id}-heading`}
-            className="font-serif text-2xl font-semibold tracking-tight sm:text-3xl"
+            className="font-display text-2xl font-bold tracking-[-0.035em] sm:text-3xl"
           >
             <SplitWords text={title} />
           </h2>

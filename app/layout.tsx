@@ -1,19 +1,24 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
-import { Inter, Source_Serif_4 } from "next/font/google";
+import { Lato, Poppins } from "next/font/google";
 import { SITE_URL, profile } from "@/content/profile";
 import { personJsonLd } from "@/lib/seo";
 import "./globals.css";
 
-const inter = Inter({
-  variable: "--font-inter",
+// Neither face is a variable font, so the weights have to be listed. Only the
+// ones the page actually sets are here — every extra weight is another file
+// over the wire for text nobody sees.
+const poppins = Poppins({
+  variable: "--font-poppins",
   subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
   display: "swap",
 });
 
-const sourceSerif = Source_Serif_4({
-  variable: "--font-source-serif",
+const lato = Lato({
+  variable: "--font-lato",
   subsets: ["latin"],
+  weight: ["400", "700"],
   display: "swap",
 });
 
@@ -82,7 +87,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     // this element, so React must be told not to flag the difference.
     <html
       lang="en"
-      className={`${inter.variable} ${sourceSerif.variable} h-full`}
+      className={`${lato.variable} ${poppins.variable} h-full`}
       suppressHydrationWarning
     >
       <head>

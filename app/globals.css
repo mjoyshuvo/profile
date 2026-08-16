@@ -57,8 +57,10 @@
   --color-teal-strong: var(--teal-strong);
   --color-teal-wash: var(--teal-wash);
   --color-on-teal: var(--on-teal);
-  --font-sans: var(--font-inter);
-  --font-serif: var(--font-source-serif);
+  /* `display` rather than `serif`: the display face is a geometric sans, and a
+     utility called font-serif that sets Poppins would be a lie in the markup. */
+  --font-sans: var(--font-lato);
+  --font-display: var(--font-poppins);
 }
 
 html {
@@ -75,7 +77,7 @@ html[data-theme="dark"] {
 body {
   background-color: var(--paper);
   color: var(--ink);
-  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-lato), ui-sans-serif, system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -464,7 +466,7 @@ html:not(.js) .rec-counter {
 /* `:has()` lets the toggle drive its sibling, which is what keeps this free of
    JavaScript. The open height is a ceiling, not a measurement — max-height
    can't transition to `content`, and no quote comes close to 120rem. */
-.rec-body:has(.rec-expand[open]) .rec-quote {
+.rec-body:has(.disclosure[open]) .rec-quote {
   max-height: 120rem;
 }
 
@@ -480,35 +482,49 @@ html:not(.js) .rec-counter {
   transition: opacity 0.3s var(--ease-soft);
 }
 
-.rec-body:has(.rec-expand[open]) .rec-quote::after {
+.rec-body:has(.disclosure[open]) .rec-quote::after {
   opacity: 0;
 }
 
-.rec-expand {
-  margin-top: 1rem;
-}
+/* The disclosure control itself, shared by the recommendation quote and the
+   project case studies — see components/Disclosure.tsx for why the disclosed
+   content deliberately lives outside the <details>. */
 
 /* The default disclosure triangle would sit outside the pill. */
-.rec-expand summary {
+.disclosure summary {
   list-style: none;
   cursor: pointer;
 }
 
-.rec-expand summary::-webkit-details-marker {
+.disclosure summary::-webkit-details-marker {
   display: none;
 }
 
-.rec-expand[open] .rec-more,
-.rec-expand:not([open]) .rec-less {
+.disclosure[open] .disclosure-more,
+.disclosure:not([open]) .disclosure-less {
   display: none;
 }
 
-.rec-chevron {
+.disclosure-chevron {
   transition: transform 0.3s var(--ease-soft);
 }
 
-.rec-expand[open] .rec-chevron {
+.disclosure[open] .disclosure-chevron {
   transform: rotate(180deg);
+}
+
+/* Collapsed case study. Same clamp as the quote above: the prose is clipped,
+   never removed, so it stays in the DOM and in the accessibility tree whether
+   or not the reader ever opens the card. The open height is a ceiling, not a
+   measurement — no case study comes close to 40rem. */
+.proj-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.45s var(--ease-soft);
+}
+
+.proj-card:has(.disclosure[open]) .proj-body {
+  max-height: 40rem;
 }
 
 /* ---------------------------------------------------------------------------
@@ -634,5 +650,21 @@ html:not(.js) .rec-counter {
   body {
     background: #fff;
     color: #000;
+  }
+
+  /* Every disclosure prints open. The clamp is a screen affordance — on paper
+     there is nothing to click, so a collapsed card would simply lose its case
+     study and a long recommendation would stop mid-sentence. */
+  .proj-body,
+  .rec-quote {
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* The fade sold a clipped edge that no longer exists, and the control does
+     nothing on paper. */
+  .rec-quote::after,
+  .disclosure {
+    display: none !important;
   }
 }

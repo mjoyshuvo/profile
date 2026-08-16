@@ -11,7 +11,7 @@ export function Education() {
           <li key={degree.degree}>
             <Reveal delay={i * 0.05}>
               <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
-                <h3 className="font-serif text-lg font-semibold">
+                <h3 className="font-display text-lg font-bold tracking-[-0.02em]">
                   {degree.degree}
                   <span className="font-sans text-base font-normal text-ink-soft">
                     {" "}

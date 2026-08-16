@@ -42,7 +42,11 @@ export function Hero() {
           <Reveal delay={0.08}>
             <h1
               id="name-heading"
-              className="mt-5 font-serif text-5xl font-bold leading-[0.92] tracking-tight sm:text-8xl sm:leading-[0.9] lg:text-9xl"
+              // Poppins at 800 with tracking pulled to -0.045em. A geometric
+              // sans at this size needs the letters closed up or the words
+              // read as loose beads; the serif it replaced held together on
+              // its own at Tailwind's default tracking-tight.
+              className="mt-5 font-display text-5xl font-extrabold leading-[0.92] tracking-[-0.045em] sm:text-8xl sm:leading-[0.9] lg:text-9xl"
             >
               {/* The visible heading is the statement; the name lives in the
                   sticky nav. Screen readers and crawlers still get both. */}
@@ -72,7 +76,7 @@ export function Hero() {
             <div className="mt-6 flex flex-wrap items-center gap-3 sm:mt-8">
               <a
                 href="#contact"
-                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-teal px-5 py-2.5 text-sm font-medium text-on-teal transition-[background-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-teal-strong hover:shadow-[0_6px_16px_-8px_var(--teal)]"
+                className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-teal px-5 py-2.5 text-sm font-bold text-on-teal transition-[background-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-teal-strong hover:shadow-[0_6px_16px_-8px_var(--teal)]"
               >
                 {/* A light passing over the fill. Needs the clipping parent
                     above, or it sweeps out across the page. */}
