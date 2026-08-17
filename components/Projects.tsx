@@ -69,7 +69,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
                       href={project.clientUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 transition-colors hover:text-teal"
+                      className="tap inline-flex items-center gap-1 transition-colors hover:text-teal"
                     >
                       {project.client}
                       <ExternalLink
@@ -92,7 +92,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
               {/* Points back at the timeline entry this was delivered under. */}
               <a
                 href="#experience"
-                className="transition-colors hover:text-teal"
+                className="tap inline-block transition-colors hover:text-teal"
               >
                 via {project.company}
               </a>

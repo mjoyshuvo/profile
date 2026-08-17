@@ -561,6 +561,47 @@ html:not(.js) .rec-counter {
 }
 
 /* ---------------------------------------------------------------------------
+   Touch. Everything below here is the interaction layer a phone was missing:
+   the page's affordances were all built on `:hover`, which a finger never
+   fires, and its inline controls were sized for a cursor.
+--------------------------------------------------------------------------- */
+
+/* Pads an inline control out to a 44px target and takes the same amount back
+   off the margin, so the row it sits in keeps its measured height. Only on a
+   coarse pointer — a mouse hits a 16px link fine, and the padding would swallow
+   the tight vertical rhythm these meta lines are set on. */
+@media (pointer: coarse) {
+  .tap {
+    padding-block: 0.75rem;
+    margin-block: -0.75rem;
+  }
+
+  /* The two pill controls — a project's case study and a quote's "see more".
+     Both were 31px, and both are the one thing on their card worth pressing. */
+  .disclosure summary {
+    min-height: 2.75rem;
+  }
+}
+
+/* Press feedback. The hover states these cards carry are gated behind
+   `hover:hover`, so on a phone a tap did nothing until the layout changed
+   underneath it. `:active` is the touch equivalent — held only while the finger
+   is down, so it reads as the press rather than as a state. */
+@media (hover: none) {
+  .proj-card:active,
+  .rec-card:active,
+  .press-card:active {
+    border-color: var(--teal);
+    transform: scale(0.995);
+  }
+
+  .tap:active,
+  .disclosure summary:active {
+    color: var(--teal);
+  }
+}
+
+/* ---------------------------------------------------------------------------
    Scroll progress. CSS-only on purpose: a JS scroll listener would run
    main-thread work on every frame of every scroll, and this page had no scroll
    handlers at all. Not gated on `html.js`, because it needs no JavaScript —

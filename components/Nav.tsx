@@ -83,7 +83,7 @@ export function Nav() {
             screen-length below, and a pencil portrait at 32px is a grey smudge
             rather than a face — it also needed its own cream coin to survive
             the dark palette, so it read as a disc stuck on the paper. */}
-        <a href="#top" className="group flex min-w-0 items-center">
+        <a href="#top" className="tap group flex min-w-0 items-center">
           {/* A wordmark, not a byline: first name and a full stop, set heavy
               and tight. The full name is a sentence, and a sentence in the
               masthead competes with the six links beside it. The stop matches

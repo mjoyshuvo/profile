@@ -51,7 +51,7 @@ export function Experience() {
                       href={role.companyUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1 transition-colors hover:text-teal"
+                      className="tap inline-flex items-center gap-1 transition-colors hover:text-teal"
                     >
                       {role.company}
                       <ExternalLink
@@ -78,13 +78,18 @@ export function Experience() {
                     className="h-px w-3 shrink-0 bg-rule"
                   />
                   <DateEnd end={role.end} endDate={role.endDate} />
-                  <span
-                    aria-hidden="true"
-                    className="h-3 w-px shrink-0 bg-rule"
-                  />
-                  <span className="inline-flex items-center gap-1">
-                    <MapPin className="h-3 w-3" aria-hidden="true" />
-                    {role.location}
+                  {/* Divider and place travel together. The pill wraps to two
+                      lines on a phone, and a divider free to wrap on its own
+                      ended the first line as a bar joining nothing. */}
+                  <span className="inline-flex items-center gap-x-2.5">
+                    <span
+                      aria-hidden="true"
+                      className="h-3 w-px shrink-0 bg-rule"
+                    />
+                    <span className="inline-flex items-center gap-1">
+                      <MapPin className="h-3 w-3" aria-hidden="true" />
+                      {role.location}
+                    </span>
                   </span>
                 </p>
               </div>
@@ -121,7 +126,7 @@ export function Experience() {
                           href={role.client.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="transition-colors hover:text-teal"
+                          className="tap transition-colors hover:text-teal"
                         >
                           {role.client.name}
                         </a>
@@ -177,7 +182,7 @@ function CaseStudyLinks({ company }: { company: string }) {
         <li key={project.slug}>
           <a
             href={`#project-${project.slug}`}
-            className="group inline-flex items-center gap-1.5 font-display text-sm font-medium text-ink-faint transition-colors hover:text-teal"
+            className="tap group inline-flex items-center gap-1.5 font-display text-sm font-medium text-ink-faint transition-colors hover:text-teal"
           >
             <ArrowDown
               className="h-3.5 w-3.5 transition-transform group-hover:translate-y-0.5"
@@ -243,7 +248,9 @@ function PositionEntry({
         />
       ) : null}
 
-      <p className="font-display text-[0.9375rem] font-semibold text-ink">{position.title}</p>
+      <p className="font-display text-[0.9375rem] font-semibold text-ink">
+        {position.title}
+      </p>
       {/* No pill here — the same joining marks as the role line, but plain, so
           the tenure stays the object and its positions read inside it. */}
       <p className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 font-display font-semibold text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">

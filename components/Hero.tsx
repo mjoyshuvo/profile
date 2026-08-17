@@ -138,7 +138,10 @@ export function Hero() {
               height={603}
               sizes="(min-width: 1024px) 320px, 176px"
               priority
-              className="portrait-ink w-28 sm:w-44 lg:w-80"
+              // At w-28 the face was a thumbnail: on a phone this is the first
+              // thing on the page and it was carrying none of the weight it
+              // carries at 320px on a desktop.
+              className="portrait-ink w-36 sm:w-44 lg:w-80"
             />
           </Reveal>
         </div>

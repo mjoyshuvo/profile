@@ -91,7 +91,7 @@ function SocialLink({
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="group inline-flex items-center gap-2 font-display font-medium text-ink-soft transition-colors hover:text-teal"
+      className="tap group inline-flex items-center gap-2 font-display font-medium text-ink-soft transition-colors hover:text-teal"
     >
       <span className="text-ink-faint transition-colors group-hover:text-teal">
         {children}

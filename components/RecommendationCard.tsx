@@ -31,7 +31,7 @@ export function RecommendationCard({
   return (
     <figure
       {...panelProps}
-      className={`group relative overflow-hidden rounded-2xl border border-rule bg-paper-raised p-6 sm:p-9 ${panelProps?.className ?? ""}`}
+      className={`rec-card group relative overflow-hidden rounded-2xl border border-rule bg-paper-raised p-6 transition-[border-color,transform] duration-200 sm:p-9 ${panelProps?.className ?? ""}`}
     >
       <CardWash />
 
@@ -73,7 +73,9 @@ export function RecommendationCard({
       <figcaption className="relative mt-6 flex items-center gap-3.5 border-t border-rule pt-5">
         <Avatar rec={rec} />
         <div className="min-w-0">
-          <p className="font-display text-[0.9375rem] font-semibold text-ink">{rec.name}</p>
+          <p className="font-display text-[0.9375rem] font-semibold text-ink">
+            {rec.name}
+          </p>
           <p className="text-sm text-ink-soft">{rec.title}</p>
           <p className="mt-0.5 font-display font-semibold text-[0.6875rem] tracking-[0.06em] text-ink-faint uppercase">
             {rec.relation}
