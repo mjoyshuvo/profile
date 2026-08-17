@@ -533,6 +533,34 @@ html:not(.js) .rec-counter {
 }
 
 /* ---------------------------------------------------------------------------
+   Mobile section menu. A native <details>, so the links are reachable with
+   scripting off — the same reasoning as the recommendation quote. The panel is
+   positioned against the header, which is why the disclosure itself needs no
+   position of its own.
+--------------------------------------------------------------------------- */
+.nav-menu summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+/* Safari draws its own triangle from a pseudo-element the standard property
+   does not reach. */
+.nav-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+/* One icon showing at a time, chosen by the open state rather than by script,
+   so the button can't disagree with the panel underneath it. */
+.nav-menu .nav-menu-close,
+.nav-menu[open] .nav-menu-open {
+  display: none;
+}
+
+.nav-menu[open] .nav-menu-close {
+  display: block;
+}
+
+/* ---------------------------------------------------------------------------
    Scroll progress. CSS-only on purpose: a JS scroll listener would run
    main-thread work on every frame of every scroll, and this page had no scroll
    handlers at all. Not gated on `html.js`, because it needs no JavaScript —

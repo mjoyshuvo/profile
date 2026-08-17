@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Menu, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { profile } from "@/content/profile";
 
 /**
- * Six labels, one of them long, need roughly 600px — too tight at `md`
- * alongside the masthead, so the row appears at `lg`. Writing is reachable by
- * scrolling; it lost its slot to Recommendations.
+ * Seven labels, one of them long, need roughly 660px — too tight at `md`
+ * alongside the masthead, so the row appears at `lg`. Below that the same
+ * links are behind the Menu disclosure rather than absent, which is what they
+ * were before: the row was `hidden lg:flex` with nothing standing in for it,
+ * so a phone got a masthead and no navigation at all.
  */
 const links = [
   { href: "#identity", label: "About" },
@@ -14,6 +17,7 @@ const links = [
   { href: "#projects", label: "Work" },
   { href: "#recommendations", label: "Recommendations" },
   { href: "#skills", label: "Skills" },
+  { href: "#writing", label: "Writing" },
   { href: "#contact", label: "Contact" },
 ];
 
@@ -38,6 +42,12 @@ const spySections = [
 
 export function Nav() {
   const [active, setActive] = useState<string>("");
+  const menu = useRef<HTMLDetailsElement>(null);
+
+  // A native <details> rather than state, so the menu opens with JavaScript
+  // off — same reasoning as the recommendation quote. The one thing it can't
+  // do on its own is shut after a jump, so that part is scripted.
+  const closeMenu = () => menu.current?.removeAttribute("open");
 
   // Scrollspy. Purely decorative — the links are plain anchors and work with
   // JavaScript disabled.
@@ -113,6 +123,49 @@ export function Nav() {
               </li>
             ))}
           </ul>
+
+          {/* The same links under `lg`. The panel hangs off the header rather
+              than the button so it can span the full width without the button
+              having to be full width. */}
+          <details ref={menu} className="nav-menu lg:hidden">
+            <summary
+              // min-h-11 rather than padding alone: this is the one standalone
+              // control on a phone, and 44px is the tap target it should be.
+              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-rule px-4 font-display text-xs font-semibold tracking-[0.1em] text-ink-soft uppercase transition-colors hover:border-teal hover:text-teal"
+              aria-label="Open section navigation"
+            >
+              <Menu className="nav-menu-open h-4 w-4" aria-hidden="true" />
+              <X className="nav-menu-close h-4 w-4" aria-hidden="true" />
+              Menu
+            </summary>
+
+            {/* Opaque, unlike the header above it. The bar can be translucent
+                because it is a 3.5rem strip; a panel this tall over the hero
+                left the display type legible straight through the links. */}
+            <ul className="absolute inset-x-0 top-full max-h-[calc(100svh-3.5rem)] overflow-y-auto border-b border-rule bg-paper px-5 py-3 shadow-[var(--shadow)] sm:px-8">
+              {links.map((link) => (
+                <li
+                  key={link.href}
+                  className="border-b border-rule/60 last:border-0"
+                >
+                  <a
+                    href={link.href}
+                    onClick={closeMenu}
+                    aria-current={active === link.href ? "true" : undefined}
+                    // A full-width row, not a pill: at this size the target
+                    // should be the whole line rather than the word.
+                    className={`block rounded-lg px-3 py-3 font-display text-base font-medium transition-colors ${
+                      active === link.href
+                        ? "bg-teal-wash text-teal"
+                        : "text-ink-soft"
+                    }`}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </details>
         </div>
       </nav>
 

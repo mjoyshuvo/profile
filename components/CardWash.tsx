@@ -12,11 +12,17 @@ export function CardWash({ size = "card" }: { size?: "card" | "chip" }) {
   // A chip is two orders of magnitude smaller than a card, so the card's
   // geometry scaled down rather than reused: same proportions — anchored off
   // the top-right, about 40% of the width — at a blur the pill can hold.
+  // Card geometry is sized in percentages of the card, not in fixed rem. At
+  // 34rem wide the wash was 544px across a 335px phone card — it cleared both
+  // edges, so a corner bloom became a flat tint over the whole top and, spread
+  // that thin under a 64px blur, read as nothing at all. Two thirds of the
+  // card, capped at the old width, keeps a real corner at every size. The blur
+  // scales with it for the same reason.
   // The chip lifts further on hover: at this size a 5-point step is invisible.
   const geometry =
     size === "chip"
       ? "-top-5 -right-4 h-10 w-16 blur-lg group-hover:bg-teal/25"
-      : "-top-28 -right-24 h-72 w-[34rem] blur-3xl group-hover:bg-teal/15";
+      : "-top-[18%] -right-[12%] h-[65%] max-h-72 w-2/3 max-w-[34rem] blur-2xl sm:blur-3xl group-hover:bg-teal/15";
 
   return (
     <div

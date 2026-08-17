@@ -174,8 +174,12 @@ function IconLink({
       {children}
       {/* Real text, not an aria-label: it names the link for assistive tech and
           fades in under the button on hover or keyboard focus. Absolutely
-          positioned so three icons stay a tight row at every width. */}
-      <span className="pointer-events-none absolute top-full left-1/2 mt-1.5 -translate-x-1/2 translate-y-[-3px] font-display text-[0.625rem] font-semibold whitespace-nowrap uppercase tracking-[0.1em] text-ink-faint opacity-0 transition-[opacity,transform] duration-200 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
+          positioned so three icons stay a tight row at every width.
+
+          Standing visible by default and hidden only where a pointer can
+          hover: a touch device never fires hover, so gating it the other way
+          round left a phone with three unlabelled circles. */}
+      <span className="pointer-events-none absolute top-full left-1/2 mt-1.5 -translate-x-1/2 font-display text-[0.625rem] font-semibold whitespace-nowrap uppercase tracking-[0.1em] text-ink-faint transition-[opacity,transform] duration-200 [@media(hover:hover)]:translate-y-[-3px] [@media(hover:hover)]:opacity-0 [@media(hover:hover)]:group-hover:translate-y-0 [@media(hover:hover)]:group-hover:opacity-100 [@media(hover:hover)]:group-focus-visible:translate-y-0 [@media(hover:hover)]:group-focus-visible:opacity-100">
         {label}
       </span>
     </a>
