@@ -76,7 +76,7 @@ export function Nav() {
     <header className="no-print sticky top-0 z-50 border-b border-rule bg-paper/85 backdrop-blur-md">
       <nav
         aria-label="Section navigation"
-        className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-5 sm:px-8"
+        className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-6 sm:px-8"
       >
         {/* Masthead: the wordmark alone. The sketch used to sit beside it, but
             it is the same drawing the hero shows at ten times the size a
@@ -142,7 +142,7 @@ export function Nav() {
             {/* Opaque, unlike the header above it. The bar can be translucent
                 because it is a 3.5rem strip; a panel this tall over the hero
                 left the display type legible straight through the links. */}
-            <ul className="absolute inset-x-0 top-full max-h-[calc(100svh-3.5rem)] overflow-y-auto border-b border-rule bg-paper px-5 py-3 shadow-[var(--shadow)] sm:px-8">
+            <ul className="absolute inset-x-0 top-full max-h-[calc(100svh-3.5rem)] overflow-y-auto border-b border-rule bg-paper px-6 py-3 shadow-[var(--shadow)] sm:px-8">
               {links.map((link) => (
                 <li
                   key={link.href}

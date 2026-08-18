@@ -81,9 +81,14 @@ These are deliberate — please keep them when changing the site:
    client lettermark chip and the dark-mode sheet behind the hero portrait, both
    of which need a fixed light ground in either palette.
 6. **One width for every section.** The nav, hero, every `<Section>` and the
-   footer all use `max-w-6xl px-5 sm:px-8`, so the page has a single left edge.
+   footer all use `max-w-6xl px-6 sm:px-8`, so the page has a single left edge.
    Long-form text is capped at `max-w-[68ch]` inside that container rather than
    by narrowing the container itself.
+7. **One vertical scale.** Sections are `py-12 sm:py-20`, the heading row is
+   `mb-6 sm:mb-8`, and the anchor offset is `scroll-padding-top: 3.5rem` on
+   `<html>` — the nav's height and nothing more. Jump targets carry no
+   `scroll-mt-*`: it stacks on the scroll padding and on the section's own top
+   padding, and the heading lands an inch down an empty screen.
 
 ### Animation
 

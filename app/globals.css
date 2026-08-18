@@ -65,8 +65,11 @@
 
 html {
   scroll-behavior: smooth;
-  /* Sticky nav is 3.5rem; keep anchored headings clear of it. */
-  scroll-padding-top: 5rem;
+  /* Exactly the sticky nav's 3.5rem, no more: every jump target is a section
+     or a card that already carries its own top padding, so anything extra
+     here stacks on top of that padding and drops the heading a further inch
+     down an otherwise empty screen. The padding does the spacing, once. */
+  scroll-padding-top: 3.5rem;
   color-scheme: light;
 }
 

@@ -37,7 +37,7 @@ export default function Home() {
       </main>
 
       <footer className="no-print border-t border-rule">
-        <div className="mx-auto flex max-w-6xl flex-col gap-1 px-5 py-8 text-sm text-ink-faint sm:flex-row sm:items-center sm:justify-between sm:px-8">
+        <div className="mx-auto flex max-w-6xl flex-col gap-1 px-6 py-10 text-sm text-ink-faint sm:flex-row sm:items-center sm:justify-between sm:px-8">
           <p>
             © {new Date().getFullYear()} {profile.name}
           </p>

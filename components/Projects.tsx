@@ -25,9 +25,10 @@ export function Projects() {
         {projects.map((project, i) => (
           <li
             key={project.slug}
+            // Deep-linked from Experience. The sticky nav is cleared by
+            // `scroll-padding-top` on <html>, so no scroll-margin here — the
+            // two used to stack and drop the card 176px down the viewport.
             id={`project-${project.slug}`}
-            // Clears the sticky nav when Experience links straight to a card.
-            className="scroll-mt-24"
           >
             <Reveal delay={i * 0.05}>
               <ProjectCard project={project} index={i} />

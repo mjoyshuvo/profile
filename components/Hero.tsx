@@ -16,7 +16,7 @@ export function Hero() {
       aria-labelledby="name-heading"
       className="flex min-h-[calc(100svh-3.5rem)] items-center py-8 sm:py-12 lg:py-16"
     >
-      <div className="mx-auto grid w-full max-w-6xl gap-6 px-5 sm:gap-10 sm:px-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-16">
+      <div className="mx-auto grid w-full max-w-6xl gap-6 px-6 sm:gap-10 sm:px-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-16">
         {/* Statement */}
         <div className="min-w-0 lg:order-1">
           <Reveal>

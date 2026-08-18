@@ -12,7 +12,7 @@ export function Writing() {
       title="Writing"
       icon={<PenLine className="h-6 w-6" />}
     >
-      <ul className="space-y-3">
+      <ul className="space-y-3 sm:space-y-4">
         {writing.map((post, i) => (
           <li key={post.url}>
             <Reveal delay={i * 0.05}>
