@@ -71,20 +71,26 @@ export function Experience() {
                     dash and the hairline divider do the joining work that
                     an arrow and a slash used to do as characters, and they
                     sit on the baseline instead of drifting above it. */}
-                <p className="inline-flex shrink-0 flex-wrap items-center gap-x-2.5 gap-y-1 self-start rounded-full border border-rule bg-paper-raised px-3 py-1 font-display font-semibold text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">
-                  <time dateTime={role.startDate}>{role.start}</time>
-                  <span
-                    aria-hidden="true"
-                    className="h-px w-3 shrink-0 bg-rule"
-                  />
-                  <DateEnd end={role.end} endDate={role.endDate} />
-                  {/* Divider and place travel together. The pill wraps to two
-                      lines on a phone, and a divider free to wrap on its own
-                      ended the first line as a bar joining nothing. */}
-                  <span className="inline-flex items-center gap-x-2.5">
+                <p className="inline-flex shrink-0 flex-col items-start gap-y-1 self-start rounded-full border border-rule bg-paper-raised px-3 py-1 font-display font-semibold text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase md:flex-row md:items-center md:gap-x-2.5">
+                  <span className="inline-flex items-center gap-x-2.5 whitespace-nowrap">
+                    <time dateTime={role.startDate}>{role.start}</time>
                     <span
                       aria-hidden="true"
-                      className="h-3 w-px shrink-0 bg-rule"
+                      className="h-px w-3 shrink-0 bg-rule"
+                    />
+                    <DateEnd end={role.end} endDate={role.endDate} />
+                  </span>
+                  {/* Two rows on a phone, one row from `md`. Wrapping was
+                      doing this before, but wrapping picks its own break
+                      point: the divider led the second line as a bar joining
+                      nothing above it, and the pin sat out of line with the
+                      date. Each row is its own nowrap group instead, so the
+                      break is where we put it and the divider only exists in
+                      the single-row layout, between the date and the place. */}
+                  <span className="inline-flex items-center gap-x-2.5 whitespace-nowrap">
+                    <span
+                      aria-hidden="true"
+                      className="hidden h-3 w-px shrink-0 bg-rule md:block"
                     />
                     <span className="inline-flex items-center gap-1">
                       <MapPin className="h-3 w-3" aria-hidden="true" />
