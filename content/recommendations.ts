@@ -31,6 +31,21 @@ export type Recommendation = {
  */
 export const recommendations: Recommendation[] = [
   {
+    id: "abdullah-al-masud-tushar",
+    name: "Abdullah Al Masud Tushar",
+    title:
+      "Product-Minded Engineer Helping European Teams Build Reliable, High-Impact Systems | Fullstack & Data Engineering",
+    relation: "Worked with me but on different teams",
+    date: "August 2026",
+    dateISO: "2026-08-23",
+    avatar: "/recommenders/abdullah-al-masud-tushar.jpg",
+    quote: [
+      "Worked together on the same team at BS23. Now we work in different teams at Cefalo, yet we still meet and discuss quite a bit, sharing ideas, challenges, things we are learning, yada yada.",
+      "Technically, he is my senior in terms of experience, but I have always found him to be a very good buddy. He talks less, thinks more, and delivers even more.",
+      "He has strong expertise in Python backend development, cloud technologies, and data engineering, and has contributed a lot in senior engineering roles. Polite and very helpful, he also brings a great mentoring spirit. It would have been great if we could work together on the same team again :)",
+    ],
+  },
+  {
     id: "erik-ormevik",
     name: "Erik Ormevik",
     title: "Product Owner & Frontend Developer at Ferdia",
