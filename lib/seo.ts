@@ -1,3 +1,4 @@
+import { certifications } from "@/content/certifications";
 import { education } from "@/content/education";
 import { experience } from "@/content/experience";
 import { SITE_URL, profile, sameAs } from "@/content/profile";
@@ -34,6 +35,18 @@ export function personJsonLd() {
       "@type": "CollegeOrUniversity",
       name: d.institution,
       ...(d.institutionUrl ? { url: d.institutionUrl } : {}),
+    })),
+    hasCredential: certifications.map((cert) => ({
+      "@type": "EducationalOccupationalCredential",
+      name: cert.name,
+      credentialCategory: "certificate",
+      ...(cert.credentialId ? { identifier: cert.credentialId } : {}),
+      ...(cert.url ? { url: cert.url } : {}),
+      recognizedBy: {
+        "@type": "Organization",
+        name: cert.issuer,
+        ...(cert.issuerUrl ? { url: cert.issuerUrl } : {}),
+      },
     })),
     knowsAbout: allSkills,
     sameAs,

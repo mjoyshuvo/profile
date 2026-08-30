@@ -35,6 +35,7 @@ const spySections = [
   "#projects",
   "#recommendations",
   "#skills",
+  "#certifications",
   "#writing",
   "#education",
   "#contact",
