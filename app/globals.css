@@ -30,8 +30,11 @@
   --dur-word: 0.62s;
 }
 
-/* Dark palette. Light is the default for everyone, so this applies only when
-   the reader explicitly picks dark via the toggle — never from the OS setting. */
+/* Dark palette. One block, one selector: the pre-paint script in the document
+   head resolves "no stored choice" against the OS setting and writes the
+   result to data-theme, so the OS preference and an explicit pick arrive here
+   the same way. Duplicating these values under a prefers-color-scheme block
+   would be a second copy to keep in step, for no gain. */
 :root[data-theme="dark"] {
   --paper: #101413;
   --paper-raised: #171d1c;
@@ -708,14 +711,25 @@ html:not(.js) .rec-counter {
   }
 }
 
-/* The hero portrait is graphite line art keyed onto transparency. On the light
-   palette it sits straight on the paper. On the dark palette it gets its own
-   sheet of paper instead of being inverted — inverting a drawn face turns it
-   into a photo negative, which reads as uncanny rather than as chalk. */
+/* The hero portrait is graphite line art keyed onto transparency. One round
+   frame in both palettes — the same shape the recommendation avatars carry, so
+   the portrait belongs to the page's vocabulary rather than sitting in a
+   rectangle of its own. `object-cover` on a square box crops the drawing's own
+   hatched margin rather than the face. */
+.portrait-ink {
+  border: 1px solid var(--rule);
+  border-radius: 9999px;
+  aspect-ratio: 1;
+  object-fit: cover;
+  box-shadow: var(--shadow);
+}
+
+/* The drawing is dark ink on transparency, so the dark palette has to put
+   something light behind it — inverting a portrait reads as a photo negative,
+   not a chalk drawing. Light mode needs no plate: the paper is already behind
+   it. */
 :root[data-theme="dark"] .portrait-ink {
-  background-color: #efece4;
-  border-radius: 0.75rem;
-  padding: 0.5rem;
+  background-color: #e2ded3;
 }
 
 /* Print: strip the chrome so Cmd-P yields a clean one-page résumé. */

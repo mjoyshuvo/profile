@@ -114,6 +114,15 @@ export function Experience() {
                     key={position.title + position.start}
                     position={position}
                     stacked={role.positions.length > 1}
+                    // A single position whose span is the whole tenure is the
+                    // pill directly above it, printed twice. The dates belong
+                    // to the company row there; the position line only needs
+                    // them once the stack has more than one entry to separate.
+                    showDates={
+                      role.positions.length > 1 ||
+                      position.startDate !== role.startDate ||
+                      position.endDate !== role.endDate
+                    }
                   />
                 ))}
               </div>
@@ -241,9 +250,12 @@ function ClientMark({ client }: { client: NonNullable<Role["client"]> }) {
 function PositionEntry({
   position,
   stacked,
+  showDates,
 }: {
   position: Position;
   stacked: boolean;
+  /** False when the company pill above already states this exact span. */
+  showDates: boolean;
 }) {
   return (
     <div className="relative">
@@ -259,11 +271,13 @@ function PositionEntry({
       </p>
       {/* No pill here — the same joining marks as the role line, but plain, so
           the tenure stays the object and its positions read inside it. */}
-      <p className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 font-display font-semibold text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">
-        <time dateTime={position.startDate}>{position.start}</time>
-        <span aria-hidden="true" className="h-px w-3 shrink-0 bg-rule" />
-        <DateEnd end={position.end} endDate={position.endDate} />
-      </p>
+      {showDates ? (
+        <p className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 font-display font-semibold text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">
+          <time dateTime={position.startDate}>{position.start}</time>
+          <span aria-hidden="true" className="h-px w-3 shrink-0 bg-rule" />
+          <DateEnd end={position.end} endDate={position.endDate} />
+        </p>
+      ) : null}
 
       {position.bullets?.length ? (
         <ul className="mt-3 space-y-2">

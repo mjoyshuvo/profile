@@ -11,16 +11,29 @@ export function Hero() {
   return (
     // Fills the viewport below the 3.5rem nav, so Experience always starts
     // below the fold and the statement gets the first screen to itself.
+    //
+    // Centred only from `lg`. On a phone the column is a good 180px shorter
+    // than the viewport, and centring split that slack evenly — which left
+    // ~90px of nothing between the nav and the portrait and pushed the triad
+    // down with it. Aligning to the top spends the whole surplus at the
+    // bottom, below the fold, where it costs the reader nothing and Experience
+    // still starts off-screen.
     <section
       id="top"
       aria-labelledby="name-heading"
-      className="flex min-h-[calc(100svh-3.5rem)] items-center py-8 sm:py-12 lg:py-16"
+      className="flex min-h-[calc(100svh-3.5rem)] items-start py-8 sm:py-12 lg:items-center lg:py-16"
     >
       <div className="mx-auto grid w-full max-w-6xl gap-6 px-6 sm:gap-10 sm:px-8 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-16">
         {/* Statement */}
         <div className="min-w-0 lg:order-1">
           <Reveal>
-            <p className="flex items-center gap-2.5 font-display text-xs font-semibold tracking-[0.18em] text-ink-faint uppercase">
+            {/* 0.18em was the widest tracking on the page, and on a phone it
+                pushed this 31-character line to 308px of a 327px column —
+                an eyebrow running edge to edge under the headline. Below `sm`
+                it drops to the 11px/0.12em the page's other uppercase labels
+                use, which brings it back to ~263px and gives the line the air
+                that makes it read as a caption rather than a second heading. */}
+            <p className="flex items-center gap-2.5 font-display text-[0.6875rem] font-semibold tracking-[0.12em] text-ink-faint uppercase sm:text-xs sm:tracking-[0.18em]">
               {/* A signal lamp rather than a bullet: a solid core with a glow,
                   two static halos, and a ring pulsing out of it on a loop.
                   The whole lamp is aria-hidden — the availability is in the
@@ -126,7 +139,16 @@ export function Hero() {
 
         {/* Portrait + proof. Sits first on mobile so the reader meets the face
             before the statement; returns to the right-hand column at lg. */}
-        <div className="order-first lg:order-2 lg:w-80">
+        {/* Optically centred, not geometrically. The grid centres both columns,
+            so the portrait's midpoint sat dead level with the text column's —
+            but that column is top-heavy: 346px of display type, then a
+            paragraph, a location line and a button row trailing below it. Only
+            36px of the column sits above the headline against 228px below, so
+            true centring hung the portrait 96px under the statement it is
+            meant to sit beside. A grid item is centred by its margin box, so
+            192px of bottom margin lifts it by half that — landing the portrait
+            level with the headline. Measured, not guessed. */}
+        <div className="order-first lg:order-2 lg:mb-48 lg:w-80">
           <Reveal delay={0.06}>
             <Image
               src={profile.sketch}

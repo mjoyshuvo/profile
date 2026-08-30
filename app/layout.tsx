@@ -66,20 +66,32 @@ export const metadata: Metadata = {
 };
 
 /**
- * Runs before first paint so an explicitly chosen theme never flashes the
- * wrong palette. Kept inline and dependency-free on purpose.
+ * Runs before first paint so the theme never flashes the wrong palette.
+ *
+ * It resolves the theme fully — stored choice first, OS preference second —
+ * and writes the answer to `data-theme`. Doing it here rather than in CSS
+ * means the dark palette needs exactly one selector to match, and the toggle
+ * can always read the current theme straight off the attribute.
+ *
+ * Kept inline and dependency-free on purpose.
  */
 const themeScript = `
 (function () {
   var d = document.documentElement;
   // Marks that JS is available, which is what arms the scroll-reveal styles.
   d.classList.add("js");
+  var t = null;
   try {
-    var t = localStorage.getItem("theme");
-    if (t === "dark" || t === "light") {
-      d.setAttribute("data-theme", t);
-    }
+    t = localStorage.getItem("theme");
   } catch (e) {}
+  if (t !== "dark" && t !== "light") {
+    t =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+  }
+  d.setAttribute("data-theme", t);
 })();
 `;
 

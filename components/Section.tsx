@@ -19,11 +19,12 @@ export function Section({ id, title, icon, children }: SectionProps) {
     <section
       id={id}
       aria-labelledby={`${id}-heading`}
-      // Vertical rhythm: 48px of air above and below on a phone, 80px from
+      // Vertical rhythm: 40px of air above and below on a phone, 64px from
       // `sm` up. The section padding is the largest gap on the page — it has
       // to out-measure the 24/32px heading gap inside it by a clear step, or
-      // the sections read as one column of blocks.
-      className="py-12 sm:py-20"
+      // the sections read as one column of blocks. 48/80 cleared that bar with
+      // room to spare and simply made the page longer to scroll.
+      className="py-10 sm:py-16"
     >
       {/* Same container as the nav, the hero and the footer. Every section on
           the page shares one left edge — see README design constraints. */}

@@ -3,6 +3,7 @@
 import { Menu, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { profile } from "@/content/profile";
+import { ThemeToggle } from "./ThemeToggle";
 
 /**
  * Seven labels, one of them long, need roughly 660px — too tight at `md`
@@ -49,6 +50,36 @@ export function Nav() {
   // off — same reasoning as the recommendation quote. The one thing it can't
   // do on its own is shut after a jump, so that part is scripted.
   const closeMenu = () => menu.current?.removeAttribute("open");
+
+  // What a native <details> doesn't give a menu: Escape and a tap outside.
+  // Both listeners are always mounted and cheap — they read `open` off the
+  // element rather than mirroring it into React state, which would make the
+  // menu's openness two sources of truth instead of one.
+  useEffect(() => {
+    const el = menu.current;
+    if (!el) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== "Escape" || !el.hasAttribute("open")) return;
+      closeMenu();
+      // Escape should leave the reader on the control they opened, not adrift
+      // at the top of the document.
+      el.querySelector("summary")?.focus();
+    };
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (!el.hasAttribute("open")) return;
+      if (event.target instanceof Node && el.contains(event.target)) return;
+      closeMenu();
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("pointerdown", onPointerDown);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("pointerdown", onPointerDown);
+    };
+  }, []);
 
   // Scrollspy. Purely decorative — the links are plain anchors and work with
   // JavaScript disabled.
@@ -109,7 +140,7 @@ export function Nav() {
               <li key={link.href}>
                 <a
                   href={link.href}
-                  aria-current={active === link.href ? "true" : undefined}
+                  aria-current={active === link.href ? "location" : undefined}
                   // Hovering fills the pill with the same teal wash the active
                   // one carries, so the highlight the reader is about to move
                   // to is the highlight they already see.
@@ -133,11 +164,16 @@ export function Nav() {
               // min-h-11 rather than padding alone: this is the one standalone
               // control on a phone, and 44px is the tap target it should be.
               className="inline-flex min-h-11 items-center gap-2 rounded-full border border-rule px-4 font-display text-xs font-semibold tracking-[0.1em] text-ink-soft uppercase transition-colors hover:border-teal hover:text-teal"
-              aria-label="Open section navigation"
             >
               <Menu className="nav-menu-open h-4 w-4" aria-hidden="true" />
               <X className="nav-menu-close h-4 w-4" aria-hidden="true" />
+              {/* The visible word is the accessible name. An `aria-label` here
+                  read "Open section navigation", which does not contain "Menu"
+                  — so "tap Menu" failed under voice control, and the label
+                  still said "Open" while the menu was open. The extra context
+                  is appended instead of replacing the name. */}
               Menu
+              <span className="sr-only"> — section navigation</span>
             </summary>
 
             {/* Opaque, unlike the header above it. The bar can be translucent
@@ -152,7 +188,7 @@ export function Nav() {
                   <a
                     href={link.href}
                     onClick={closeMenu}
-                    aria-current={active === link.href ? "true" : undefined}
+                    aria-current={active === link.href ? "location" : undefined}
                     // A full-width row, not a pill: at this size the target
                     // should be the whole line rather than the word.
                     className={`block rounded-lg px-3 py-3 font-display text-base font-medium transition-colors ${
@@ -167,6 +203,11 @@ export function Nav() {
               ))}
             </ul>
           </details>
+
+          {/* Last in the cluster and outside the `lg` split, so the control is
+              in the same corner at every width rather than appearing and
+              disappearing with the link row. */}
+          <ThemeToggle />
         </div>
       </nav>
 
