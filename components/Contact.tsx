@@ -1,4 +1,4 @@
-import { ArrowUpRight, Mail, MapPin } from "lucide-react";
+import { ArrowUpRight, CalendarDays, Mail, MapPin } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./BrandIcons";
 import { CardWash } from "./CardWash";
 import { profile } from "@/content/profile";
@@ -33,36 +33,47 @@ export function Contact() {
               team its afternoons.
             </p>
 
-            {/* The email is the primary action; everything else is a footnote. */}
-            <a
-              href={`mailto:${profile.email}`}
-              // `max-w-full` plus a shrinkable label: the address is one
-              // unbreakable token, so an inline-flex pill sized to its content
-              // grew past the card — and the card clips, so at 320px the CTA
-              // was cut off mid-word. It shrinks now instead of overflowing.
-              className="group relative mt-8 inline-flex max-w-full items-center gap-3 overflow-hidden rounded-full bg-teal px-5 py-3 font-display text-sm font-semibold text-on-teal transition-[background-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-teal-strong hover:shadow-[0_8px_20px_-10px_var(--teal)] sm:px-6 sm:text-base"
-            >
-              {/* Same passing light as the hero call to action — the two are
-                  the same button doing the same job at opposite ends of the
-                  page, so they move the same way. Needs the clipping parent
-                  above, or it sweeps out across the panel. */}
-              <span
-                aria-hidden="true"
-                className="cta-sheen pointer-events-none absolute inset-y-0 -left-8 w-8 bg-on-teal/25 blur-[6px]"
-              />
-              <Mail className="relative h-4 w-4 shrink-0" aria-hidden="true" />
-              {/* The address is one unbreakable token, so a narrow card either
-                  clips it or splits it mid-word. A <wbr> after the @ gives the
-                  browser the one break point a reader would pick themselves. */}
-              <span className="relative min-w-0 break-words">
-                {profile.email.split("@")[0]}@<wbr />
-                {profile.email.split("@")[1]}
-              </span>
-              <ArrowUpRight
-                className="cta-arrow-diag relative h-4 w-4 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                aria-hidden="true"
-              />
-            </a>
+            {/* Two ways to start: write when it suits them, or take a slot in
+                the diary. The email keeps the filled pill and the booking link
+                is outlined, so the row still has one obvious first move. */}
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <a
+                href={`mailto:${profile.email}`}
+                // `max-w-full` plus a shrinkable label: the address is one
+                // unbreakable token, so an inline-flex pill sized to its content
+                // grew past the card — and the card clips, so at 320px the CTA
+                // was cut off mid-word. It shrinks now instead of overflowing.
+                className="group relative inline-flex max-w-full items-center gap-3 overflow-hidden rounded-full bg-teal px-5 py-3 font-display text-sm font-semibold text-on-teal transition-[background-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-teal-strong hover:shadow-[0_8px_20px_-10px_var(--teal)] sm:px-6 sm:text-base"
+              >
+                {/* Same passing light as the hero call to action — the two are
+                    the same button doing the same job at opposite ends of the
+                    page, so they move the same way. Needs the clipping parent
+                    above, or it sweeps out across the panel. */}
+                <span
+                  aria-hidden="true"
+                  className="cta-sheen pointer-events-none absolute inset-y-0 -left-8 w-8 bg-on-teal/25 blur-[6px]"
+                />
+                <Mail
+                  className="relative h-4 w-4 shrink-0"
+                  aria-hidden="true"
+                />
+                {/* The address is one unbreakable token, so a narrow card either
+                    clips it or splits it mid-word. A <wbr> after the @ gives the
+                    browser the one break point a reader would pick themselves. */}
+                <span className="relative min-w-0 break-words">
+                  {profile.email.split("@")[0]}@<wbr />
+                  {profile.email.split("@")[1]}
+                </span>
+                <ArrowUpRight
+                  className="cta-arrow-diag relative h-4 w-4 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+                  aria-hidden="true"
+                />
+              </a>
+
+              <SecondaryLink href={profile.bookingUrl} label="Book a 30-min call">
+                <CalendarDays className="h-4 w-4 shrink-0" aria-hidden="true" />
+              </SecondaryLink>
+            </div>
 
             <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-rule pt-6 text-sm">
               <SocialLink
@@ -84,6 +95,38 @@ export function Contact() {
         </div>
       </Reveal>
     </Section>
+  );
+}
+
+/**
+ * The quieter sibling of the email pill: same shape and same lift, drawn in
+ * outline so the filled button stays the one the eye lands on first.
+ */
+function SecondaryLink({
+  href,
+  label,
+  children,
+}: {
+  href: string;
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="tap group inline-flex max-w-full items-center gap-2 rounded-full border border-rule px-5 py-3 font-display text-sm font-semibold text-ink-soft transition-[color,border-color,background-color,transform] duration-200 hover:-translate-y-0.5 hover:border-teal hover:bg-teal-wash/50 hover:text-teal sm:px-6 sm:text-base"
+    >
+      <span className="text-ink-faint transition-colors group-hover:text-teal">
+        {children}
+      </span>
+      <span className="min-w-0 break-words">{label}</span>
+      <ArrowUpRight
+        className="h-4 w-4 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+        aria-hidden="true"
+      />
+    </a>
   );
 }
 

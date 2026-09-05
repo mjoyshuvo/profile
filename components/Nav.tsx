@@ -216,6 +216,12 @@ export function Nav() {
           scroll-driven animations never show it, which is a fine outcome for
           something purely decorative. */}
       <span className="scroll-progress no-print" aria-hidden="true" />
+      {/* The lit tip riding the front of that bar. A separate element rather
+          than a pseudo of the bar above: that one is drawn with `scale: 0 1`,
+          which would stretch any child horizontally and smear a round glow
+          into an ellipse that changes shape as you scroll. This one only
+          moves, so the glow stays a circle. */}
+      <span className="scroll-progress-head no-print" aria-hidden="true" />
     </header>
   );
 }

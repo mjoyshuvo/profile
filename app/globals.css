@@ -622,8 +622,20 @@ html:not(.js) .rec-counter {
   }
 }
 
-.scroll-progress {
+.scroll-progress,
+.scroll-progress-head {
   display: none;
+}
+
+/* The head rides the front edge by moving, not by scaling — `left` is what is
+   animated, so the dot and its glow keep their shape the whole way across. */
+@keyframes scroll-progress-head-slide {
+  from {
+    left: 0%;
+  }
+  to {
+    left: 100%;
+  }
 }
 
 @supports (animation-timeline: scroll()) {
@@ -638,6 +650,30 @@ html:not(.js) .rec-counter {
     transform-origin: left center;
     scale: 0 1;
     animation: scroll-progress-grow linear both;
+    animation-timeline: scroll(root block);
+  }
+
+  /* A white bead with a close teal halo, centred on the 2px rule: 6px tall
+     against the bar's 2px, so `bottom` is -3px to put its middle where the
+     bar's middle already is. Both numbers stay whole pixels — a 5px dot on a
+     half-pixel offset renders soft on one edge and stops reading as round.
+     The glow is kept tight on purpose: a wide one blooms past the bead and the
+     whole thing smears into a comet rather than a lit tip.
+     `translateX(-50%)` centres the bead on the progress point instead of
+     hanging it off the end. */
+  .scroll-progress-head {
+    display: block;
+    position: absolute;
+    bottom: -3px;
+    height: 6px;
+    width: 6px;
+    border-radius: 9999px;
+    background-color: #fff;
+    transform: translateX(-50%);
+    box-shadow:
+      0 0 3px 0.5px rgb(255 255 255 / 0.85),
+      0 0 8px 1.5px color-mix(in srgb, var(--teal) 50%, transparent);
+    animation: scroll-progress-head-slide linear both;
     animation-timeline: scroll(root block);
   }
 }
@@ -698,7 +734,10 @@ html:not(.js) .rec-counter {
     opacity: 1 !important;
   }
 
-  .scroll-progress {
+  /* The head would otherwise park at `left: 100%`, a lit dot stuck in the
+     top-right corner regardless of scroll. It goes with the bar it rides. */
+  .scroll-progress,
+  .scroll-progress-head {
     display: none;
   }
 

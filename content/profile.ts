@@ -27,6 +27,8 @@ export const profile = {
    * sits on the paper with no frame. Near-black ink; dark mode inverts it in CSS.
    */
   sketch: "/mrityunjoy-das-sketch.png",
+  /** Public booking page: a call can be set without an email round-trip. */
+  bookingUrl: "https://cal.com/mrityunjoy-das-d6xwna/30min",
   links: {
     linkedin: "https://www.linkedin.com/in/mrityunjoy-das/",
     github: "https://github.com/mjoyshuvo",
