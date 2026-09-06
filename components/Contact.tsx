@@ -51,7 +51,7 @@ export function Contact() {
                     above, or it sweeps out across the panel. */}
                 <span
                   aria-hidden="true"
-                  className="cta-sheen pointer-events-none absolute inset-y-0 -left-8 w-8 bg-on-teal/25 blur-[6px]"
+                  className="cta-sheen pointer-events-none absolute inset-0 blur-[6px]"
                 />
                 <Mail
                   className="relative h-4 w-4 shrink-0"

@@ -95,7 +95,7 @@ export function Hero() {
                     above, or it sweeps out across the page. */}
                 <span
                   aria-hidden="true"
-                  className="cta-sheen pointer-events-none absolute inset-y-0 -left-8 w-8 bg-on-teal/25 blur-[6px]"
+                  className="cta-sheen pointer-events-none absolute inset-0 blur-[6px]"
                 />
                 <span className="relative">Get in touch</span>
                 <ArrowRight

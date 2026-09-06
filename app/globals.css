@@ -214,18 +214,33 @@ body {
 /* A light sweeping across the teal fill. Skewed so the edge reads as a
    highlight rather than a moving band, and held off-screen for most of the
    cycle so it passes occasionally instead of strobing. */
+/* The band travels in percentages of itself, so it has to be as wide as the
+   button it crosses — otherwise its parked position lands wherever 320% of a
+   32px band happens to fall, which on a wide button is the middle of the fill.
+   Full width plus a gradient inside gives the sweep a parent-relative edge to
+   rest behind. */
 @keyframes cta-sheen {
   0% {
-    transform: translateX(-140%) skewX(-20deg);
+    transform: translateX(-100%) skewX(-20deg);
   }
-  55%,
+  70%,
   100% {
-    transform: translateX(320%) skewX(-20deg);
+    transform: translateX(120%) skewX(-20deg);
   }
 }
 
+/* Timing follows from the geometry. The old band crossed ~150px of travel in
+   2.5s; a full-width band crosses ~330px, so the same 2.5s read as a flash.
+   7s with the sweep over the first 70% puts it back at about 65px a second,
+   and still leaves a couple of seconds of rest between passes. */
 .cta-sheen {
-  animation: cta-sheen 4.5s ease-in-out infinite;
+  background: linear-gradient(
+    to right,
+    transparent 40%,
+    color-mix(in oklab, var(--on-teal) 25%, transparent) 50%,
+    transparent 60%
+  );
+  animation: cta-sheen 7s ease-in-out infinite;
 }
 
 /* The arrow keeps nudging toward the thing it points at. */
