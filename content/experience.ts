@@ -64,7 +64,7 @@ export const experience: Role[] = [
         bullets: [
           "Cut processing time on the slowest pipelines by 50%, by moving the work to multiprocessing and removing the code paths that made it serial in the first place.",
           "Reworked the Dockerfile and brought build times down by 40%, which took a slow feedback loop out of every deploy.",
-          "Built and run 500+ data pipelines producing the timeseries, timeseries groups and forecast data behind the platform's market intelligence.",
+          "Built and run 200+ data pipelines producing the timeseries, timeseries groups and forecast data behind the platform's market intelligence.",
         ],
       },
     ],

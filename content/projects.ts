@@ -50,7 +50,7 @@ export const projects: Project[] = [
     product:
       "Veyt sells market intelligence across every green-energy market it covers — carbon, guarantees of origin, power purchase agreements and renewable fuels. Traders and analysts act on the published curves the same day they land.",
     work: "I build and run the pipelines feeding all of it: Python ETL publishing timeseries, timeseries groups and forecast curves from upstream sources that each define a schedule and a format differently. I cut processing time on the slowest jobs by 50% with multiprocessing and by removing the code paths that forced them to run serially, and took 40% off build times by reworking the Docker layers. I also build the REST APIs the platform exposes, and the MCP servers that give agents authenticated, typed access to the same systems.",
-    metric: { value: "500+", label: "pipelines in production" },
+    metric: { value: "200+", label: "pipelines in production" },
     tech: [
       "Python",
       "ETL",
