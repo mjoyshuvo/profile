@@ -48,7 +48,7 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
       <CardWash />
 
       <div className="relative p-5 sm:p-7">
-        <div className="gap-7 lg:grid lg:grid-cols-[1fr_13rem] lg:items-start">
+        <div>
           <div className="min-w-0">
             <div className="flex items-baseline gap-3">
               <span
@@ -107,13 +107,16 @@ function ProjectCard({ project, index }: { project: Project; index: number }) {
           </div>
 
           {/* The headline figure is the card's graphic. A schematic here was
-              decoration standing in for a fact; the number is the fact. */}
+              decoration standing in for a fact; the number is the fact. It
+              hugs its own content in the chip the skills and the dates use:
+              a full-width band holding three words was mostly empty space,
+              and it made the number read as a badge rather than a finding. */}
           {project.metric ? (
-            <p className="order-first mt-5 flex items-baseline gap-3 rounded-xl border border-rule bg-paper px-4 py-3 lg:order-none lg:mt-0 lg:block lg:px-5 lg:py-5 lg:text-center">
-              <span className="font-display text-3xl leading-none font-bold text-teal tabular-nums sm:text-4xl lg:text-5xl">
+            <p className="mt-4 inline-flex w-fit max-w-full items-center gap-2.5 rounded-full border border-rule bg-paper py-1.5 pr-4 pl-3.5 sm:ml-[calc(1.5rem+0.75rem)]">
+              <span className="font-display text-base leading-none font-bold text-teal tabular-nums sm:text-lg">
                 {project.metric.value}
               </span>
-              <span className="font-display font-semibold text-[0.6875rem] leading-snug tracking-[0.08em] text-ink-faint uppercase lg:mt-3 lg:block">
+              <span className="font-display font-semibold text-[0.6875rem] leading-snug tracking-[0.08em] text-ink-faint uppercase">
                 {project.metric.label}
               </span>
             </p>

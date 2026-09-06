@@ -67,12 +67,13 @@ export function Experience() {
                 {/* Monospace and uppercase, matching the meta lines on the
                     project cards — dates and places are data, and setting them
                     like data keeps them from competing with the company name.
-                    Carried in a pill so the span reads as one object: the
-                    dash and the hairline divider do the joining work that
-                    an arrow and a slash used to do as characters, and they
-                    sit on the baseline instead of drifting above it. */}
-                <p className="inline-flex shrink-0 flex-col items-start gap-y-1 self-start rounded-full border border-rule bg-paper-raised px-3 py-1 font-display font-semibold text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase md:flex-row md:items-center md:gap-x-2.5">
-                  <span className="inline-flex items-center gap-x-2.5 whitespace-nowrap">
+                    Two pills rather than one: a single pill had to break its
+                    own inside into two rows on a phone, and a tall pill with a
+                    stacked interior reads as a broken object. Side by side the
+                    pair fits one line down to 360px and wraps as whole pills
+                    below that, which is a break a reader can see the sense of. */}
+                <span className="flex shrink-0 flex-wrap items-center gap-x-2 gap-y-1.5 self-start font-display font-semibold text-[0.625rem] tracking-[0.06em] text-ink-faint uppercase sm:text-[0.6875rem] sm:tracking-[0.08em]">
+                  <span className="inline-flex items-center gap-x-2.5 rounded-full border border-rule bg-paper-raised px-2.5 py-1 whitespace-nowrap sm:px-3">
                     <time dateTime={role.startDate}>{role.start}</time>
                     <span
                       aria-hidden="true"
@@ -80,24 +81,19 @@ export function Experience() {
                     />
                     <DateEnd end={role.end} endDate={role.endDate} />
                   </span>
-                  {/* Two rows on a phone, one row from `md`. Wrapping was
-                      doing this before, but wrapping picks its own break
-                      point: the divider led the second line as a bar joining
-                      nothing above it, and the pin sat out of line with the
-                      date. Each row is its own nowrap group instead, so the
-                      break is where we put it and the divider only exists in
-                      the single-row layout, between the date and the place. */}
-                  <span className="inline-flex items-center gap-x-2.5 whitespace-nowrap">
-                    <span
-                      aria-hidden="true"
-                      className="hidden h-3 w-px shrink-0 bg-rule md:block"
-                    />
-                    <span className="inline-flex items-center gap-1">
-                      <MapPin className="h-3 w-3" aria-hidden="true" />
-                      {role.location}
+                  <span className="inline-flex items-center gap-1 rounded-full border border-rule bg-paper-raised px-2.5 py-1 whitespace-nowrap sm:px-3">
+                    <MapPin className="h-3 w-3 shrink-0" aria-hidden="true" />
+                    {/* City always, country from `sm` up. The full place and
+                        the dates together need ~380px, which a phone does not
+                        have — and "Dhaka" alone is not ambiguous next to a
+                        country nobody loses. Split on the first comma so the
+                        content file keeps holding one plain string. */}
+                    {role.location.split(",")[0]}
+                    <span className="hidden sm:inline">
+                      {role.location.slice(role.location.indexOf(","))}
                     </span>
                   </span>
-                </p>
+                </span>
               </div>
 
               {/* Position stack. Indented under the company with its own rule so
@@ -132,7 +128,7 @@ export function Experience() {
               <CaseStudyLinks company={role.company} />
 
               {role.client ? (
-                <div className="mt-4 flex max-w-3xl items-start gap-3 rounded-lg border border-rule bg-paper-raised px-4 py-3">
+                <div className="mt-4 flex max-w-3xl items-center gap-3 rounded-lg border border-rule bg-paper-raised px-4 py-3">
                   <ClientMark client={role.client} />
                   <p className="text-sm leading-relaxed text-ink-soft">
                     <span className="inline-flex items-center gap-1.5 font-display font-semibold text-ink">
