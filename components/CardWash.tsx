@@ -18,16 +18,16 @@ export function CardWash({ size = "card" }: { size?: "card" | "chip" }) {
   // that thin under a 64px blur, read as nothing at all. Two thirds of the
   // card, capped at the old width, keeps a real corner at every size. The blur
   // scales with it for the same reason.
-  // The chip lifts further on hover: at this size a 5-point step is invisible.
-  // It also holds a stronger resting tint where there is no pointer to hover
-  // with. The chip's bloom is anchored mostly outside a 34px-tall pill, so at
-  // 10% under a 16px blur the sliver that survives the clip is invisible on a
-  // phone — and a phone never gets the hover that rescues it on a desktop.
-  // Sitting it a little further inside and lifting the resting tint gives the
-  // chip the same corner everywhere, and a tap still brightens it.
+  // The chip's bloom must sit INSIDE the pill to survive it. Anchored outside a
+  // 34px-tall pill, `overflow-hidden` clipped away all but a sliver, and a
+  // 16px blur spread that sliver into nothing on a phone — where there is also
+  // no hover to rescue it. Sitting it just over the top-right corner, at half
+  // the pill's height, leaves a real bloom after the clip. Touch screens hold a
+  // stronger resting tint because a tint is all they ever get; a tap brightens
+  // it the way hover does on a desktop.
   const geometry =
     size === "chip"
-      ? "-top-4 -right-3 h-10 w-16 blur-lg group-hover:bg-teal/25 group-active:bg-teal/30 [@media(hover:none)]:bg-teal/20"
+      ? "-top-2 -right-2 h-5 w-12 blur-md group-hover:bg-teal/30 group-active:bg-teal/35 [@media(hover:none)]:bg-teal/25"
       : "-top-[18%] -right-[12%] h-[65%] max-h-72 w-2/3 max-w-[34rem] blur-2xl sm:blur-3xl group-hover:bg-teal/15";
 
   return (
