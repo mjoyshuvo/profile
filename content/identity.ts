@@ -26,11 +26,11 @@ export const pillars: Pillar[] = [
   {
     eyebrow: "Data engineering",
     title: "Data pipelines that publish timeseries and forecasts",
-    body: "200+ production pipelines behind Veyt's market intelligence, producing the timeseries, timeseries groups and forecast curves the platform sells across carbon, guarantees of origin, power purchase agreements and renewable fuels. Python ETL over market data sources with their own schedules and failure modes, dependency-aware orchestration, schema design for timeseries at volume, monitoring that surfaces a failed run before a customer does, and multiprocessing work that took 50% off the slowest jobs.",
+    body: "200+ production pipelines behind Veyt's market intelligence, producing the timeseries, timeseries groups and forecast curves the platform sells across carbon, guarantees of origin, power purchase agreements and renewable fuels. An ingestion layer reaching dozens of external registries and APIs, Python ETL over sources with their own schedules and failure modes, Prefect orchestration, schema design for timeseries at volume, monitoring that surfaces a failed run before a customer does, multiprocessing work that took 50% off the slowest jobs, and query and index rewrites that took one core lookup from 99.4 ms to 0.193 ms.",
   },
   {
     eyebrow: "AI",
     title: "MCP tools and agent workflows on live systems",
-    body: "MCP servers that give agents authenticated, typed access to internal systems, so an agent reads the actual state instead of inferring it. Agentic workflows built on top of those tools for recurring engineering tasks, LLM API integration inside existing Python services, and coaching Cefalo teams through adopting both — including where the approach does not pay.",
+    body: "MCP servers that give agents authenticated, typed access to internal systems, so an agent reads the actual state instead of inferring it. Agentic workflows built on top of those tools for recurring engineering tasks, a production auto-fix agent hardened until most of its repairs land unattended, LLM API integration inside existing Python services, and coaching Cefalo teams through adopting all of it — including where the approach does not pay.",
   },
 ];

@@ -10,13 +10,13 @@ export const profile = {
   triad: ["Engineer.", "Mentor.", "Builder."],
   /** The supporting paragraph under the statement. */
   supportingLine:
-    "Backend and Data Engineer with 10 years of experience building scalable systems and robust data pipelines. Passionate about solving complex technical challenges while actively mentoring the next generation of engineering talent.",
+    "Backend and Data Engineer with 10 years of experience building scalable systems and robust data pipelines, now building the MCP tooling and agentic workflows on top of them. AI Coach and AI Task Force member at Cefalo, mentoring engineers on agentic development.",
   /**
    * The supporting line is deliberately less literal than a search engine needs,
    * so <meta> and JSON-LD get their own keyword-carrying sentence.
    */
   metaDescription:
-    "Staff Software Engineer with 10 years in backend, data, and AI engineering — ETL pipelines, FastAPI and Django services, and agentic systems, for Norwegian clients including Veyt and Ferdia.",
+    "Staff Software Engineer with 10 years in backend, data, and AI engineering — 200+ ETL pipelines, FastAPI and Django services, MCP servers and agentic workflows, for Norwegian clients including Veyt and Ferdia.",
   location: "Dhaka, Bangladesh",
   email: "mjoyshuvo@gmail.com",
   resumePath: "/Mrityunjoy_Das_Resume.pdf",

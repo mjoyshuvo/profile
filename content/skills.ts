@@ -21,7 +21,14 @@ export const skillGroups: SkillGroup[] = [
   },
   {
     label: "Data Engineering",
-    items: ["ETL", "Prefect", "Celery", "Elasticsearch", "Apache Superset"],
+    items: [
+      "ETL",
+      "Prefect",
+      "Pandas",
+      "Celery",
+      "Elasticsearch",
+      "Apache Superset",
+    ],
   },
   {
     label: "Agentic & AI",
@@ -35,11 +42,21 @@ export const skillGroups: SkillGroup[] = [
       "RAG",
       "LangChain",
       "LangGraph",
+      "Ollama",
     ],
   },
   {
     label: "Infrastructure",
-    items: ["Docker", "AWS", "Microservices", "Keycloak", "CI/CD", "Git"],
+    items: [
+      "Docker",
+      "AWS",
+      "GCP",
+      "Microservices",
+      "Keycloak",
+      "GitHub Actions",
+      "CI/CD",
+      "Git",
+    ],
   },
 ];
 

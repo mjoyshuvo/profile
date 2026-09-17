@@ -2,9 +2,11 @@ import {
   ArrowRightLeft,
   BookOpen,
   Boxes,
+  Bot,
   BrainCircuit,
   ChartColumn,
   Cloud,
+  CloudCog,
   Code,
   Container,
   Database,
@@ -22,6 +24,7 @@ import {
   Search,
   Server,
   Share2,
+  Table,
   Terminal,
   TreePine,
   Workflow,
@@ -57,6 +60,7 @@ export const skillIcons: Record<string, LucideIcon> = {
   // Data Engineering
   ETL: ArrowRightLeft,
   Prefect: Workflow,
+  Pandas: Table,
   Celery: Repeat,
   Elasticsearch: Search,
   "Apache Superset": ChartColumn,
@@ -71,12 +75,15 @@ export const skillIcons: Record<string, LucideIcon> = {
   RAG: BookOpen,
   LangChain: Link2,
   LangGraph: Share2,
+  Ollama: Bot,
 
   // Infrastructure
   Docker: Container,
   AWS: Cloud,
+  GCP: CloudCog,
   Microservices: Boxes,
   Keycloak: KeyRound,
+  "GitHub Actions": Workflow,
   "CI/CD": Rocket,
   Git: GitBranch,
 };
