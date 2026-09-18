@@ -1,9 +1,18 @@
 import { Compass } from "lucide-react";
 import { pillars } from "@/content/identity";
-import { CardWash } from "./CardWash";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
 
+/**
+ * Three parallel disciplines, read as one triad.
+ *
+ * These used to be three full-width raised cards — the same card the project
+ * index uses — each carrying a solid teal 01/02/03 chip. That spent three
+ * screens on three things that belong side by side, put a rank on work that
+ * has none, and made this section indistinguishable from Products and systems
+ * a scroll further down. The raised card now belongs to the projects alone.
+ * What is left here is an accent rule, a discipline glyph and the prose.
+ */
 export function Identity() {
   return (
     <Section
@@ -11,51 +20,47 @@ export function Identity() {
       title="Engineering identity"
       icon={<Compass className="h-6 w-6" />}
     >
-      {/* An <ol>: the items are genuinely ordinal, so the visible numerals and
-          the markup should agree. One observed container drives the whole
-          ladder — see the stagger rules in globals.css. */}
+      {/* A <ul>: the items are a set, not a sequence. One observed container
+          drives the whole ladder — see the stagger rules in globals.css. */}
       <Reveal
         mode="stagger"
-        as="ol"
+        as="ul"
         step={0.07}
-        className="space-y-5 sm:space-y-6"
+        className="grid gap-8 sm:gap-10 lg:grid-cols-3"
       >
-        {pillars.map((pillar, i) => (
-          <li key={pillar.title}>
-            <article className="group relative overflow-hidden rounded-2xl border border-rule bg-paper-raised p-5 transition-[border-color,box-shadow,transform] duration-200 hover:border-teal sm:p-7 [@media(hover:hover)]:hover:-translate-y-0.5 [@media(hover:hover)]:hover:shadow-[var(--shadow)]">
-              <CardWash />
+        {pillars.map(({ eyebrow, icon: Icon, title, body }) => (
+          <li
+            key={title}
+            // The accent rule is the whole frame. It rests in --rule and takes
+            // the teal on hover, so the section keeps the page's one
+            // interaction without borrowing the card's lift and shadow.
+            className="group border-l-2 border-rule pl-5 transition-colors duration-200 hover:border-teal"
+          >
+            <div className="flex items-center gap-3">
+              <span
+                className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-teal-wash text-teal"
+                aria-hidden="true"
+              >
+                <Icon className="h-5 w-5" />
+              </span>
 
-              <div className="relative">
-                <div className="flex items-center gap-3.5">
-                  {/* aria-hidden so a screen reader announcing list positions
-                      doesn't read "one, oh-one". */}
-                  <span
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-teal font-display text-xs font-bold text-on-teal tabular-nums"
-                    aria-hidden="true"
-                  >
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
+              {/* The role is the label a skimming reader sorts by, so it
+                  carries the teal and sits level with the glyph. */}
+              <p className="font-display text-[0.8125rem] font-bold tracking-[0.14em] text-teal uppercase">
+                {eyebrow}
+              </p>
+            </div>
 
-                  {/* The role is the label a skimming reader sorts by, so it
-                      carries the teal and sits level with the title rather
-                      than shrinking above it. */}
-                  <p className="font-display text-[0.8125rem] font-bold tracking-[0.14em] text-teal uppercase">
-                    {pillar.eyebrow}
-                  </p>
-                </div>
+            <h3 className="mt-4 font-display text-xl font-bold tracking-[-0.03em]">
+              {title}
+            </h3>
 
-                <h3 className="mt-3 font-display text-xl font-bold tracking-[-0.03em] sm:text-2xl">
-                  {pillar.title}
-                </h3>
-
-                {/* The card spans the full page width like every other, but
-                    the reading measure is capped — 130 characters a line is
-                    not a line anyone finishes. */}
-                <p className="mt-2.5 max-w-[68ch] text-[0.9375rem] leading-relaxed text-ink-soft">
-                  {pillar.body}
-                </p>
-              </div>
-            </article>
+            {/* Capped at a column's worth below lg, where the row still spans
+                the page — 130 characters a line is not a line anyone
+                finishes. In the three-column layout the grid already caps it. */}
+            <p className="mt-2.5 max-w-[68ch] text-sm leading-relaxed text-ink-soft">
+              {body}
+            </p>
           </li>
         ))}
       </Reveal>

@@ -549,8 +549,88 @@ html:not(.js) .rec-counter {
   transition: max-height 0.45s var(--ease-soft);
 }
 
+/* The spare tech pills. A resting card shows five and a count; opening the
+   case study swaps the count for the remainder. `display: none` rather than a
+   clip, so the count and the pills it stands for are never both announced. */
+.proj-tech-rest {
+  display: none;
+}
+
+.proj-card:has(.disclosure[open]) .proj-tech-rest {
+  display: block;
+}
+
+.proj-card:has(.disclosure[open]) .proj-tech-count {
+  display: none;
+}
+
+/* The case-study stat tiles.
+   Each figure is a before-and-after, so the tile draws the comparison rather
+   than stating the result: the old value struck through in faint ink, the new
+   one in teal, and a hairline running between them.
+
+   The animation is keyed to the card being OPEN, not to page load — the tiles
+   live inside `.proj-body`, which is clipped to zero height while the card
+   rests, so animating on load would spend the whole thing behind a closed lid.
+   Matching the `:has()` selector is what starts it.
+
+   Rest state is the FINISHED state. The keyframes only supply a `from`, so a
+   browser that never runs them — or a reader who asked for less motion — gets
+   the tile fully drawn rather than a blank box. */
+@keyframes stat-rule {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes stat-fig {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+.stat-rule {
+  transform-origin: left center;
+}
+
+.proj-card:has(.disclosure[open]) .stat-rule {
+  animation: stat-rule 0.9s var(--ease-soft) both;
+}
+
+.proj-card:has(.disclosure[open]) .stat-fig {
+  animation: stat-fig 0.6s var(--ease-soft) both;
+}
+
+/* One tile after another, so the row reads left to right rather than landing
+   all at once. The figure trails its own hairline. */
+.stat-tile:nth-child(2) .stat-rule {
+  animation-delay: 0.1s;
+}
+
+.stat-tile:nth-child(3) .stat-rule {
+  animation-delay: 0.2s;
+}
+
+.stat-tile:nth-child(1) .stat-fig {
+  animation-delay: 0.35s;
+}
+
+.stat-tile:nth-child(2) .stat-fig {
+  animation-delay: 0.45s;
+}
+
+.stat-tile:nth-child(3) .stat-fig {
+  animation-delay: 0.55s;
+}
+
 .proj-card:has(.disclosure[open]) .proj-body {
-  max-height: 48rem;
+  /* A hard cap, not a fit — so it has to clear the tallest card in the
+     narrowest column. That is the Veyt card at 390px, where the prose wraps
+     longest: 1163px of content once the stat tiles sit on top of it. 56rem
+     clipped the last third of "What I did" clean off on a phone. Measured at
+     390px, with headroom. */
+  max-height: 80rem;
 }
 
 /* ---------------------------------------------------------------------------
@@ -747,6 +827,16 @@ html:not(.js) .rec-counter {
     stroke-dasharray: none !important;
     stroke-dashoffset: 0 !important;
     opacity: 1 !important;
+  }
+
+  /* These two rest on their finished frame, so nothing is hidden by killing
+     them — but the staggered delays would otherwise hold each tile blank for
+     up to half a second before the blanket rule let it through. */
+  .stat-rule,
+  .stat-fig {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 
   /* The head would otherwise park at `left: 100%`, a lit dot stuck in the
