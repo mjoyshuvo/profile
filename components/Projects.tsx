@@ -54,7 +54,7 @@ function ProjectCard({ project }: { project: Project }) {
   const remainingTech = project.tech.slice(TECH_AT_REST);
 
   return (
-    <article className="proj-card group relative overflow-hidden rounded-2xl border border-rule bg-paper-raised transition-[border-color,box-shadow,transform] duration-200 hover:border-teal [@media(hover:hover)]:hover:-translate-y-0.5 [@media(hover:hover)]:hover:shadow-[var(--shadow)]">
+    <article className="proj-card spot-card lift-card group relative overflow-hidden rounded-2xl border border-rule bg-paper-raised">
       <CardWash />
 
       <div className="relative p-5 sm:p-7">
@@ -131,15 +131,19 @@ function ProjectCard({ project }: { project: Project }) {
             it's in the DOM and in the accessibility tree whether or not the
             reader opens it. The padding sits inside the clipped box, so a
             closed card contributes no height at all. */}
+        {/* A one-row grid whose track opens from 0fr to 1fr, so the body
+            animates to its real height — no max-height ceiling to outgrow. */}
         <div id={bodyId} className="proj-body">
-          {project.stats ? <Stats stats={project.stats} /> : null}
+          <div className="proj-body-inner">
+            {project.stats ? <Stats stats={project.stats} /> : null}
 
-          {/* Label-and-value pairs get the element that says so — which is
-              also the structure an ATS reads. */}
-          <dl className="space-y-4 pt-6">
-            <Field label="Product">{project.product}</Field>
-            <Field label="What I did">{project.work}</Field>
-          </dl>
+            {/* Label-and-value pairs get the element that says so — which is
+                also the structure an ATS reads. */}
+            <dl className="proj-body-fields space-y-4 pt-6">
+              <Field label="Product">{project.product}</Field>
+              <Field label="What I did">{project.work}</Field>
+            </dl>
+          </div>
         </div>
 
         <div className="mt-6 flex flex-wrap items-center justify-between gap-x-6 gap-y-4 border-t border-rule pt-5">
@@ -153,8 +157,12 @@ function ProjectCard({ project }: { project: Project }) {
             {restingTech.map((item) => (
               <TechPill key={item}>{item}</TechPill>
             ))}
-            {remainingTech.map((item) => (
-              <TechPill key={item} className="proj-tech-rest">
+            {remainingTech.map((item, i) => (
+              <TechPill
+                key={item}
+                className="proj-tech-rest"
+                style={{ "--i": i } as React.CSSProperties}
+              >
                 {item}
               </TechPill>
             ))}
@@ -197,7 +205,7 @@ function Stats({ stats }: { stats: NonNullable<Project["stats"]> }) {
       {stats.map((stat) => (
         <li
           key={stat.label}
-          className="stat-tile rounded-xl border border-rule bg-paper p-4"
+          className="stat-tile rounded-xl border border-rule bg-paper p-4 transition-[border-color,transform] duration-300 hover:-translate-y-0.5 hover:border-teal/40"
         >
           <p className="flex items-baseline gap-2.5">
             <span className="font-display text-sm font-semibold whitespace-nowrap text-ink-faint line-through tabular-nums">
@@ -226,12 +234,15 @@ function Stats({ stats }: { stats: NonNullable<Project["stats"]> }) {
 function TechPill({
   children,
   className = "",
+  style,
 }: {
   children: React.ReactNode;
   className?: string;
+  style?: React.CSSProperties;
 }) {
   return (
     <li
+      style={style}
       className={`rounded-full border border-rule bg-paper px-2.5 py-1 font-display text-[0.6875rem] font-medium text-ink-soft transition-colors group-hover:border-teal/30 hover:border-teal hover:text-teal ${className}`}
     >
       {children}

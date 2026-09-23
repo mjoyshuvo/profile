@@ -114,10 +114,17 @@ scroll())`. Deliberately not a scroll listener: that would put main-thread work
   frame, not to nothing.** Any new `@keyframes` must therefore be neutralised
   there by name, or it ships in its end state for the readers who asked for
   less motion.
-- The **section icons** drift their own SVG shapes on a stagger, so each mark
-  moves out of its own construction — Layers ripples through three chevrons,
-  Mail through envelope and flap. One rule in `globals.css` covers all eight;
-  no per-icon code.
+- The **section icons** draw their own SVG strokes on a stagger, once, when the
+  heading arrives, and again when the pointer rests on the heading row. One rule
+  in `globals.css` covers all eight; no per-icon code.
+- **Cards** (`.spot-card`) get a glow and a lit border that follow the pointer.
+  The CSS is in `globals.css`; `components/Spotlight.tsx` is one delegated
+  listener that feeds it `--mx`/`--my`, and does nothing on touch.
+  `.lift-card` adds the hover lift. Cards use `overflow: clip`, not `hidden`,
+  so a click inside can never scroll the card sideways.
+- The **hero portrait** loops an aura, a ring and a bead, all `aria-hidden`
+  decoration. The two chips beside it carry words, so they animate in once and
+  then hold still.
 - The other thing that moves on its own is the **availability lamp** in the hero. It pulses
   without a pause control because WCAG 2.2.2 governs moving _information_, and
   the lamp is `aria-hidden` and says nothing the sentence beside it does not —
@@ -135,14 +142,12 @@ scroll())`. Deliberately not a scroll listener: that would put main-thread work
 the `<details>`** — inside a closed one it would be `display: none`, and both the
 quotes and the case studies have to stay in the DOM and in the accessibility tree
 whether or not anyone opens them. So the `<details>` is an empty, native,
-keyboard-reachable control, and `:has(.disclosure[open])` releases a `max-height`
-clamp on its sibling (`.rec-quote`, `.proj-body`).
+keyboard-reachable control, and `:has(.disclosure[open])` opens its sibling.
 
-Two consequences worth knowing before changing it:
-
-- The open height is a **ceiling, not a measurement** — `max-height` cannot
-  transition to `content`. Prose longer than the ceiling gets silently clipped, so
-  raise it if a case study grows.
+- `.proj-body` is a one-row grid that animates `grid-template-rows` from `0fr`
+  to `1fr`, so a case study opens to its real height with no ceiling to outgrow.
+- `.rec-quote` still releases a `max-height` clamp. That open height is a
+  **ceiling, not a measurement**, so raise it if a quote grows past it.
 - The clamp is a screen affordance. Every disclosure is forced open in
   `@media print`, or Cmd-P would drop the case studies and truncate a quote.
 

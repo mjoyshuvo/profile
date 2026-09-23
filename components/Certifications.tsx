@@ -27,8 +27,8 @@ export function Certifications() {
               <Reveal delay={i * 0.05}>
                 <Card
                   {...linkProps}
-                  className={`group relative block overflow-hidden rounded-lg border border-rule bg-paper-raised px-4 py-4 transition-[border-color,transform] duration-200 hover:border-teal ${
-                    cert.url ? "press-card" : ""
+                  className={`spot-card group relative block overflow-hidden rounded-lg border border-rule bg-paper-raised px-4 py-4 transition-[border-color] duration-200 hover:border-teal ${
+                    cert.url ? "press-card lift-card" : ""
                   }`}
                 >
                   <CardWash />

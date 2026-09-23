@@ -20,7 +20,7 @@ export function Writing() {
                 href={post.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="press-card group relative block overflow-hidden rounded-lg border border-rule bg-paper-raised px-4 py-4 transition-[border-color,transform] duration-200 hover:border-teal"
+                className="press-card spot-card lift-card group relative block overflow-hidden rounded-lg border border-rule bg-paper-raised px-4 py-4"
               >
                 {/* The same corner wash the project and contact cards carry. */}
                 <CardWash />

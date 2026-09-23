@@ -8,6 +8,7 @@ import { Nav } from "@/components/Nav";
 import { Projects } from "@/components/Projects";
 import { Recommendations } from "@/components/Recommendations";
 import { Skills } from "@/components/Skills";
+import { Spotlight } from "@/components/Spotlight";
 import { Writing } from "@/components/Writing";
 import { profile } from "@/content/profile";
 
@@ -24,6 +25,7 @@ export default function Home() {
       </a>
 
       <Nav />
+      <Spotlight />
 
       <main id="main" className="w-full flex-1">
         <Hero />

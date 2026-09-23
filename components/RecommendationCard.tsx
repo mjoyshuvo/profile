@@ -31,7 +31,7 @@ export function RecommendationCard({
   return (
     <figure
       {...panelProps}
-      className={`rec-card group relative overflow-hidden rounded-2xl border border-rule bg-paper-raised p-6 transition-[border-color,transform] duration-200 sm:p-9 ${panelProps?.className ?? ""}`}
+      className={`rec-card spot-card group relative overflow-hidden rounded-2xl border border-rule bg-paper-raised p-6 transition-[border-color,transform] duration-200 sm:p-9 ${panelProps?.className ?? ""}`}
     >
       <CardWash />
 

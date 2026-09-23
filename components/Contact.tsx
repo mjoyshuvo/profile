@@ -15,7 +15,7 @@ export function Contact() {
       <Reveal>
         {/* One panel rather than a grid of equal cards: email is the action
             that matters, so it gets the weight and everything else recedes. */}
-        <div className="group relative overflow-hidden rounded-2xl border border-rule bg-paper-raised p-5 sm:p-10">
+        <div className="spot-card group relative overflow-hidden rounded-2xl border border-rule bg-paper-raised p-5 sm:p-10">
           {/* The same corner wash every card on the page carries, so this panel
               reads as part of the set rather than as its own treatment. */}
           <CardWash />

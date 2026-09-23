@@ -52,7 +52,10 @@ export function Hero() {
             </p>
           </Reveal>
 
-          <Reveal delay={0.08}>
+          {/* No Reveal wrapper: each line rises out of its own mask on load
+              (`.hero-line` in globals.css), and fading the block as well
+              would double the motion on the first thing anyone sees. */}
+          <div>
             <h1
               id="name-heading"
               // Poppins at 800 with tracking pulled to -0.045em. A geometric
@@ -65,15 +68,17 @@ export function Hero() {
                   sticky nav. Screen readers and crawlers still get both. */}
               <span className="sr-only">{profile.name} — </span>
               {lines.map((line, i) => (
-                <span
-                  key={line}
-                  className={`block ${i === lastLine ? "text-teal" : ""}`}
-                >
-                  {line}
+                <span key={line} className="hero-line block">
+                  <span
+                    className={`hero-line-inner block ${i === lastLine ? "hero-accent" : ""}`}
+                    style={{ "--line": i } as React.CSSProperties}
+                  >
+                    {line}
+                  </span>
                 </span>
               ))}
             </h1>
-          </Reveal>
+          </div>
 
           <Reveal delay={0.14}>
             <p className="mt-5 max-w-2xl text-[0.9375rem] leading-relaxed text-ink-soft sm:mt-8 sm:text-lg">
@@ -148,27 +153,67 @@ export function Hero() {
             meant to sit beside. A grid item is centred by its margin box, so
             192px of bottom margin lifts it by half that — landing the portrait
             level with the headline. Measured, not guessed. */}
-        <div className="order-first lg:order-2 lg:mb-48 lg:w-80">
+        <div className="order-first lg:order-2 lg:mb-48">
           <Reveal delay={0.06}>
-            <Image
-              src={profile.sketch}
-              alt={`Portrait of ${profile.name}`}
-              // A pencil drawing keyed onto transparency, so it sits on the
-              // paper with no frame. `portrait-ink` gives it a paper card on
-              // the dark palette — inverting it would read as a photo negative.
-              width={640}
-              height={603}
-              sizes="(min-width: 1024px) 320px, 176px"
-              priority
-              // At w-28 the face was a thumbnail: on a phone this is the first
-              // thing on the page and it was carrying none of the weight it
-              // carries at 320px on a desktop.
-              className="portrait-ink w-36 sm:w-44 lg:w-80"
-            />
+            <Portrait />
           </Reveal>
         </div>
       </div>
     </section>
+  );
+}
+
+/**
+ * The portrait as a small composition rather than a bare circle: a soft teal
+ * aura behind, a conic ring turning slowly around the frame, and a lit bead
+ * riding that ring. Two glass chips carry the headline facts beside it.
+ *
+ * Everything that loops is decoration — aria-hidden, saying nothing the page
+ * does not already say — so it needs no pause control, and it stops under
+ * reduced motion. The chips carry words, so they arrive once and then hold
+ * still: moving text would need a pause button.
+ */
+function Portrait() {
+  return (
+    <div className="portrait-stage group relative w-36 sm:w-44 lg:w-80">
+      <span aria-hidden="true" className="portrait-aura" />
+      <span aria-hidden="true" className="portrait-ring" />
+      <span aria-hidden="true" className="portrait-orbit">
+        <span className="portrait-bead" />
+      </span>
+
+      <div className="portrait-frame relative overflow-hidden rounded-full">
+        <Image
+          src={profile.sketch}
+          alt={`Portrait of ${profile.name}`}
+          // A pencil drawing keyed onto transparency. `portrait-ink` gives it
+          // a paper plate on the dark palette — inverting it would read as a
+          // photo negative.
+          width={640}
+          height={603}
+          sizes="(min-width: 1024px) 320px, 176px"
+          priority
+          className="portrait-ink w-full"
+        />
+      </div>
+
+      {/* Restates the supporting line, so hidden from assistive tech rather
+          than read twice. Desktop only: beside a 144px phone portrait they
+          would cover the face. */}
+      <span
+        aria-hidden="true"
+        className="portrait-chip portrait-chip-a hidden lg:inline-flex"
+      >
+        <span className="font-extrabold text-teal">10</span> years shipping
+      </span>
+      <span
+        aria-hidden="true"
+        className="portrait-chip portrait-chip-b hidden lg:inline-flex"
+      >
+        <span className="h-1.5 w-1.5 rounded-full bg-teal" />
+        AI Coach · Cefalo
+      </span>
+    </div>
   );
 }
 
