@@ -1,16 +1,20 @@
 "use client";
 
 import { Menu, X } from "lucide-react";
+import {
+  motion,
+  useMotionValueEvent,
+  useScroll,
+  useSpring,
+} from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { profile } from "@/content/profile";
 import { ThemeToggle } from "./ThemeToggle";
 
 /**
- * Seven labels, one of them long, need roughly 660px — too tight at `md`
- * alongside the masthead, so the row appears at `lg`. Below that the same
- * links are behind the Menu disclosure rather than absent, which is what they
- * were before: the row was `hidden lg:flex` with nothing standing in for it,
- * so a phone got a masthead and no navigation at all.
+ * Seven labels, one of them long, need roughly 660px inside the pill — too
+ * tight at `md`, so the row appears at `lg`. Below that the same links sit
+ * behind the Menu disclosure rather than being absent.
  */
 const links = [
   { href: "#identity", label: "About" },
@@ -44,17 +48,37 @@ const spySections = [
 
 export function Nav() {
   const [active, setActive] = useState<string>("");
+  const [scrolled, setScrolled] = useState(false);
+  const [tucked, setTucked] = useState(false);
   const menu = useRef<HTMLDetailsElement>(null);
 
+  // The pill tucks away while the reader scrolls down into the page and comes
+  // back the moment they scroll up — the nav is there when they reach for it
+  // and out of the way while they read. Never while the menu is open.
+  const { scrollY, scrollYProgress } = useScroll();
+  useMotionValueEvent(scrollY, "change", (y) => {
+    const previous = scrollY.getPrevious() ?? 0;
+    setScrolled(y > 40);
+    const menuOpen = menu.current?.hasAttribute("open");
+    setTucked(!menuOpen && y > previous && y > 480);
+  });
+
+  // The reading-progress line along the pill's bottom edge. Sprung, so a jump
+  // from a nav click glides instead of snapping.
+  const progress = useSpring(scrollYProgress, {
+    stiffness: 200,
+    damping: 40,
+    restDelta: 0.001,
+  });
+
   // A native <details> rather than state, so the menu opens with JavaScript
-  // off — same reasoning as the recommendation quote. The one thing it can't
-  // do on its own is shut after a jump, so that part is scripted.
+  // off. The one thing it can't do on its own is shut after a jump, so that
+  // part is scripted.
   const closeMenu = () => menu.current?.removeAttribute("open");
 
   // What a native <details> doesn't give a menu: Escape and a tap outside.
-  // Both listeners are always mounted and cheap — they read `open` off the
-  // element rather than mirroring it into React state, which would make the
-  // menu's openness two sources of truth instead of one.
+  // They read `open` off the element rather than mirroring it into React
+  // state, so the menu's openness has one source of truth.
   useEffect(() => {
     const el = menu.current;
     if (!el) return;
@@ -62,8 +86,6 @@ export function Nav() {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape" || !el.hasAttribute("open")) return;
       closeMenu();
-      // Escape should leave the reader on the control they opened, not adrift
-      // at the top of the document.
       el.querySelector("summary")?.focus();
     };
 
@@ -105,96 +127,95 @@ export function Nav() {
   }, []);
 
   return (
-    <header className="no-print sticky top-0 z-50 border-b border-rule bg-paper/85 backdrop-blur-md">
-      <nav
+    // The header is a transparent strip; only the pill inside it takes
+    // pointer events, so the page stays clickable around it.
+    <header className="no-print pointer-events-none sticky top-0 z-50 px-4 pt-3 sm:px-6">
+      <motion.nav
         aria-label="Section navigation"
-        className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-6 sm:px-8"
+        animate={{ y: tucked ? "-140%" : "0%" }}
+        transition={{ type: "spring", stiffness: 380, damping: 38 }}
+        className={`nav-pill pointer-events-auto relative mx-auto flex w-full max-w-6xl items-center justify-between gap-1 rounded-full border border-rule bg-paper-raised/75 backdrop-blur-xl backdrop-saturate-150 transition-[padding,box-shadow] duration-300 lg:w-fit lg:justify-start ${
+          scrolled
+            ? "p-1 shadow-[var(--shadow-float)]"
+            : "p-1.5 shadow-[var(--shadow)]"
+        }`}
       >
-        {/* Masthead: the wordmark alone. The sketch used to sit beside it, but
-            it is the same drawing the hero shows at ten times the size a
-            screen-length below, and a pencil portrait at 32px is a grey smudge
-            rather than a face — it also needed its own cream coin to survive
-            the dark palette, so it read as a disc stuck on the paper. */}
-        <a href="#top" className="tap group flex min-w-0 items-center">
-          {/* A wordmark, not a byline: first name and a full stop, set heavy
-              and tight. The full name is a sentence, and a sentence in the
-              masthead competes with the six links beside it. The stop matches
-              the hero triad — "Engineer. Mentor. Builder." — so the page has
-              one idiom rather than two. The teal is on the stop alone, which
-              is as much accent as a 16px mark can carry. */}
+        {/* A wordmark, not a byline: first name and a full stop, set heavy and
+            tight. The stop matches the hero triad — "Engineer. Mentor.
+            Builder." — so the page has one idiom. */}
+        <a
+          href="#top"
+          className="tap group flex min-w-0 items-center rounded-full px-3 py-1.5 lg:mr-1 lg:border-r lg:border-rule lg:rounded-none lg:pr-4"
+        >
           <span
-            className="min-w-0 font-display text-lg font-bold tracking-[-0.03em] transition-colors group-hover:text-teal"
+            className="min-w-0 font-display text-base font-bold tracking-[-0.03em] transition-colors group-hover:text-teal"
             aria-hidden="true"
           >
             {profile.name.split(" ")[0]}
             <span className="text-teal">.</span>
           </span>
-          {/* The mark says "Mrityunjoy"; the link still has to say where it
-              goes and who it belongs to. */}
           <span className="sr-only">{profile.name} — back to top</span>
         </a>
 
-        <div className="flex items-center gap-1 sm:gap-2">
-          <ul className="hidden items-center gap-1 lg:flex">
-            {links.map((link) => (
+        <ul className="hidden items-center lg:flex">
+          {links.map((link) => {
+            const isActive = active === link.href;
+            return (
               <li key={link.href}>
                 <a
                   href={link.href}
-                  aria-current={active === link.href ? "location" : undefined}
-                  // Hovering fills the pill with the same teal wash the active
-                  // one carries, so the highlight the reader is about to move
-                  // to is the highlight they already see.
-                  className={`rounded-full px-3 py-1.5 font-display text-sm font-medium transition-colors hover:bg-teal-wash/60 hover:text-teal ${
-                    active === link.href
-                      ? "bg-teal-wash text-teal"
-                      : "text-ink-soft"
+                  aria-current={isActive ? "location" : undefined}
+                  className={`relative isolate block rounded-full px-3 py-1.5 font-display text-sm font-medium transition-colors hover:text-teal ${
+                    isActive ? "text-teal" : "text-ink-soft"
                   }`}
                 >
+                  {/* One pill for the whole row, handed from link to link by
+                      a shared layout id, so it slides to the section the
+                      reader has reached instead of blinking on and off. */}
+                  {isActive ? (
+                    <motion.span
+                      layoutId="nav-active"
+                      aria-hidden="true"
+                      className="absolute inset-0 -z-10 rounded-full bg-teal-wash"
+                      transition={{
+                        type: "spring",
+                        stiffness: 420,
+                        damping: 34,
+                      }}
+                    />
+                  ) : null}
                   {link.label}
                 </a>
               </li>
-            ))}
-          </ul>
+            );
+          })}
+        </ul>
 
-          {/* The same links under `lg`. The panel hangs off the header rather
-              than the button so it can span the full width without the button
-              having to be full width. */}
+        <div className="flex items-center gap-1 lg:ml-1">
           <details ref={menu} className="nav-menu lg:hidden">
-            <summary
-              // min-h-11 rather than padding alone: this is the one standalone
-              // control on a phone, and 44px is the tap target it should be.
-              className="inline-flex min-h-11 items-center gap-2 rounded-full border border-rule px-4 font-display text-xs font-semibold tracking-[0.1em] text-ink-soft uppercase transition-colors hover:border-teal hover:text-teal"
-            >
+            <summary className="inline-flex min-h-10 items-center gap-2 rounded-full px-4 font-display text-xs font-semibold tracking-[0.1em] text-ink-soft uppercase transition-colors hover:bg-teal-wash/60 hover:text-teal">
               <Menu className="nav-menu-open h-4 w-4" aria-hidden="true" />
               <X className="nav-menu-close h-4 w-4" aria-hidden="true" />
-              {/* The visible word is the accessible name. An `aria-label` here
-                  read "Open section navigation", which does not contain "Menu"
-                  — so "tap Menu" failed under voice control, and the label
-                  still said "Open" while the menu was open. The extra context
-                  is appended instead of replacing the name. */}
+              {/* The visible word is the accessible name, so "tap Menu" works
+                  under voice control. */}
               Menu
               <span className="sr-only"> — section navigation</span>
             </summary>
 
-            {/* Opaque, unlike the header above it. The bar can be translucent
-                because it is a 3.5rem strip; a panel this tall over the hero
-                left the display type legible straight through the links. */}
-            <ul className="absolute inset-x-0 top-full max-h-[calc(100svh-3.5rem)] overflow-y-auto border-b border-rule bg-paper px-6 py-3 shadow-[var(--shadow)] sm:px-8">
+            {/* A sheet hung under the pill. Opaque: over the hero's display
+                type a translucent panel left the words legible through the
+                links. The rows stagger in — see `.nav-menu[open]` in CSS. */}
+            <ul className="nav-sheet absolute inset-x-0 top-full mt-2 max-h-[calc(100svh-6rem)] overflow-y-auto rounded-3xl border border-rule bg-paper-raised p-2 shadow-[var(--shadow-float)]">
               {links.map((link) => (
-                <li
-                  key={link.href}
-                  className="border-b border-rule/60 last:border-0"
-                >
+                <li key={link.href}>
                   <a
                     href={link.href}
                     onClick={closeMenu}
                     aria-current={active === link.href ? "location" : undefined}
-                    // A full-width row, not a pill: at this size the target
-                    // should be the whole line rather than the word.
-                    className={`block rounded-lg px-3 py-3 font-display text-base font-medium transition-colors ${
+                    className={`block rounded-2xl px-4 py-3 font-display text-base font-medium transition-colors ${
                       active === link.href
                         ? "bg-teal-wash text-teal"
-                        : "text-ink-soft"
+                        : "text-ink-soft hover:bg-teal-wash/50"
                     }`}
                   >
                     {link.label}
@@ -204,24 +225,16 @@ export function Nav() {
             </ul>
           </details>
 
-          {/* Last in the cluster and outside the `lg` split, so the control is
-              in the same corner at every width rather than appearing and
-              disappearing with the link row. */}
           <ThemeToggle />
         </div>
-      </nav>
 
-      {/* Scroll progress. CSS-only — a JS scroll listener would put per-frame
-          work on the main thread for a decorative hairline. Engines without
-          scroll-driven animations never show it, which is a fine outcome for
-          something purely decorative. */}
-      <span className="scroll-progress no-print" aria-hidden="true" />
-      {/* The lit tip riding the front of that bar. A separate element rather
-          than a pseudo of the bar above: that one is drawn with `scale: 0 1`,
-          which would stretch any child horizontally and smear a round glow
-          into an ellipse that changes shape as you scroll. This one only
-          moves, so the glow stays a circle. */}
-      <span className="scroll-progress-head no-print" aria-hidden="true" />
+        {/* Reading progress, riding the pill's lower edge. Decorative. */}
+        <motion.span
+          aria-hidden="true"
+          style={{ scaleX: progress }}
+          className="pointer-events-none absolute right-6 bottom-0 left-6 h-0.5 origin-left rounded-full bg-teal"
+        />
+      </motion.nav>
     </header>
   );
 }

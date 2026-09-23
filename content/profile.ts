@@ -10,7 +10,7 @@ export const profile = {
   triad: ["Engineer.", "Mentor.", "Builder."],
   /** The supporting paragraph under the statement. */
   supportingLine:
-    "Backend and Data Engineer with 10 years of experience building scalable systems and robust data pipelines, now building the MCP tooling and agentic workflows on top of them. AI Coach and AI Task Force member at Cefalo, mentoring engineers on agentic development.",
+    "Backend and Data Engineer with 10 years of experience building scalable systems and robust data pipelines, now building the MCP tooling and agentic workflows on top of them. At Cefalo I teach engineers to use agentic AI tools like Claude properly, and sit on the AI Task Force.",
   /**
    * The supporting line is deliberately less literal than a search engine needs,
    * so <meta> and JSON-LD get their own keyword-carrying sentence.
@@ -23,10 +23,10 @@ export const profile = {
   /** Photograph — used for OpenGraph and JSON-LD, where a real face is wanted. */
   photo: "/mrityunjoy-das-portrait.jpg",
   /**
-   * Pencil-sketch treatment of the same portrait, drawn on transparency so it
-   * sits on the paper with no frame. Near-black ink; dark mode inverts it in CSS.
+   * The same photograph with its office background cut away (transparent WebP,
+   * square, head and shoulders). The hero sets it in a circle over a teal glow.
    */
-  sketch: "/mrityunjoy-das-sketch.png",
+  cutout: "/mrityunjoy-das-cutout.webp",
   /** Public booking page: a call can be set without an email round-trip. */
   bookingUrl: "https://cal.com/mrityunjoy-das-d6xwna/30min",
   links: {

@@ -39,6 +39,13 @@ export type Project = {
    * puts it in `metric` and leaves this off.
    */
   stats?: { before: string; after: string; label: string }[];
+  /**
+   * For a project whose numbers are counts rather than before-and-after
+   * changes. Shown in place of the bars on the resting card: `items` draws one
+   * labelled block per item, and without `items` the card draws `value` dots.
+   * Same rule as `stats`: every count must already be in the prose.
+   */
+  counts?: { value: number; label: string; items?: string[] }[];
   tech: string[];
 };
 
@@ -115,6 +122,15 @@ export const projects: Project[] = [
     product:
       "Roboket is ADN Telecom's marketing product suite — a CRM, a Facebook ads manager, a URL shortener and a reporting module, each its own service, all behind a single sign-on.",
     work: "I led the team of five and built the backend services in FastAPI and Flask, with SQLAlchemy over the data layer and Celery for the work that had no business blocking a request. I put Keycloak in front of the whole suite so one account opens every module, wired the ads manager to the Facebook Marketing API, shipped the CRM billing module, and stood the reporting up on Apache Superset.",
+    metric: { value: "4", label: "products behind one sign-on" },
+    counts: [
+      {
+        value: 4,
+        label: "products on one sign-on",
+        items: ["CRM", "Ads", "URLs", "Reports"],
+      },
+      { value: 5, label: "engineers in the team I led" },
+    ],
     tech: [
       "Python",
       "FastAPI",

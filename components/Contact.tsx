@@ -1,157 +1,147 @@
+import Image from "next/image";
 import { ArrowUpRight, CalendarDays, Mail, MapPin } from "lucide-react";
 import { GithubIcon, LinkedinIcon } from "./BrandIcons";
-import { CardWash } from "./CardWash";
+import { ContactCard } from "./ContactCard";
+import { CopyButton } from "./CopyButton";
 import { profile } from "@/content/profile";
+import { ScrollWords } from "./motion/ScrollWords";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
 
+/**
+ * The close: the page's last big line on the left, lighting up word by word
+ * as it scrolls in, and on the right a contact card — who, whether I'm
+ * available, and every way to reach me as one row each.
+ */
 export function Contact() {
+  const [user, domain] = profile.email.split("@");
+
   return (
     <Section
       id="contact"
       title="Get in touch"
       icon={<Mail className="h-6 w-6" />}
     >
-      <Reveal>
-        {/* One panel rather than a grid of equal cards: email is the action
-            that matters, so it gets the weight and everything else recedes. */}
-        <div className="spot-card group relative overflow-hidden rounded-2xl border border-rule bg-paper-raised p-5 sm:p-10">
-          {/* The same corner wash every card on the page carries, so this panel
-              reads as part of the set rather than as its own treatment. */}
-          <CardWash />
-
-          <div className="relative">
-            {/* The availability line lives in the hero; repeating it here
-                would say the same thing twice on one page. */}
-            <p className="max-w-xl font-display text-2xl leading-snug font-extrabold tracking-[-0.035em] sm:text-3xl">
-              Let&apos;s talk about your project.
-            </p>
-
-            <p className="mt-4 max-w-xl text-base leading-relaxed text-ink-soft">
+      <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_27rem] lg:gap-14">
+        <div>
+          <ScrollWords
+            text="Let’s build something that stays up."
+            className="font-display text-[2.75rem] leading-[0.98] font-extrabold tracking-[-0.045em] text-balance sm:text-7xl"
+          />
+          <Reveal>
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-ink-soft sm:mt-8 sm:text-lg">
               I&apos;m always happy to talk about backend architecture, data
               pipelines, agentic systems, or whatever is quietly costing your
               team its afternoons.
             </p>
-
-            {/* Two ways to start: write when it suits them, or take a slot in
-                the diary. The email keeps the filled pill and the booking link
-                is outlined, so the row still has one obvious first move. */}
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <a
-                href={`mailto:${profile.email}`}
-                // `max-w-full` plus a shrinkable label: the address is one
-                // unbreakable token, so an inline-flex pill sized to its content
-                // grew past the card — and the card clips, so at 320px the CTA
-                // was cut off mid-word. It shrinks now instead of overflowing.
-                className="group relative inline-flex max-w-full items-center gap-3 overflow-hidden rounded-full bg-teal px-5 py-3 font-display text-sm font-semibold text-on-teal transition-[background-color,transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:bg-teal-strong hover:shadow-[0_8px_20px_-10px_var(--teal)] sm:px-6 sm:text-base"
-              >
-                {/* Same passing light as the hero call to action — the two are
-                    the same button doing the same job at opposite ends of the
-                    page, so they move the same way. Needs the clipping parent
-                    above, or it sweeps out across the panel. */}
-                <span
-                  aria-hidden="true"
-                  className="cta-sheen pointer-events-none absolute inset-0 blur-[6px]"
-                />
-                <Mail
-                  className="relative h-4 w-4 shrink-0"
-                  aria-hidden="true"
-                />
-                {/* The address is one unbreakable token, so a narrow card either
-                    clips it or splits it mid-word. A <wbr> after the @ gives the
-                    browser the one break point a reader would pick themselves. */}
-                <span className="relative min-w-0 break-words">
-                  {profile.email.split("@")[0]}@<wbr />
-                  {profile.email.split("@")[1]}
-                </span>
-                <ArrowUpRight
-                  className="cta-arrow-diag relative h-4 w-4 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-                  aria-hidden="true"
-                />
-              </a>
-
-              <SecondaryLink href={profile.bookingUrl} label="Book a 30-min call">
-                <CalendarDays className="h-4 w-4 shrink-0" aria-hidden="true" />
-              </SecondaryLink>
-            </div>
-
-            <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3 border-t border-rule pt-6 text-sm">
-              <SocialLink
-                href={profile.links.linkedin}
-                label="in/mrityunjoy-das"
-              >
-                <LinkedinIcon className="h-4 w-4" />
-              </SocialLink>
-              <SocialLink href={profile.links.github} label="@mjoyshuvo">
-                <GithubIcon className="h-4 w-4" />
-              </SocialLink>
-
-              <span className="flex w-full items-center gap-1.5 text-ink-faint sm:ml-auto sm:w-auto">
-                <MapPin className="h-4 w-4" aria-hidden="true" />
-                {profile.location}
-              </span>
-            </div>
-          </div>
+            <p className="mt-6 flex items-center gap-2 font-display text-sm font-semibold text-ink-faint">
+              <MapPin className="h-4 w-4 shrink-0" aria-hidden="true" />
+              {profile.location} · working with teams in Norway
+            </p>
+          </Reveal>
         </div>
-      </Reveal>
+
+        <Reveal delay={0.1}>
+          <ContactCard>
+            <div className="flex items-center gap-4">
+              <span className="photo-glow relative h-20 w-20 shrink-0 overflow-hidden rounded-full">
+                <Image
+                  src={profile.cutout}
+                  alt=""
+                  width={160}
+                  height={160}
+                  sizes="80px"
+                  className="h-full w-full object-cover"
+                />
+              </span>
+              <div className="flex min-w-0 flex-col gap-1">
+                <p className="font-display text-xl font-extrabold tracking-[-0.02em]">
+                  {profile.name}
+                </p>
+                <p className="text-sm text-ink-soft">
+                  {profile.title} · Cefalo
+                </p>
+                <p className="flex items-center gap-2 font-display text-xs font-semibold text-teal-strong">
+                  <span className="relative flex h-2 w-2" aria-hidden="true">
+                    <span className="pulse-ring absolute inset-0 rounded-full bg-teal" />
+                    <span className="relative h-2 w-2 rounded-full bg-teal" />
+                  </span>
+                  {profile.status}
+                </p>
+              </div>
+            </div>
+
+            <ul className="border-t border-rule">
+              <li className="flex min-h-16 items-center gap-3 border-b border-rule">
+                <RowIcon>
+                  <Mail className="h-[1.125rem] w-[1.125rem]" />
+                </RowIcon>
+                <a
+                  href={`mailto:${profile.email}`}
+                  className="tap min-w-0 font-display text-[0.9375rem] font-semibold break-words transition-colors hover:text-teal"
+                >
+                  {user}@<wbr />
+                  {domain}
+                </a>
+                <span className="ml-auto shrink-0">
+                  <CopyButton text={profile.email} label="Copy email address" />
+                </span>
+              </li>
+              <Row href={profile.bookingUrl} label="Book a 30-min call">
+                <CalendarDays className="h-[1.125rem] w-[1.125rem]" />
+              </Row>
+              <Row href={profile.links.linkedin} label="in/mrityunjoy-das">
+                <LinkedinIcon className="h-4 w-4" />
+              </Row>
+              <Row href={profile.links.github} label="@mjoyshuvo" last>
+                <GithubIcon className="h-4 w-4" />
+              </Row>
+            </ul>
+          </ContactCard>
+        </Reveal>
+      </div>
     </Section>
   );
 }
 
-/**
- * The quieter sibling of the email pill: same shape and same lift, drawn in
- * outline so the filled button stays the one the eye lands on first.
- */
-function SecondaryLink({
-  href,
-  label,
-  children,
-}: {
-  href: string;
-  label: string;
-  children: React.ReactNode;
-}) {
+function RowIcon({ children }: { children: React.ReactNode }) {
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="tap group inline-flex max-w-full items-center gap-2 rounded-full border border-rule px-5 py-3 font-display text-sm font-semibold text-ink-soft transition-[color,border-color,background-color,transform] duration-200 hover:-translate-y-0.5 hover:border-teal hover:bg-teal-wash/50 hover:text-teal sm:px-6 sm:text-base"
+    <span
+      aria-hidden="true"
+      className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-teal-wash text-teal"
     >
-      <span className="text-ink-faint transition-colors group-hover:text-teal">
-        {children}
-      </span>
-      <span className="min-w-0 break-words">{label}</span>
-      <ArrowUpRight
-        className="h-4 w-4 shrink-0 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
-        aria-hidden="true"
-      />
-    </a>
+      {children}
+    </span>
   );
 }
 
-function SocialLink({
+/** One way to reach me: the whole row is the link, and its arrow turns. */
+function Row({
   href,
   label,
+  last,
   children,
 }: {
   href: string;
   label: string;
+  last?: boolean;
   children: React.ReactNode;
 }) {
   return (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="tap group inline-flex items-center gap-2 font-display font-medium text-ink-soft transition-colors hover:text-teal"
-    >
-      <span className="text-ink-faint transition-colors group-hover:text-teal">
-        {children}
-      </span>
-      <span className="border-b border-transparent pb-0.5 transition-colors group-hover:border-teal">
-        {label}
-      </span>
-    </a>
+    <li className={last ? "" : "border-b border-rule"}>
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group flex min-h-16 items-center gap-3 font-display text-[0.9375rem] font-semibold transition-colors hover:text-teal"
+      >
+        <RowIcon>{children}</RowIcon>
+        <span className="min-w-0 break-words">{label}</span>
+        <ArrowUpRight
+          className="ml-auto h-[1.125rem] w-[1.125rem] shrink-0 text-teal transition-transform duration-300 group-hover:rotate-45"
+          aria-hidden="true"
+        />
+      </a>
+    </li>
   );
 }

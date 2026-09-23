@@ -35,10 +35,11 @@ export function Section({ id, title, icon, children }: SectionProps) {
       <div className="mx-auto w-full max-w-6xl px-6 sm:px-8">
         {/* `hold` rather than `rise`: the heading row itself doesn't move, it
             just tells the words inside when they're on screen. Fading the row
-            as well would double the motion on every section. */}
+            as well would double the motion on every section. The teal line
+            that draws along the rule is `.section-head::after`. */}
         <Reveal
           mode="hold"
-          className="mb-6 flex items-center gap-3 border-b border-rule pb-3 sm:mb-8"
+          className="section-head relative mb-6 flex items-center gap-3 border-b border-rule pb-3 sm:mb-8"
         >
           {icon ? (
             <span className="section-icon text-teal" aria-hidden="true">

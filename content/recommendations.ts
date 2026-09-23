@@ -16,6 +16,11 @@ export type Recommendation = {
   /** Verbatim, one entry per paragraph. Plain text — no markdown, no HTML. */
   quote: string[];
   /**
+   * One sentence lifted, word for word, from `quote`, set large at the top of
+   * the spotlight. Optional: without it the quote simply starts.
+   */
+  pull?: string;
+  /**
    * Optional, because the photo usually lags the words. Falls back to an
    * initials monogram drawn from the palette tokens.
    */
@@ -39,6 +44,7 @@ export const recommendations: Recommendation[] = [
     date: "August 2026",
     dateISO: "2026-08-23",
     avatar: "/recommenders/abdullah-al-masud-tushar.jpg",
+    pull: "He talks less, thinks more, and delivers even more.",
     quote: [
       "Worked together on the same team at BS23. Now we work in different teams at Cefalo, yet we still meet and discuss quite a bit, sharing ideas, challenges, things we are learning, yada yada.",
       "Technically, he is my senior in terms of experience, but I have always found him to be a very good buddy. He talks less, thinks more, and delivers even more.",
@@ -53,6 +59,7 @@ export const recommendations: Recommendation[] = [
     date: "July 2022",
     dateISO: "2022-07-14",
     avatar: "/recommenders/erik-ormevik.jpg",
+    pull: "Mrityunjoy does not back down from a difficult situation, and rather takes charge and displays great leadership!",
     quote: [
       // Source reads "took it upon himself to e sure" — a typo for "ensure".
       // That is the only word changed anywhere in this quote.

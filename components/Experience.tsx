@@ -1,163 +1,252 @@
 import Image from "next/image";
 import { ArrowDown, Briefcase, ExternalLink, MapPin } from "lucide-react";
 import { NorwayFlag } from "./BrandIcons";
+import { CardWash } from "./CardWash";
+import { CareerRail } from "./CareerRail";
+import { CountUp } from "./CountUp";
+import { Disclosure } from "./Disclosure";
 import { experience, type Position, type Role } from "@/content/experience";
 import { projects } from "@/content/projects";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
 
+/** Bullets shown per position before the rest fold behind "Show all". */
+const BULLETS_AT_REST = 3;
+
+const MONTH = 1000 * 60 * 60 * 24 * 30.4375;
+
+/** A fractional year from an ISO date, for placing bars on the ruler. */
+function yearOf(iso: string | undefined, now: Date) {
+  const date = iso ? new Date(iso) : now;
+  return (
+    date.getUTCFullYear() + date.getUTCMonth() / 12 + date.getUTCDate() / 365
+  );
+}
+
+/** "3 yrs 11 mos" from two ISO dates, the way LinkedIn states a tenure. */
+function tenure(start: string, end: string | undefined, now: Date) {
+  const months = Math.max(
+    1,
+    Math.round(
+      ((end ? new Date(end) : now).getTime() - new Date(start).getTime()) /
+        MONTH,
+    ),
+  );
+  const years = Math.floor(months / 12);
+  const rest = months % 12;
+  const parts = [];
+  if (years) parts.push(`${years} yr${years > 1 ? "s" : ""}`);
+  if (rest) parts.push(`${rest} mo${rest > 1 ? "s" : ""}`);
+  return parts.join(" ");
+}
+
+function slugOf(company: string) {
+  return company
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+}
+
+/** The first word or two of a company name — what fits on a ruler bar. */
+function shortName(company: string) {
+  const known: Record<string, string> = {
+    "Brain Station 23": "BS23",
+    "ADN DigiNet Ltd.": "ADN",
+    "InfoSapex Limited": "InfoSapex",
+  };
+  return known[company] ?? company;
+}
+
+/**
+ * Experience as a metro line: one station per company, and the selected
+ * company's panel under it. The panels are rendered here, on the server, so
+ * every role and bullet is in the HTML; `CareerRail` only decides which one
+ * shows. Without JavaScript all four are listed, newest first.
+ */
 export function Experience() {
+  // Built statically, so "now" is the build date — the site redeploys often
+  // enough that the line's end and the live tenure stay current.
+  const now = new Date();
+  const first = Math.floor(
+    Math.min(...experience.map((role) => yearOf(role.startDate, now))),
+  );
+  const last = yearOf(undefined, now) + 0.35;
+  const at = (year: number) => ((year - first) / (last - first)) * 100;
+
+  const stops = [...experience].reverse().map((role) => {
+    const start = new Date(role.startDate).getUTCFullYear();
+    const end = role.endDate ? new Date(role.endDate).getUTCFullYear() : null;
+    return {
+      slug: slugOf(role.company),
+      short: shortName(role.company),
+      years:
+        end === null
+          ? `${start} – now`
+          : end === start
+            ? String(start)
+            : `${start} – ${end}`,
+      left: at(yearOf(role.startDate, now)),
+      right: at(yearOf(role.endDate, now)),
+      live: !role.endDate,
+    };
+  });
+
   return (
     <Section
       id="experience"
       title="Experience"
       icon={<Briefcase className="h-6 w-6" />}
     >
-      {/* `hold` fires the rule without the list itself moving. The rule is a
-          ::before on the <ol> rather than a child element — an <ol> may only
-          contain <li>, and constraint 2 in the README is there so parsers can
-          read this list. */}
-      <Reveal
-        mode="hold"
-        as="ol"
-        className="timeline relative space-y-10 pl-6 sm:pl-8"
-      >
-        {experience.map((role, i) => (
-          <li key={`${role.company}-${role.start}`} className="relative">
-            {/* Timeline node. Only the role still running ripples — a pulse
-                means "live", and putting one on every closed role spent the
-                signal on nothing. The ring has to start wider than the dot's
-                4px paper collar, or it expands entirely underneath it and
-                never shows. Past roles keep the dot, in the rule's grey. */}
-            <span
-              className="absolute top-2 -left-[calc(1.5rem+4.5px)] grid h-2 w-2 place-items-center sm:-left-[calc(2rem+4.5px)]"
-              aria-hidden="true"
-            >
-              {role.endDate ? null : (
-                <span className="pulse-ring absolute -inset-1.5 rounded-full bg-teal" />
-              )}
-              <span
-                className={`relative h-2 w-2 rounded-full ring-4 ring-paper ${
-                  role.endDate ? "bg-rule" : "bg-teal"
-                }`}
-              />
-            </span>
-
-            <Reveal delay={i * 0.05}>
-              <div className="flex flex-col gap-1 sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
-                <h3 className="font-display text-lg font-bold tracking-[-0.02em] sm:text-xl">
-                  {role.companyUrl ? (
-                    <a
-                      href={role.companyUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="tap inline-flex items-center gap-1 transition-colors hover:text-teal"
-                    >
-                      {role.company}
-                      <ExternalLink
-                        className="h-3.5 w-3.5 opacity-60"
-                        aria-hidden="true"
-                      />
-                    </a>
-                  ) : (
-                    role.company
-                  )}
-                </h3>
-
-                {/* Monospace and uppercase, matching the meta lines on the
-                    project cards — dates and places are data, and setting them
-                    like data keeps them from competing with the company name.
-                    Two pills rather than one: a single pill had to break its
-                    own inside into two rows on a phone, and a tall pill with a
-                    stacked interior reads as a broken object. Side by side the
-                    pair fits one line down to 360px and wraps as whole pills
-                    below that, which is a break a reader can see the sense of. */}
-                <span className="flex shrink-0 flex-wrap items-center gap-x-2 gap-y-1.5 self-start font-display font-semibold text-[0.625rem] tracking-[0.06em] text-ink-faint uppercase sm:text-[0.6875rem] sm:tracking-[0.08em]">
-                  <span className="inline-flex items-center gap-x-2.5 rounded-full border border-rule bg-paper-raised px-2.5 py-1 whitespace-nowrap sm:px-3">
-                    <time dateTime={role.startDate}>{role.start}</time>
-                    <span
-                      aria-hidden="true"
-                      className="h-px w-3 shrink-0 bg-rule"
-                    />
-                    <DateEnd end={role.end} endDate={role.endDate} />
-                  </span>
-                  <span className="inline-flex items-center gap-1 rounded-full border border-rule bg-paper-raised px-2.5 py-1 whitespace-nowrap sm:px-3">
-                    <MapPin className="h-3 w-3 shrink-0" aria-hidden="true" />
-                    {/* City always, country from `sm` up. The full place and
-                        the dates together need ~380px, which a phone does not
-                        have — and "Dhaka" alone is not ambiguous next to a
-                        country nobody loses. Split on the first comma so the
-                        content file keeps holding one plain string. */}
-                    {role.location.split(",")[0]}
-                    <span className="hidden sm:inline">
-                      {role.location.slice(role.location.indexOf(","))}
-                    </span>
-                  </span>
-                </span>
-              </div>
-
-              {/* Position stack. Indented under the company with its own rule so
-                  a promotion reads as one tenure, not as separate jobs. */}
-              <div
-                className={
-                  role.positions.length > 1
-                    ? "mt-4 space-y-6 border-l border-rule/70 pl-5"
-                    : "mt-3"
-                }
-              >
-                {role.positions.map((position) => (
-                  <PositionEntry
-                    key={position.title + position.start}
-                    position={position}
-                    stacked={role.positions.length > 1}
-                    // A single position whose span is the whole tenure is the
-                    // pill directly above it, printed twice. The dates belong
-                    // to the company row there; the position line only needs
-                    // them once the stack has more than one entry to separate.
-                    showDates={
-                      role.positions.length > 1 ||
-                      position.startDate !== role.startDate ||
-                      position.endDate !== role.endDate
-                    }
-                  />
-                ))}
-              </div>
-
-              {/* Derived from the project list rather than hand-maintained, so
-                  removing a case study can't leave a dead anchor behind. */}
-              <CaseStudyLinks company={role.company} />
-
-              {role.client ? (
-                <div className="mt-4 flex max-w-3xl items-center gap-3 rounded-lg border border-rule bg-paper-raised px-4 py-3">
-                  <ClientMark client={role.client} />
-                  <p className="text-sm leading-relaxed text-ink-soft">
-                    <span className="inline-flex items-center gap-1.5 font-display font-semibold text-ink">
-                      {role.client.url ? (
-                        <a
-                          href={role.client.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="tap transition-colors hover:text-teal"
-                        >
-                          {role.client.name}
-                        </a>
-                      ) : (
-                        role.client.name
-                      )}
-                      {/* Every client here is Norwegian; the flag says so
-                          faster than the sentence does. */}
-                      <NorwayFlag className="h-3 w-[1.03rem] shrink-0 rounded-[1px] ring-1 ring-black/10" />
-                      <span className="sr-only">(Norway)</span>
-                    </span>{" "}
-                    — {role.client.blurb}
-                  </p>
-                </div>
-              ) : null}
-            </Reveal>
-          </li>
-        ))}
+      <Reveal>
+        <CareerRail
+          stops={stops}
+          nowLeft={at(yearOf(undefined, now))}
+          panels={experience.map((role) => ({
+            slug: slugOf(role.company),
+            name: role.company,
+            dates: `${role.start} – ${role.end}`,
+            tenure: tenure(role.startDate, role.endDate, now),
+            live: !role.endDate,
+            node: <RolePanel role={role} now={now} />,
+          }))}
+        />
       </Reveal>
     </Section>
+  );
+}
+
+/** Position grids by count. Literal classes, so Tailwind can see them. */
+const POSITION_COLS: Record<number, string> = {
+  1: "",
+  2: "md:grid-cols-2",
+  3: "md:grid-cols-2 lg:grid-cols-3",
+};
+
+/**
+ * One company as a bento: who and for whom on the left, the numbers worth
+ * remembering in a teal block beside it, and one card per position under
+ * both. The numbers sit next to the name, where a skimming reader looks.
+ */
+function RolePanel({ role, now }: { role: Role; now: Date }) {
+  const start = yearOf(role.startDate, now);
+  const span = yearOf(role.endDate, now) - start;
+  const hasStats = Boolean(role.highlights?.length);
+
+  return (
+    <article className="career-panel grid gap-4 lg:grid-cols-12">
+      <div
+        className={`spot-card relative flex flex-col gap-4 overflow-hidden rounded-3xl border border-rule bg-paper-raised p-6 sm:p-8 ${
+          hasStats ? "lg:col-span-7" : "lg:col-span-12"
+        }`}
+      >
+        <CardWash />
+        <h3 className="career-name relative font-display text-3xl leading-[1.05] font-extrabold tracking-[-0.04em] sm:text-[2.75rem]">
+          {role.companyUrl ? (
+            <a
+              href={role.companyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="tap inline-flex items-center gap-1.5 transition-colors hover:text-teal"
+            >
+              {role.company}
+              <ExternalLink className="h-4 w-4 opacity-50" aria-hidden="true" />
+            </a>
+          ) : (
+            role.company
+          )}
+        </h3>
+
+        {/* Dates and places are data, so they are set like data: small,
+            uppercase, in pills that wrap as whole pills. */}
+        <p className="relative flex flex-wrap gap-2 font-display text-[0.6875rem] font-semibold tracking-[0.08em] text-ink-faint uppercase">
+          <span className="inline-flex items-center gap-x-2 rounded-full border border-rule px-3 py-1.5 whitespace-nowrap">
+            <time dateTime={role.startDate}>{role.start}</time>
+            <span aria-hidden="true" className="h-px w-3 shrink-0 bg-rule" />
+            <DateEnd end={role.end} endDate={role.endDate} />
+          </span>
+          <span className="rounded-full border border-rule px-3 py-1.5 whitespace-nowrap">
+            {tenure(role.startDate, role.endDate, now)}
+          </span>
+          <span className="inline-flex items-center gap-1 rounded-full border border-rule px-3 py-1.5 whitespace-nowrap">
+            <MapPin className="h-3 w-3 shrink-0" aria-hidden="true" />
+            {role.location.split(",")[0]}
+          </span>
+        </p>
+
+        {role.client ? (
+          <div className="relative mt-1 flex flex-col gap-3 border-t border-rule pt-4 sm:flex-row sm:items-start sm:gap-4">
+            <ClientMark client={role.client} />
+            <p className="text-sm leading-relaxed text-ink-soft">
+              <span className="mr-1.5 inline-flex items-center gap-1.5 align-middle font-display text-[0.6875rem] font-semibold tracking-[0.12em] text-teal uppercase">
+                Client ·{" "}
+                {role.client.url ? (
+                  <a
+                    href={role.client.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="tap transition-colors hover:text-teal-strong"
+                  >
+                    {role.client.name}
+                  </a>
+                ) : (
+                  role.client.name
+                )}
+                <NorwayFlag className="h-3 w-[1.03rem] shrink-0 rounded-[1px] ring-1 ring-black/10" />
+                <span className="sr-only">(Norway)</span>
+              </span>
+              {role.client.blurb}
+            </p>
+          </div>
+        ) : null}
+      </div>
+
+      {hasStats ? (
+        <ul
+          className={`grid overflow-hidden rounded-3xl bg-teal text-on-teal lg:col-span-5 ${
+            role.highlights!.length === 3 ? "grid-cols-3" : "grid-cols-2"
+          }`}
+        >
+          {role.highlights!.map((item) => (
+            <li
+              key={item.label}
+              className="flex flex-col justify-center gap-2 border-on-teal/15 p-4 not-last:border-r sm:p-6"
+            >
+              <CountUp
+                value={item.value}
+                className="font-display text-2xl leading-none font-extrabold tracking-[-0.04em] tabular-nums sm:text-[2.5rem]"
+              />
+              <span className="font-display text-[0.625rem] leading-snug font-semibold tracking-[0.08em] uppercase opacity-85 sm:text-[0.6875rem]">
+                {item.label}
+              </span>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+
+      {/* One card per position, newest first. A promotion reads as one
+          tenure with steps in it, not as separate jobs. */}
+      <div
+        className={`grid gap-4 lg:col-span-12 ${POSITION_COLS[Math.min(role.positions.length, 3)]}`}
+      >
+        {role.positions.map((position, i) => {
+          const from = yearOf(position.startDate, now) - start;
+          const length = yearOf(position.endDate, now) - start - from;
+          return (
+            <PositionEntry
+              key={position.title + position.start}
+              position={position}
+              left={(from / span) * 100}
+              width={Math.max(3, (length / span) * 100)}
+              id={`${slugOf(role.company)}-${i}`}
+            />
+          );
+        })}
+      </div>
+
+      <div className="lg:col-span-12">
+        <CaseStudyLinks company={role.company} />
+      </div>
+    </article>
   );
 }
 
@@ -245,52 +334,86 @@ function ClientMark({ client }: { client: NonNullable<Role["client"]> }) {
 
 function PositionEntry({
   position,
-  stacked,
-  showDates,
+  left,
+  width,
+  id,
 }: {
   position: Position;
-  stacked: boolean;
-  /** False when the company pill above already states this exact span. */
-  showDates: boolean;
+  /** Where this position sits inside the company tenure, in percent. */
+  left: number;
+  width: number;
+  id: string;
 }) {
+  const bullets = position.bullets ?? [];
+  const resting = bullets.slice(0, BULLETS_AT_REST);
+  const folded = bullets.slice(BULLETS_AT_REST);
+  const moreId = `position-${id}-more`;
+
   return (
-    <div className="relative">
-      {stacked ? (
-        <span
-          className="absolute -left-[calc(1.25rem+3.5px)] top-[0.45rem] h-1.5 w-1.5 rounded-full bg-rule ring-4 ring-paper"
-          aria-hidden="true"
-        />
-      ) : null}
-
-      <p className="font-display text-[0.9375rem] font-semibold text-ink">
-        {position.title}
+    <div className="career-position flex flex-col gap-3 rounded-3xl border border-rule bg-paper-raised p-5 sm:p-7">
+      <p className="flex items-center gap-x-2 font-display text-[0.6875rem] font-semibold tracking-[0.08em] text-ink-faint uppercase">
+        <time dateTime={position.startDate}>{position.start}</time>
+        <span aria-hidden="true" className="h-px w-3 shrink-0 bg-rule" />
+        <DateEnd end={position.end} endDate={position.endDate} />
       </p>
-      {/* No pill here — the same joining marks as the role line, but plain, so
-          the tenure stays the object and its positions read inside it. */}
-      {showDates ? (
-        <p className="mt-1 flex flex-wrap items-center gap-x-2.5 gap-y-1 font-display font-semibold text-[0.6875rem] tracking-[0.08em] text-ink-faint uppercase">
-          <time dateTime={position.startDate}>{position.start}</time>
-          <span aria-hidden="true" className="h-px w-3 shrink-0 bg-rule" />
-          <DateEnd end={position.end} endDate={position.endDate} />
-        </p>
-      ) : null}
+      <h4 className="font-display text-lg leading-snug font-bold tracking-[-0.02em] sm:text-xl">
+        {position.title}
+      </h4>
 
-      {position.bullets?.length ? (
-        <ul className="mt-3 space-y-2">
-          {position.bullets.map((bullet) => (
-            <li
-              key={bullet}
-              className="relative max-w-[68ch] pl-5 text-[0.9375rem] leading-relaxed text-ink-soft"
-            >
-              <span
-                className="absolute left-0 top-[0.6em] h-1.5 w-1.5 rounded-full bg-teal/60"
-                aria-hidden="true"
-              />
-              {bullet}
-            </li>
+      {/* Where the position sits inside the tenure. Decorative: the dates
+          above say the same in words. */}
+      <span
+        aria-hidden="true"
+        className="relative block h-1.5 overflow-hidden rounded-full bg-rule"
+      >
+        <span
+          className="metro-span absolute inset-y-0 rounded-full bg-teal"
+          style={{ left: `${left}%`, width: `${width}%` }}
+        />
+      </span>
+
+      {resting.length ? (
+        <ul className="mt-1 space-y-2">
+          {resting.map((bullet) => (
+            <Bullet key={bullet}>{bullet}</Bullet>
           ))}
         </ul>
       ) : null}
+
+      {/* The rest of the bullets. Clipped, never removed — they are in the
+          DOM and the accessibility tree whether or not the reader opens them,
+          the same pattern as a project's case study. */}
+      {folded.length ? (
+        <>
+          <div id={moreId} className="career-more">
+            <div className="career-more-inner">
+              <ul className="space-y-2 pt-2">
+                {folded.map((bullet) => (
+                  <Bullet key={bullet}>{bullet}</Bullet>
+                ))}
+              </ul>
+            </div>
+          </div>
+          <Disclosure
+            more={`Show all ${bullets.length}`}
+            less="Show fewer"
+            controls={moreId}
+            className="mt-1 self-start"
+          />
+        </>
+      ) : null}
     </div>
+  );
+}
+
+function Bullet({ children }: { children: React.ReactNode }) {
+  return (
+    <li className="relative max-w-[68ch] pl-5 text-[0.9375rem] leading-relaxed text-ink-soft">
+      <span
+        className="absolute top-[0.6em] left-0 h-1.5 w-1.5 rounded-full bg-teal/60"
+        aria-hidden="true"
+      />
+      {children}
+    </li>
   );
 }

@@ -9,8 +9,9 @@ Live: https://mrityunjoy.com
 
 - **Next.js 16** (App Router, TypeScript) — every route is statically prerendered
 - **Tailwind CSS v4** with CSS custom properties for the light/dark palette
-- **IntersectionObserver + CSS transitions and keyframes** for all motion, plus a
-  scroll-driven progress bar behind `@supports` (no animation library)
+- **Motion** (`motion/react`) for pointer and scroll-linked motion — the nav
+  pill, photo tilt, magnetic buttons, swipe deck, scroll-lit words — and
+  **IntersectionObserver + CSS** for entrance reveals
 - **lucide-react** for UI icons; brand marks are inlined in `components/BrandIcons.tsx`
 
 ## Editing the content
@@ -71,69 +72,102 @@ These are deliberate — please keep them when changing the site:
 3. **The scroll reveal must never hide content.** The hidden state is scoped to
    `html.js` and disabled under `prefers-reduced-motion`, so a reader without
    JavaScript or with motion reduced sees the full page.
-4. **Light is the default theme.** The OS `prefers-color-scheme` is deliberately
-   ignored — dark applies only when `data-theme` is set on `<html>`.
-   (`components/ThemeToggle.tsx` still exists but is mounted nowhere, so today
-   that only happens via a stored `localStorage.theme`.)
+4. **Light is the default theme.** Dark applies only when `data-theme` is set
+   on `<html>` — by the toggle at the end of the nav pill, a stored
+   `localStorage.theme`, or the OS preference on a first visit. The toggle
+   reveals the new palette in a circle from the button (View Transitions API),
+   and swaps instantly where that API is missing or motion is reduced.
 5. **Colour tokens only.** Never hardcode a colour in a component — add a token
    in `globals.css` and define it in both palette blocks (`:root` and
-   `[data-theme="dark"]`). The two exceptions are commented where they sit: the
-   client lettermark chip and the dark-mode sheet behind the hero portrait, both
-   of which need a fixed light ground in either palette.
+   `[data-theme="dark"]`). The exception is commented where it sits: the client
+   lettermark chip, which needs a fixed light ground in either palette.
 6. **One width for every section.** The nav, hero, every `<Section>` and the
    footer all use `max-w-6xl px-6 sm:px-8`, so the page has a single left edge.
    Long-form text is capped at `max-w-[68ch]` inside that container rather than
    by narrowing the container itself.
 7. **One vertical scale.** Sections are `py-12 sm:py-20`, the heading row is
-   `mb-6 sm:mb-8`, and the anchor offset is `scroll-padding-top: 3.5rem` on
-   `<html>` — the nav's height and nothing more. Jump targets carry no
+   `mb-6 sm:mb-8`, and the anchor offset is `scroll-padding-top: 4.5rem` on
+   `<html>` — the floating nav pill and its gap, and nothing more. Jump targets carry no
    `scroll-mt-*`: it stacks on the scroll padding and on the section's own top
    padding, and the heading lands an inch down an empty screen.
 
 ### Animation
 
-All motion is CSS driven by one `IntersectionObserver` in `components/Reveal.tsx`.
-No library, and nothing here may start depending on one.
+Entrance reveals are CSS driven by one `IntersectionObserver` in
+`components/Reveal.tsx`. Pointer- and scroll-linked motion uses **Motion**
+(`motion/react`), with shared curves in `lib/motion.ts` and
+`<MotionConfig reducedMotion="user">` in `components/motion/MotionProvider.tsx`.
 
-- `Reveal` has three modes. `rise` fades and lifts the block. `stagger` leaves
-  the block still and lifts its direct children on an `nth-child` ladder in
-  `globals.css`, **capped at seven** — past that the ladder out-runs the scroll.
-  `hold` has no motion of its own and exists only to tell the words inside a
-  heading when they are on screen. `as` picks the tag, so the wrapper can be a
-  `ul`/`ol` instead of emitting a `div` inside a list.
-- `components/SplitWords.tsx` splits section headings into per-word masks. **The
-  space between words must stay a plain text node between the masks.** Put it
-  inside a mask and `overflow: hidden` collapses it, which quietly turns
-  "Products and systems" into "Productsandsystems" for copy-paste and for the
-  accessible name. Note this does mean a multi-word heading is no longer one
-  contiguous string in the raw HTML — grep the DOM's text, not the markup.
-- The scroll progress bar is CSS-only behind `@supports (animation-timeline:
-scroll())`. Deliberately not a scroll listener: that would put main-thread work
-  on every frame for a decorative hairline.
+- **No hidden start state in Motion props.** Motion writes `initial` styles into
+  the server HTML, so `initial={{ opacity: 0 }}` would hide content from a
+  reader without JavaScript. Hidden start states live in CSS under `html.js`;
+  Motion only drives transforms and CSS variables whose reading rule is also
+  scoped to `html.js` (see `.scroll-word`).
+- `Reveal` has three modes. `rise` fades and lifts the block. `stagger` lifts
+  its direct children on an `nth-child` ladder, **capped at seven**. `hold` has
+  no motion of its own and only tells what is inside it that it is on screen
+  (section headings, the teal rule under them, the bars on project cards).
+- `components/SplitWords.tsx` splits section headings into per-word masks.
+  **The space between words must stay a plain text node between the masks**,
+  or `overflow: hidden` collapses it.
+- **Hero.** The triad rises letter by letter from its line masks (`.hero-ch`).
+  `components/PhotoCard.tsx` sets the cut-out photo
+  (`public/mrityunjoy-das-cutout.webp`) in a circle over a teal glow, with a
+  dashed ring, pointer tilt, scroll drift and three glass chips. The chips carry
+  words, so they arrive once and hold still.
+- **Nav.** A floating glass pill (`components/Nav.tsx`). The active link's
+  background is one element handed between links by a shared `layoutId`. The
+  pill tucks away on scroll down and returns on scroll up. The reading-progress
+  line on its lower edge is a sprung `useScroll`.
+- **Magnetic buttons** (`components/motion/Magnetic.tsx`) pull towards a fine
+  pointer and do nothing on touch.
+- **Projects.** From `md` up the cards pin and stack; `components/StackEffect.tsx`
+  feeds `--stack` so the covered card shrinks and dims. Any open case study
+  turns the stacking off. `components/ProjectFigures.tsx` draws before/after
+  bars from each project's `stats` (pairs under a 5% ratio stay in the case
+  study tiles only) and count blocks from `counts`.
+- **Experience** is a metro line (`components/CareerRail.tsx`): one station
+  per company at its start month, the line filled to the selected company,
+  and the current role's stretch dashed and moving towards "Now". From `sm` up
+  the stations are tabs over one bento panel; on a phone the list itself is a
+  vertical line and the selected row opens in place. Every panel is
+  server-rendered; without JavaScript the line is hidden and all companies are
+  listed. Each role's `highlights` in `content/experience.ts` must restate
+  numbers already in its bullets; they count up (`components/CountUp.tsx`)
+  from the final value the server rendered. Bullets past the third fold behind
+  a `Disclosure`, still in the DOM.
+- **Engineering identity** is a stack of layers (`components/IdentityStack.tsx`):
+  AI on data on backend, dots running between them. `tags` in
+  `content/identity.ts` must only name tools the body names.
+- **Skills** is a filter board (`components/SkillsBoard.tsx`). Filtering fades
+  tiles; it never removes them.
+- **Certifications** show how much validity is left, computed at build time
+  from `issued` / `expires`, so a redeploy keeps it true.
+- **Writing** is an index of large titles (`components/WritingIndex.tsx`); the
+  hovered or focused post's cover shows beside the list on desktop and inline
+  on phones.
+- **Recommendations** are a spotlight: people on the left, the selected one's
+  `pull` sentence and full text on the right. `pull` must be copied word for
+  word from `quote`. The quote can be dragged or swiped; inactive panels wait
+  to the side (`data-side`) so a switch slides in the direction of travel.
+- **Contact.** The closing line lights up word by word as it scrolls in
+  (`components/motion/ScrollWords.tsx`); beside it, a contact card that tilts
+  towards a fine pointer (`components/ContactCard.tsx`) holds every way to
+  reach me, one row each.
+- **Writing** sits inside one card; the list can grow, and the cover preview
+  is sticky so it stays beside the row it belongs to.
+- **Theme in a link.** `?theme=dark` or `?theme=light` on any URL sets the
+  theme for that visit. It is read by the pre-paint script in
+  `app/layout.tsx` and never saved, so it cannot overwrite a visitor's own
+  choice.
 - **The `prefers-reduced-motion` block forces every animation to its _final_
-  frame, not to nothing.** Any new `@keyframes` must therefore be neutralised
-  there by name, or it ships in its end state for the readers who asked for
-  less motion.
-- The **section icons** draw their own SVG strokes on a stagger, once, when the
-  heading arrives, and again when the pointer rests on the heading row. One rule
-  in `globals.css` covers all eight; no per-icon code.
-- **Cards** (`.spot-card`) get a glow and a lit border that follow the pointer.
-  The CSS is in `globals.css`; `components/Spotlight.tsx` is one delegated
-  listener that feeds it `--mx`/`--my`, and does nothing on touch.
-  `.lift-card` adds the hover lift. Cards use `overflow: clip`, not `hidden`,
-  so a click inside can never scroll the card sideways.
-- The **hero portrait** loops an aura, a ring and a bead, all `aria-hidden`
-  decoration. The two chips beside it carry words, so they animate in once and
-  then hold still.
-- The other thing that moves on its own is the **availability lamp** in the hero. It pulses
-  without a pause control because WCAG 2.2.2 governs moving _information_, and
-  the lamp is `aria-hidden` and says nothing the sentence beside it does not —
-  stop it and nothing is lost. It still stops under `prefers-reduced-motion`.
-- **Anything that moves and does carry meaning needs a keyboard-reachable pause
-  control.** Hover-pause does not count: it is unreachable by keyboard and by
-  touch, and Lighthouse does not check, so the score would sit at 100 while the
-  page regressed. Scope the animation to `html.js` — the same condition as the
-  button — so motion and control cannot ship apart.
+  frame, not to nothing.** Any new `@keyframes` must be neutralised there by
+  name, or it ships in its end state for the readers who asked for less motion.
+- The **availability lamp**, the photo ring and the hero bloom loop without a
+  pause control because they are `aria-hidden` and carry no information. They
+  stop under `prefers-reduced-motion`.
+- **Anything that moves on its own and carries meaning needs a
+  keyboard-reachable pause control.** Hover-pause does not count.
 
 ### Disclosures
 

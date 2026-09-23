@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import { Lato, Poppins } from "next/font/google";
+import { MotionProvider } from "@/components/motion/MotionProvider";
 import { SITE_URL, profile } from "@/content/profile";
 import { personJsonLd } from "@/lib/seo";
 import "./globals.css";
@@ -68,7 +69,8 @@ export const metadata: Metadata = {
 /**
  * Runs before first paint so the theme never flashes the wrong palette.
  *
- * It resolves the theme fully — stored choice first, OS preference second —
+ * It resolves the theme fully — a `?theme=` in the link first, then the
+ * stored choice, then the OS preference —
  * and writes the answer to `data-theme`. Doing it here rather than in CSS
  * means the dark palette needs exactly one selector to match, and the toggle
  * can always read the current theme straight off the attribute.
@@ -81,9 +83,18 @@ const themeScript = `
   // Marks that JS is available, which is what arms the scroll-reveal styles.
   d.classList.add("js");
   var t = null;
+  // A shared link can ask for a theme (?theme=dark or ?theme=light). It
+  // wins for this visit only: it is not saved, so it never overwrites the
+  // visitor's own choice.
   try {
-    t = localStorage.getItem("theme");
+    t = new URLSearchParams(window.location.search).get("theme");
   } catch (e) {}
+  if (t !== "dark" && t !== "light") {
+    t = null;
+    try {
+      t = localStorage.getItem("theme");
+    } catch (e) {}
+  }
   if (t !== "dark" && t !== "light") {
     t =
       window.matchMedia &&
@@ -113,7 +124,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         />
       </head>
       <body className="min-h-full flex flex-col">
-        {children}
+        <MotionProvider>{children}</MotionProvider>
         {/* Cookieless page counts, so there's some signal on whether the site
             actually gets read. No personal data leaves the page. */}
         <Analytics />

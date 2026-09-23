@@ -3,8 +3,10 @@ import { projects, type Project } from "@/content/projects";
 import { CardWash } from "./CardWash";
 import { Disclosure } from "./Disclosure";
 import { OpenOnHash } from "./OpenOnHash";
+import { ProjectFigures } from "./ProjectFigures";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
+import { StackEffect } from "./StackEffect";
 
 /** Shown while the card rests; the remainder arrives with the case study. */
 const TECH_AT_REST = 5;
@@ -28,19 +30,25 @@ export function Projects() {
       icon={<Layers className="h-6 w-6" />}
     >
       <OpenOnHash />
+      <StackEffect />
 
-      <ul className="space-y-5 sm:space-y-6">
+      {/* From `md` up the cards pin and stack as the reader scrolls — see
+          `.proj-stack` in globals.css. `--i` steps each pinned card a little
+          lower than the last, so the edges of the ones beneath still show. */}
+      <ul className="proj-stack space-y-5 sm:space-y-6 md:space-y-10">
         {projects.map((project, i) => (
           <li
             key={project.slug}
-            // Deep-linked from Experience. The sticky nav is cleared by
-            // `scroll-padding-top` on <html>, so no scroll-margin here — the
-            // two used to stack and drop the card 176px down the viewport.
+            // Deep-linked from Experience. The nav is cleared by
+            // `scroll-padding-top` on <html>, so no scroll-margin here.
             id={`project-${project.slug}`}
+            style={{ "--i": i } as React.CSSProperties}
           >
-            <Reveal delay={i * 0.05}>
-              <ProjectCard project={project} />
-            </Reveal>
+            <div className="proj-layer">
+              <Reveal delay={i * 0.05}>
+                <ProjectCard project={project} />
+              </Reveal>
+            </div>
           </li>
         ))}
       </ul>
@@ -54,7 +62,7 @@ function ProjectCard({ project }: { project: Project }) {
   const remainingTech = project.tech.slice(TECH_AT_REST);
 
   return (
-    <article className="proj-card spot-card lift-card group relative overflow-hidden rounded-2xl border border-rule bg-paper-raised">
+    <article className="proj-card spot-card lift-card group relative overflow-hidden rounded-3xl border border-rule bg-paper-raised shadow-[var(--shadow)]">
       <CardWash />
 
       <div className="relative p-5 sm:p-7">
@@ -104,28 +112,19 @@ function ProjectCard({ project }: { project: Project }) {
                 via {project.company}
               </a>
             </p>
+
+            {/* What the card rests on. One line, so the row can be read at a
+                glance and the case study stays optional. Beside the figures,
+                so the panel on the right has text to stand next to. */}
+            <p className="mt-4 max-w-[60ch] text-[0.9375rem] leading-relaxed text-ink-soft">
+              {project.gist}
+            </p>
           </div>
 
-          {/* The headline figure is the card's graphic — the one number worth
-              remembering, at a size that says so. It spent a release inside a
-              pill, which made a finding read as a badge. */}
-          {project.metric ? (
-            <p className="shrink-0 sm:text-right">
-              <span className="block font-display text-3xl leading-none font-extrabold tracking-[-0.03em] text-teal tabular-nums">
-                {project.metric.value}
-              </span>
-              <span className="mt-1.5 block font-display font-semibold text-[0.6875rem] leading-snug tracking-[0.08em] text-ink-faint uppercase">
-                {project.metric.label}
-              </span>
-            </p>
-          ) : null}
+          {/* The card's graphic: the headline figure, then the supporting
+              numbers as before/after bars (or counts). */}
+          <ProjectFigures project={project} />
         </div>
-
-        {/* What the card rests on. One line, so the row can be read at a
-            glance and the case study stays optional. */}
-        <p className="mt-4 max-w-[68ch] text-[0.9375rem] leading-relaxed text-ink-soft">
-          {project.gist}
-        </p>
 
         {/* The case study. Clipped rather than removed — see Disclosure — so
             it's in the DOM and in the accessibility tree whether or not the
@@ -211,7 +210,10 @@ function Stats({ stats }: { stats: NonNullable<Project["stats"]> }) {
             <span className="font-display text-sm font-semibold whitespace-nowrap text-ink-faint line-through tabular-nums">
               {stat.before}
             </span>
-            <ArrowRight className="h-3.5 w-3.5 shrink-0 text-teal" aria-hidden="true" />
+            <ArrowRight
+              className="h-3.5 w-3.5 shrink-0 text-teal"
+              aria-hidden="true"
+            />
             <span className="stat-fig font-display text-xl leading-none font-extrabold whitespace-nowrap text-teal tabular-nums">
               {stat.after}
             </span>

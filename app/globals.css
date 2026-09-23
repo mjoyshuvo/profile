@@ -21,6 +21,9 @@
   --on-teal: #ffffff;
   --shadow:
     0 1px 2px rgb(26 26 26 / 0.04), 0 8px 24px -12px rgb(26 26 26 / 0.12);
+  /* For things that float over the page: the nav pill, the menu sheet. */
+  --shadow-float:
+    0 1px 2px rgb(26 26 26 / 0.05), 0 18px 40px -18px rgb(26 26 26 / 0.28);
 
   /* Motion. Not palette values, so they stay out of the dark block and out of
      `@theme` — they'd generate colour utilities that mean nothing. One named
@@ -50,6 +53,7 @@
   --teal-wash: #16302c;
   --on-teal: #06201d;
   --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px -12px rgb(0 0 0 / 0.6);
+  --shadow-float: 0 1px 2px rgb(0 0 0 / 0.4), 0 18px 40px -16px rgb(0 0 0 / 0.75);
 }
 
 @theme inline {
@@ -71,11 +75,11 @@
 
 html {
   scroll-behavior: smooth;
-  /* Exactly the sticky nav's 3.5rem, no more: every jump target is a section
+  /* The floating nav's 4.5rem (pill plus its gap), no more: every jump target is a section
      or a card that already carries its own top padding, so anything extra
      here stacks on top of that padding and drops the heading a further inch
      down an otherwise empty screen. The padding does the spacing, once. */
-  scroll-padding-top: 3.5rem;
+  scroll-padding-top: 4.5rem;
   color-scheme: light;
 }
 
@@ -220,21 +224,26 @@ body {
 }
 
 /* ---------------------------------------------------------------------------
-   Hero statement. Each line of the triad rises out of its own mask on load,
-   one after the other, so "Engineer. Mentor. Builder." lands as three beats
-   rather than as one block fading in.
+   Hero statement. Each letter of the triad rises out of its line's mask on
+   load, with a blur that clears as it lands, one letter after the next — so
+   "Engineer. Mentor. Builder." sweeps in as one line of motion.
 
    An animation rather than a transition: it is above the fold, so there is no
    scroll to wait for. Only a `from` frame, so the rest state is the finished
-   one. The mask padding clears the descender on "g" and the side bearings the
-   tight tracking pushes out; the negative margins cancel it back out so the
-   heading's measured height does not move.
+   one, and only under `html.js`, so without scripting the words simply stand.
+   The mask padding clears the descender on "g"; the negative margins cancel
+   it back out so the heading's measured height does not move.
 --------------------------------------------------------------------------- */
-@keyframes hero-rise {
+@keyframes hero-ch-in {
   from {
     opacity: 0;
-    transform: translateY(100%) rotate(2.5deg);
+    transform: translateY(105%) rotate(8deg);
+    filter: blur(8px);
   }
+}
+
+.hero-ch {
+  display: inline-block;
 }
 
 .js .hero-line {
@@ -243,109 +252,35 @@ body {
   margin: 0 -0.05em -0.14em;
 }
 
-.js .hero-line-inner {
+.js .hero-ch {
   transform-origin: left bottom;
-  animation: hero-rise 1s var(--ease-soft) backwards;
-  animation-delay: calc(0.12s + var(--line, 0) * 0.11s);
+  animation: hero-ch-in 0.9s var(--ease-soft) backwards;
+  animation-delay: calc(0.15s + var(--c, 0) * 0.035s);
 }
 
-.hero-accent {
-  color: var(--teal);
-}
-
-/* ---------------------------------------------------------------------------
-   Hero call-to-action row.
---------------------------------------------------------------------------- */
-
-/* A light sweeping across the teal fill. Skewed so the edge reads as a
-   highlight rather than a moving band, and held off-screen for most of the
-   cycle so it passes occasionally instead of strobing. */
-/* The band travels in percentages of itself, so it has to be as wide as the
-   button it crosses — otherwise its parked position lands wherever 320% of a
-   32px band happens to fall, which on a wide button is the middle of the fill.
-   Full width plus a gradient inside gives the sweep a parent-relative edge to
-   rest behind. */
-@keyframes cta-sheen {
-  0% {
-    transform: translateX(-100%) skewX(-20deg);
-  }
-  70%,
-  100% {
-    transform: translateX(120%) skewX(-20deg);
+/* A slow teal bloom behind the hero. Large and soft, so it reads as light on
+   the paper rather than as a shape. */
+@keyframes hero-bloom {
+  to {
+    transform: translate(-8%, 10%) scale(1.1);
   }
 }
 
-/* Timing follows from the geometry. The old band crossed ~150px of travel in
-   2.5s; a full-width band crosses ~330px, so the same 2.5s read as a flash.
-   7s with the sweep over the first 70% puts it back at about 65px a second,
-   and still leaves a couple of seconds of rest between passes. */
-.cta-sheen {
-  background: linear-gradient(
-    to right,
-    transparent 40%,
-    color-mix(in oklab, var(--on-teal) 25%, transparent) 50%,
-    transparent 60%
+.hero-bloom {
+  position: absolute;
+  top: -10%;
+  right: -12%;
+  width: min(52rem, 110vw);
+  aspect-ratio: 1;
+  border-radius: 9999px;
+  background: radial-gradient(
+    circle,
+    color-mix(in oklab, var(--teal) 14%, transparent),
+    transparent 62%
   );
-  animation: cta-sheen 7s ease-in-out infinite;
-}
-
-/* The arrow keeps nudging toward the thing it points at. */
-@keyframes cta-arrow {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  50% {
-    transform: translateX(3px);
-  }
-}
-
-.cta-arrow {
-  animation: cta-arrow 1.8s ease-in-out infinite;
-}
-
-/* The contact button's arrow points up and out rather than straight ahead, so
-   its nudge follows the same diagonal the hover translate uses. */
-@keyframes cta-arrow-diag {
-  0%,
-  100% {
-    transform: translate(0, 0);
-  }
-  50% {
-    transform: translate(2px, -2px);
-  }
-}
-
-.cta-arrow-diag {
-  animation: cta-arrow-diag 1.8s ease-in-out infinite;
-}
-
-/* On hover the animation is dropped rather than paused: a paused animation
-   still holds its computed transform and would beat the hover translate. */
-.group:hover .cta-arrow,
-.group:hover .cta-arrow-diag {
-  animation: none;
-}
-
-/* The secondary links breathe on their border, which is a far bigger target
-   for the eye than nudging an 18px glyph would be. */
-@keyframes cta-breathe {
-  0%,
-  100% {
-    border-color: var(--rule);
-  }
-  50% {
-    border-color: var(--teal);
-  }
-}
-
-.cta-breathe {
-  animation: cta-breathe 3.2s ease-in-out infinite;
-}
-
-.cta-breathe:hover,
-.cta-breathe:focus-visible {
-  animation: none;
+  filter: blur(30px);
+  pointer-events: none;
+  animation: hero-bloom 18s ease-in-out infinite alternate;
 }
 
 /* Timeline rule. Draws downward as the section arrives, then stops — a
@@ -506,6 +441,10 @@ body {
 .js .rec-stack {
   display: grid;
   align-items: start;
+  /* The waiting panels sit 2.5rem to either side; clip them so a phone
+     never scrolls sideways. `clip`, not `hidden`, so no scroll box forms. */
+  overflow-x: clip;
+  overflow-y: visible;
 }
 
 .js .rec-stack > * + * {
@@ -521,8 +460,9 @@ body {
   opacity: 0;
   pointer-events: none;
   transition:
-    opacity 0.3s var(--ease-soft),
-    visibility 0s linear 0.3s;
+    opacity 0.35s var(--ease-soft),
+    transform 0.5s var(--ease-soft),
+    visibility 0s linear 0.35s;
 }
 
 .js .rec-stack > [data-rec-panel][data-active] {
@@ -530,7 +470,8 @@ body {
   opacity: 1;
   pointer-events: auto;
   transition:
-    opacity 0.3s var(--ease-soft),
+    opacity 0.35s var(--ease-soft),
+    transform 0.5s var(--ease-soft),
     visibility 0s;
 }
 
@@ -900,77 +841,6 @@ html:not(.js) .rec-counter {
   }
 }
 
-/* ---------------------------------------------------------------------------
-   Scroll progress. CSS-only on purpose: a JS scroll listener would run
-   main-thread work on every frame of every scroll, and this page had no scroll
-   handlers at all. Not gated on `html.js`, because it needs no JavaScript —
-   engines without scroll-driven animations simply never show it.
---------------------------------------------------------------------------- */
-@keyframes scroll-progress-grow {
-  from {
-    scale: 0 1;
-  }
-  to {
-    scale: 1 1;
-  }
-}
-
-.scroll-progress,
-.scroll-progress-head {
-  display: none;
-}
-
-/* The head rides the front edge by moving, not by scaling — `left` is what is
-   animated, so the dot and its glow keep their shape the whole way across. */
-@keyframes scroll-progress-head-slide {
-  from {
-    left: 0%;
-  }
-  to {
-    left: 100%;
-  }
-}
-
-@supports (animation-timeline: scroll()) {
-  .scroll-progress {
-    display: block;
-    position: absolute;
-    inset-inline: 0;
-    /* Sits on the header's own bottom rule. */
-    bottom: -1px;
-    height: 2px;
-    background-color: var(--teal);
-    transform-origin: left center;
-    scale: 0 1;
-    animation: scroll-progress-grow linear both;
-    animation-timeline: scroll(root block);
-  }
-
-  /* A white bead with a close teal halo, centred on the 2px rule: 6px tall
-     against the bar's 2px, so `bottom` is -3px to put its middle where the
-     bar's middle already is. Both numbers stay whole pixels — a 5px dot on a
-     half-pixel offset renders soft on one edge and stops reading as round.
-     The glow is kept tight on purpose: a wide one blooms past the bead and the
-     whole thing smears into a comet rather than a lit tip.
-     `translateX(-50%)` centres the bead on the progress point instead of
-     hanging it off the end. */
-  .scroll-progress-head {
-    display: block;
-    position: absolute;
-    bottom: -3px;
-    height: 6px;
-    width: 6px;
-    border-radius: 9999px;
-    background-color: #fff;
-    transform: translateX(-50%);
-    box-shadow:
-      0 0 3px 0.5px rgb(255 255 255 / 0.85),
-      0 0 8px 1.5px color-mix(in srgb, var(--teal) 50%, transparent);
-    animation: scroll-progress-head-slide linear both;
-    animation-timeline: scroll(root block);
-  }
-}
-
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -987,19 +857,54 @@ html:not(.js) .rec-counter {
 
   /* All four rest on their finished frame, but each is held back by a delay
      the blanket rule below does not shorten. Kill them by name. */
-  .hero-line-inner,
-  .portrait-frame,
-  .portrait-chip,
-  .proj-tech-rest {
+  .hero-ch,
+  .career-stack > li,
+  .career-body,
+  .metro-span,
+  .metro-live,
+  .metro-now,
+  .metro-dot-active,
+  .career-stack > li::before,
+  .career-stack > li::after,
+  .layer-bit,
+  .layer-panel,
+  .badge-ring,
+  .badge-orbit,
+  .badge-live,
+  .edu-bridge,
+  .photo-frame,
+  .photo-img,
+  .photo-chip,
+  .proj-tech-rest,
+  .nav-sheet,
+  .nav-sheet li {
     animation: none !important;
   }
 
   /* The ring and bead stay where they are — a still ring is still a ring. The
-     aura stops at its resting shape. */
-  .portrait-ring,
-  .portrait-orbit,
-  .portrait-aura {
+     aura and the bloom stop at their resting shape. */
+  .photo-ring,
+  .photo-aura,
+  .hero-bloom {
     animation: none !important;
+  }
+
+  /* Bars and count blocks rest on their finished state. */
+  .bar-fill,
+  .badge-bar,
+  .count-seg,
+  .count-dot {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .section-head::after {
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .js .scroll-word {
+    opacity: 1 !important;
   }
 
   .proj-body-inner > * {
@@ -1014,26 +919,10 @@ html:not(.js) .rec-counter {
   }
 
   /* The blanket rule below forces every animation to its FINAL frame rather
-     than skipping it, so every @keyframes must be neutralised here by name.
-     The progress bar would otherwise paint full regardless of scroll
-     position. */
+     than skipping it, so every @keyframes must be neutralised here by name. */
   /* Ends at opacity 0, so the blanket rule would leave the ring permanently
      invisible rather than simply still. Kill it by name and let the lamp sit
      as a solid dot. */
-  .cta-sheen,
-  .cta-arrow,
-  .cta-arrow-diag,
-  .cta-breathe {
-    animation: none !important;
-    transform: none !important;
-  }
-
-  /* The sheen sits off-screen at rest; without killing it the blanket rule
-     would park it mid-sweep across the button. */
-  .cta-sheen {
-    display: none !important;
-  }
-
   .pulse-ring {
     animation: none !important;
     opacity: 0.5 !important;
@@ -1060,13 +949,6 @@ html:not(.js) .rec-counter {
     transform: none !important;
   }
 
-  /* The head would otherwise park at `left: 100%`, a lit dot stuck in the
-     top-right corner regardless of scroll. It goes with the bar it rides. */
-  .scroll-progress,
-  .scroll-progress-head {
-    display: none;
-  }
-
   *,
   *::before,
   *::after {
@@ -1077,59 +959,15 @@ html:not(.js) .rec-counter {
 }
 
 /* ---------------------------------------------------------------------------
-   Hero portrait. Graphite line art keyed onto transparency, set in a small
-   composition: an aura behind, a slowly turning ring around it, a lit bead on
-   the ring, and two glass chips beside it at desktop widths.
-
-   The ring and the bead share one duration and both start at 12 o'clock, so
-   the bead always sits on the bright head of the ring's gradient.
+   Hero photo. The photograph cut out of its background and set in a circle
+   over a teal glow, a dashed ring turning slowly around it with a lit bead on
+   it, and three glass chips on its edge at desktop widths. See PhotoCard.
 --------------------------------------------------------------------------- */
-.portrait-stage {
-  aspect-ratio: 1;
+.photo-stage {
   isolation: isolate;
 }
 
-/* A plate of its own, so the aura glows round the portrait rather than
-   tinting the paper showing through the drawing. */
-.portrait-frame {
-  background-color: var(--paper-raised);
-  border: 1px solid var(--rule);
-  box-shadow: var(--shadow);
-  transition: transform 0.6s var(--ease-spring);
-}
-
-/* `object-cover` on a square box crops the drawing's own hatched margin
-   rather than the face. */
-.portrait-ink {
-  display: block;
-  aspect-ratio: 1;
-  object-fit: cover;
-  transition: transform 0.9s var(--ease-soft);
-}
-
-@media (hover: hover) {
-  .portrait-stage:hover .portrait-frame {
-    transform: scale(1.03);
-  }
-
-  /* The drawing moves a little more than its frame, so the face seems to sit
-     a layer behind the glass. */
-  .portrait-stage:hover .portrait-ink {
-    transform: scale(1.06);
-  }
-}
-
-/* The drawing is dark ink on transparency, so the dark palette has to put
-   something light behind it — inverting a portrait reads as a photo negative,
-   not a chalk drawing. Light mode needs no plate: the paper is already behind
-   it. One of the two fixed colours the README allows. */
-:root[data-theme="dark"] .portrait-ink {
-  background-color: #e2ded3;
-}
-
-/* A blurred blob that slowly changes shape. Large and soft enough that it
-   reads as light falling on the paper, not as a moving object. */
-@keyframes portrait-aura {
+@keyframes photo-aura {
   0%,
   100% {
     border-radius: 42% 58% 60% 40% / 45% 45% 55% 55%;
@@ -1141,145 +979,887 @@ html:not(.js) .rec-counter {
   }
 }
 
-.portrait-aura {
+.photo-aura {
   position: absolute;
-  inset: -14%;
+  inset: -4%;
   z-index: -1;
   background: radial-gradient(
-    circle at 35% 35%,
+    circle at 50% 60%,
     color-mix(in oklab, var(--teal) 30%, transparent),
     transparent 70%
   );
-  filter: blur(24px);
-  animation: portrait-aura 14s ease-in-out infinite;
+  filter: blur(28px);
+  animation: photo-aura 14s ease-in-out infinite;
 }
 
-@keyframes portrait-spin {
+@keyframes photo-spin {
   to {
     transform: rotate(360deg);
   }
 }
 
-@keyframes portrait-fade {
+@keyframes photo-fade {
   from {
     opacity: 0;
   }
 }
 
-/* A conic gradient cut down to a 2px ring by a radial mask: a comet tail that
-   fades in round the circle and ends in full teal at the top. */
-.portrait-ring {
+.photo-ring {
   position: absolute;
-  inset: -7px;
+  inset: 3%;
   border-radius: 9999px;
-  background: conic-gradient(
-    transparent 0 50%,
-    color-mix(in oklab, var(--teal) 20%, transparent) 70%,
-    var(--teal) 99%,
-    transparent 100%
-  );
-  -webkit-mask: radial-gradient(
-    farthest-side,
-    transparent calc(100% - 2px),
-    #000 calc(100% - 2px)
-  );
-  mask: radial-gradient(
-    farthest-side,
-    transparent calc(100% - 2px),
-    #000 calc(100% - 2px)
-  );
+  border: 1.5px dashed color-mix(in oklab, var(--teal) 50%, transparent);
   animation:
-    portrait-spin 9s linear infinite,
-    portrait-fade 1s var(--ease-soft) 0.7s backwards;
+    photo-spin 40s linear infinite,
+    photo-fade 1s var(--ease-soft) 0.8s backwards;
 }
 
-.portrait-orbit {
+.photo-bead {
   position: absolute;
-  inset: -7px;
-  animation:
-    portrait-spin 9s linear infinite,
-    portrait-fade 1s var(--ease-soft) 0.7s backwards;
-}
-
-.portrait-bead {
-  position: absolute;
-  top: -2.5px;
+  top: -6px;
   left: 50%;
-  width: 7px;
-  height: 7px;
-  margin-left: -3.5px;
+  width: 11px;
+  height: 11px;
+  margin-left: -5.5px;
   border-radius: 9999px;
-  background-color: var(--paper-raised);
+  background-color: var(--teal);
   box-shadow:
-    0 0 0 2px var(--teal),
-    0 0 10px 2px color-mix(in oklab, var(--teal) 55%, transparent);
+    0 0 0 4px var(--paper),
+    0 0 12px 2px color-mix(in oklab, var(--teal) 55%, transparent);
 }
 
-/* The frame opens as a widening circle on load. Only when scripting is on,
-   so the portrait is never hidden behind a clip that nothing will lift. */
-@keyframes portrait-in {
+.photo-frame {
+  box-shadow:
+    0 30px 60px -30px color-mix(in oklab, var(--teal) 60%, transparent),
+    var(--shadow);
+}
+
+/* A hairline of light round the disc, so it reads as glass on the paper. */
+.photo-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px
+    color-mix(in oklab, var(--paper-raised) 45%, transparent);
+  pointer-events: none;
+}
+
+/* Teal rising from the bottom of the disc into the pale wash. Built from the
+   palette tokens, so it follows the theme. */
+.photo-glow {
+  background: radial-gradient(
+    140% 100% at 50% 100%,
+    var(--teal) 0%,
+    color-mix(in oklab, var(--teal) 60%, var(--teal-wash)) 42%,
+    color-mix(in oklab, var(--teal) 18%, var(--teal-wash)) 78%,
+    var(--teal-wash) 100%
+  );
+}
+
+.photo-img {
+  object-position: 50% 15%;
+}
+
+.photo-light {
+  opacity: 0;
+  transition: opacity 0.35s var(--ease-soft);
+}
+
+.photo-stage[data-lit] .photo-light {
+  opacity: 1;
+}
+
+/* The disc opens from its centre on load and the photo settles into it. Only
+   with scripting on, so the portrait is never stuck behind a clip. */
+@keyframes photo-in {
   from {
     clip-path: circle(0% at 50% 50%);
-    transform: scale(1.08);
   }
   to {
-    clip-path: circle(75% at 50% 50%);
-    transform: none;
+    clip-path: circle(50% at 50% 50%);
   }
 }
 
-.js .portrait-frame {
-  animation: portrait-in 1.1s var(--ease-soft) 0.1s backwards;
+@keyframes photo-settle {
+  from {
+    transform: scale(1.15);
+  }
 }
 
-/* Glass chips. They carry words, so they arrive once and then hold still —
-   see the Portrait component. */
+.js .photo-frame {
+  animation: photo-in 1.1s var(--ease-soft) 0.25s backwards;
+}
+
+.js .photo-img {
+  animation: photo-settle 1.6s var(--ease-soft) 0.25s backwards;
+}
+
+/* Glass chips. They carry words, so they arrive once and then hold still. */
 @keyframes chip-in {
   from {
     opacity: 0;
-    transform: translateY(10px) scale(0.9);
+    transform: translateY(10px) scale(0.85);
   }
 }
 
-.portrait-chip {
+.photo-chip {
   position: absolute;
+  display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
-  padding: 0.45rem 0.85rem;
+  gap: 0.35rem;
+  padding: 0.4rem 0.7rem;
   border: 1px solid color-mix(in oklab, var(--rule) 80%, transparent);
   border-radius: 9999px;
   background-color: color-mix(in oklab, var(--paper-raised) 86%, transparent);
-  -webkit-backdrop-filter: blur(10px) saturate(1.4);
-  backdrop-filter: blur(10px) saturate(1.4);
-  box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(12px) saturate(1.4);
+  backdrop-filter: blur(12px) saturate(1.4);
+  box-shadow: var(--shadow-float);
   font-family: var(--font-poppins), ui-sans-serif, sans-serif;
-  font-size: 0.75rem;
+  font-size: 0.6875rem;
   font-weight: 600;
   letter-spacing: -0.01em;
   white-space: nowrap;
   color: var(--ink-soft);
 }
 
-.portrait-chip-a {
-  bottom: 12%;
-  left: -2.5rem;
+.photo-chip b {
+  font-size: 0.8125rem;
 }
 
-.portrait-chip-b {
-  top: 6%;
-  right: -1.75rem;
+/* Phone: one chip in each corner of the stage, where the disc is narrowest
+   and the chips cover background rather than the face. */
+.photo-chip-a {
+  top: 0;
+  left: -3.25rem;
 }
 
-.js .portrait-chip {
+.photo-chip-d {
+  top: 0;
+  right: -3.25rem;
+}
+
+.photo-chip-c {
+  bottom: 0;
+  left: -3rem;
+}
+
+.photo-chip-b {
+  bottom: 0;
+  right: -3rem;
+}
+
+/* Desktop: round the disc's edge, clear of the face. */
+@media (min-width: 1024px) {
+  .photo-chip {
+    gap: 0.45rem;
+    padding: 0.55rem 0.95rem;
+    font-size: 0.8125rem;
+  }
+
+  .photo-chip b {
+    font-size: 1rem;
+  }
+
+  .photo-chip-a {
+    top: 9%;
+    left: -2.25rem;
+  }
+
+  .photo-chip-d {
+    top: 1%;
+    right: -3.25rem;
+  }
+
+  .photo-chip-b {
+    top: auto;
+    bottom: 22%;
+    right: -2.75rem;
+  }
+
+  .photo-chip-c {
+    bottom: -0.5rem;
+    left: 12%;
+  }
+}
+
+.js .photo-chip {
   animation: chip-in 0.7s var(--ease-spring) backwards;
 }
 
-.js .portrait-chip-a {
-  animation-delay: 0.75s;
+.js .photo-chip-a {
+  animation-delay: 1s;
 }
 
-.js .portrait-chip-b {
+.js .photo-chip-b {
+  animation-delay: 1.15s;
+}
+
+.js .photo-chip-c {
+  animation-delay: 1.3s;
+}
+
+.js .photo-chip-d {
+  animation-delay: 1.45s;
+}
+
+/* ---------------------------------------------------------------------------
+   Nav sheet. The phone menu drops in under the pill and its rows follow one
+   after another. Keyed to the native `[open]`, so it needs no script.
+--------------------------------------------------------------------------- */
+@keyframes sheet-in {
+  from {
+    opacity: 0;
+    transform: translateY(-8px) scale(0.98);
+  }
+}
+
+@keyframes row-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
+.nav-menu[open] .nav-sheet {
+  transform-origin: top center;
+  animation: sheet-in 0.35s var(--ease-soft);
+}
+
+.nav-menu[open] .nav-sheet li {
+  animation: row-in 0.4s var(--ease-soft) backwards;
+}
+
+.nav-menu[open] .nav-sheet li:nth-child(2) { animation-delay: 0.03s; }
+.nav-menu[open] .nav-sheet li:nth-child(3) { animation-delay: 0.06s; }
+.nav-menu[open] .nav-sheet li:nth-child(4) { animation-delay: 0.09s; }
+.nav-menu[open] .nav-sheet li:nth-child(5) { animation-delay: 0.12s; }
+.nav-menu[open] .nav-sheet li:nth-child(6) { animation-delay: 0.15s; }
+.nav-menu[open] .nav-sheet li:nth-child(n + 7) { animation-delay: 0.18s; }
+
+/* ---------------------------------------------------------------------------
+   Theme switch. The new palette's snapshot is revealed by a growing circle
+   (ThemeToggle drives the clip-path); the default cross-fade is switched off
+   so the two palettes never blend into a muddy middle frame.
+--------------------------------------------------------------------------- */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* ---------------------------------------------------------------------------
+   Section heading rule. A teal line draws along the heading's bottom rule
+   when the heading arrives. Only with scripting on; the plain rule is the
+   no-JS state.
+--------------------------------------------------------------------------- */
+.js .section-head::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: linear-gradient(to right, var(--teal), transparent 55%);
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 1.2s var(--ease-soft) 0.15s;
+}
+
+.js .section-head[data-revealed]::after {
+  transform: scaleX(1);
+}
+
+/* ---------------------------------------------------------------------------
+   Project stack. From `md` up each card pins under the nav and the next one
+   slides over it; the one underneath shrinks and dims a little (StackEffect
+   feeds `--stack`, 0 → 1, as it is covered). Off on phones, where cards are
+   tall enough that a pinned one would hide its own lower half.
+
+   While a case study is open the list stops stacking, so a long case study
+   scrolls like normal content instead of being covered.
+--------------------------------------------------------------------------- */
+@media (min-width: 768px) {
+  .proj-stack > li {
+    position: sticky;
+    top: calc(5.5rem + var(--i, 0) * 0.9rem);
+  }
+
+  /* Any open case study drops the whole list out of the stack. Unpinning
+     only the open card let it scroll away and uncover the pinned cards
+     still waiting behind it. */
+  .proj-stack:has(.disclosure[open]) > li {
+    position: relative;
+    top: auto;
+  }
+}
+
+.proj-layer {
+  transform-origin: top center;
+  transform: scale(calc(1 - var(--stack, 0) * 0.06));
+  opacity: calc(1 - var(--stack, 0) * 0.45);
+  will-change: transform;
+}
+
+/* ---------------------------------------------------------------------------
+   Before/after bars on a project card. Widths are real, set inline from the
+   figures; the motion only scales them in from the left when the card
+   arrives. With scripting off they simply stand at full length.
+--------------------------------------------------------------------------- */
+.bar-fill {
+  transform-origin: left center;
+  transition: transform 1.2s var(--ease-soft);
+}
+
+.bar-fill.after {
+  transition-delay: 0.25s;
+}
+
+.js [data-reveal]:not([data-revealed]) .bar-fill {
+  transform: scaleX(0);
+}
+
+/* Counts: blocks fill and dots pop in one after another. */
+.count-seg,
+.count-dot {
+  transition:
+    background-color 0.4s var(--ease-soft),
+    color 0.4s var(--ease-soft),
+    transform 0.5s var(--ease-spring);
+  transition-delay: calc(0.2s + var(--k, 0) * 0.12s);
+}
+
+.js [data-reveal]:not([data-revealed]) .count-seg {
+  background-color: var(--rule);
+  color: var(--ink-faint);
+}
+
+.js [data-reveal]:not([data-revealed]) .count-dot {
+  background-color: var(--rule);
+  transform: scale(0.55);
+}
+
+/* ---------------------------------------------------------------------------
+   Words that light up as they scroll into view (ScrollWords). The opacity is
+   a variable Motion writes; the rule reading it only exists under `html.js`,
+   so without scripting the line is simply solid.
+--------------------------------------------------------------------------- */
+.js .scroll-word {
+  opacity: var(--o, 1);
+}
+
+/* ---------------------------------------------------------------------------
+   Career rail (Experience) as a metro line. Without scripting the line and
+   the phone's row buttons are hidden and every company panel is listed; with
+   it, one panel shows. From `sm` up the stations above are the tabs and the
+   panel slides in from the side the reader moved towards; on a phone the list
+   is the line, drawn down its left edge, and the selected row opens in place.
+--------------------------------------------------------------------------- */
+html:not(.js) .career-rail,
+html:not(.js) .metro-row {
+  display: none;
+}
+
+.career-stack > li + li {
+  margin-top: 1.5rem;
+}
+
+.metro-fill {
+  transition: width 0.9s var(--ease-soft);
+}
+
+/* The running stretch: teal dashes that keep moving towards "Now". */
+.metro-live {
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--teal) 0 0.625rem,
+    color-mix(in oklab, var(--teal) 40%, var(--paper)) 0.625rem 1.25rem
+  );
+  background-size: 1.25rem 100%;
+  animation: metro-flow 0.9s linear infinite;
+}
+
+@keyframes metro-flow {
+  to {
+    background-position: 1.25rem 0;
+  }
+}
+
+@keyframes metro-flow-y {
+  to {
+    background-position: 0 1.25rem;
+  }
+}
+
+.metro-now {
+  animation: metro-spin 6s linear infinite;
+}
+
+@keyframes metro-spin {
+  to {
+    rotate: 360deg;
+  }
+}
+
+.metro-dot {
+  display: block;
+  transition:
+    width 0.35s var(--ease-spring),
+    height 0.35s var(--ease-spring),
+    background-color 0.4s var(--ease-soft),
+    border-color 0.4s var(--ease-soft);
+}
+
+.metro-dot-active {
+  animation: metro-pulse 1.8s ease-out infinite;
+}
+
+@keyframes metro-pulse {
+  from {
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--teal) 45%, transparent);
+  }
+  70%,
+  to {
+    box-shadow: 0 0 0 0.75rem transparent;
+  }
+}
+
+/* A position's place inside the tenure grows in whenever its panel shows. */
+.js .career-stack > li[data-active] .metro-span {
+  transform-origin: left;
+  animation: metro-span 0.9s var(--ease-soft) both;
+}
+
+@keyframes metro-span {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+/* Phone: the list is the line. A rule down the left, a station per row, the
+   running stretch dashed and moving at the top. */
+@media (max-width: 39.99rem) {
+  .js .career-stack {
+    position: relative;
+  }
+
+  .js .career-stack::before,
+  .js .career-stack > li[data-live]::before {
+    content: "";
+    position: absolute;
+    left: 1.0625rem;
+    width: 0.25rem;
+    border-radius: 999px;
+  }
+
+  .js .career-stack::before {
+    top: 1.5rem;
+    bottom: 1.5rem;
+    background: var(--rule);
+  }
+
+  .js .career-stack > li {
+    position: relative;
+    padding-left: 2.875rem;
+  }
+
+  .js .career-stack > li + li {
+    margin-top: 0.875rem;
+  }
+
+  .js .career-stack > li[data-live]::before {
+    top: 1.5rem;
+    height: 3rem;
+    background-image: repeating-linear-gradient(
+      180deg,
+      var(--teal) 0 0.625rem,
+      color-mix(in oklab, var(--teal) 40%, var(--paper)) 0.625rem 1.25rem
+    );
+    background-size: 100% 1.25rem;
+    animation: metro-flow-y 0.9s linear infinite;
+  }
+
+  /* The station on each row. */
+  .js .career-stack > li::after {
+    content: "";
+    position: absolute;
+    left: 1.1875rem;
+    top: 2rem;
+    width: 1rem;
+    height: 1rem;
+    translate: -50% -50%;
+    border-radius: 999px;
+    border: 3px solid var(--paper);
+    background: color-mix(in oklab, var(--ink-faint) 45%, var(--paper));
+    transition:
+      width 0.35s var(--ease-spring),
+      height 0.35s var(--ease-spring),
+      background-color 0.4s var(--ease-soft);
+  }
+
+  .js .career-stack > li[data-live]::after,
+  .js .career-stack > li[data-active]::after {
+    background: var(--teal);
+  }
+
+  .js .career-stack > li[data-active]::after {
+    width: 1.375rem;
+    height: 1.375rem;
+    animation: metro-pulse 1.8s ease-out infinite;
+  }
+
+  .metro-row {
+    border-color: var(--rule);
+    background: var(--paper-raised);
+    color: var(--ink);
+    transition:
+      background-color 0.35s var(--ease-soft),
+      color 0.35s var(--ease-soft),
+      border-color 0.35s var(--ease-soft);
+  }
+
+  [data-active] > .metro-row {
+    border-color: var(--teal);
+    background: var(--teal);
+    color: var(--on-teal);
+  }
+
+  .metro-chevron {
+    transition: rotate 0.4s var(--ease-spring);
+  }
+
+  [data-active] > .metro-row .metro-chevron {
+    rotate: 180deg;
+  }
+
+  .js .career-stack > li:not([data-active]) > .career-body {
+    display: none;
+  }
+
+  .js .career-stack > li[data-active] > .career-body {
+    padding-top: 0.875rem;
+    animation: career-in-down 0.45s var(--ease-soft);
+  }
+
+  /* The row already names the company, so the panel's heading is kept for
+     assistive tech only. */
+  .js .career-name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+}
+
+@media (min-width: 40rem) {
+  .js .career-stack > li {
+    display: none;
+    margin: 0;
+  }
+
+  .js .career-stack > li[data-active] {
+    display: block;
+    animation: career-in-fwd 0.5s var(--ease-soft);
+  }
+
+  .js .career-stack[data-dir="back"] > li[data-active] {
+    animation-name: career-in-back;
+  }
+}
+
+@keyframes career-in-fwd {
+  from {
+    opacity: 0;
+    transform: translateX(2rem);
+  }
+}
+
+@keyframes career-in-back {
+  from {
+    opacity: 0;
+    transform: translateX(-2rem);
+  }
+}
+
+@keyframes career-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-0.5rem);
+  }
+}
+
+.career-more {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.5s var(--ease-soft);
+}
+
+.career-more-inner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.career-position:has(.disclosure[open]) .career-more {
+  grid-template-rows: 1fr;
+}
+
+/* ---------------------------------------------------------------------------
+   Engineering identity as a layer stack (IdentityStack). The slabs tilt back a
+   little, like floors seen from the front; the selected one lifts and fills
+   teal, and dots run up and down the wires between them. Without scripting
+   the stack is hidden and all three panels are listed.
+--------------------------------------------------------------------------- */
+html:not(.js) .layer-stack {
+  display: none;
+}
+
+.layer-slab {
+  border-color: var(--rule);
+  background: var(--paper-raised);
+  color: var(--ink);
+  transform: perspective(1000px) rotateX(14deg);
+  box-shadow: 0 10px 24px -20px rgb(26 26 26 / 0.35);
+  transition:
+    transform 0.6s var(--ease-spring),
+    background-color 0.4s var(--ease-soft),
+    color 0.4s var(--ease-soft),
+    border-color 0.4s var(--ease-soft),
+    box-shadow 0.5s var(--ease-soft);
+}
+
+.layer-slab:hover {
+  border-color: var(--teal);
+}
+
+.layer-slab[data-active] {
+  border-color: var(--teal);
+  background: var(--teal);
+  color: var(--on-teal);
+  transform: perspective(1000px) rotateX(14deg) translateY(-0.375rem);
+  box-shadow: 0 26px 40px -22px color-mix(in oklab, var(--teal) 85%, transparent);
+}
+
+.layer-glyph {
+  background: var(--teal-wash);
+  color: var(--teal);
+  transition:
+    background-color 0.4s var(--ease-soft),
+    color 0.4s var(--ease-soft);
+}
+
+.layer-slab[data-active] .layer-glyph {
+  background: color-mix(in oklab, var(--on-teal) 16%, transparent);
+  color: var(--on-teal);
+}
+
+.layer-wire {
+  position: absolute;
+  inset-block: 0;
+  width: 2px;
+  background: var(--rule);
+}
+
+.layer-bit {
+  position: absolute;
+  top: 0;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: var(--teal);
+  animation: layer-travel 1.8s ease-in-out infinite;
+}
+
+.layer-bit-late {
   animation-delay: 0.9s;
+  animation-direction: reverse;
+}
+
+@keyframes layer-travel {
+  0% {
+    top: 0;
+    opacity: 0;
+  }
+  15%,
+  85% {
+    opacity: 1;
+  }
+  100% {
+    top: calc(100% - 0.5rem);
+    opacity: 0;
+  }
+}
+
+.layer-panels > * + * {
+  margin-top: 2.5rem;
+}
+
+.js .layer-panel {
+  display: none;
+  margin: 0;
+}
+
+.js .layer-panel[data-active] {
+  display: block;
+  animation: layer-in 0.5s var(--ease-soft);
+}
+
+@keyframes layer-in {
+  from {
+    opacity: 0;
+    transform: translateX(1.125rem);
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Skills filter board (SkillsBoard). Picking an area lifts its tiles and fades
+   the rest, rippling in reading order; nothing leaves the page.
+--------------------------------------------------------------------------- */
+html:not(.js) .skill-filters {
+  display: none;
+}
+
+.skill-filter {
+  border-color: var(--rule);
+  background: var(--paper-raised);
+  color: var(--ink-soft);
+  transition:
+    background-color 0.3s var(--ease-soft),
+    color 0.3s var(--ease-soft),
+    border-color 0.3s var(--ease-soft);
+}
+
+.skill-filter:hover {
+  border-color: var(--teal);
+  color: var(--teal);
+}
+
+.skill-filter[aria-pressed="true"] {
+  border-color: var(--teal);
+  background: var(--teal);
+  color: var(--on-teal);
+}
+
+.skill-count {
+  background: color-mix(in oklab, var(--ink) 6%, transparent);
+  transition: background-color 0.3s var(--ease-soft);
+}
+
+.skill-filter[aria-pressed="true"] .skill-count {
+  background: color-mix(in oklab, var(--on-teal) 18%, transparent);
+}
+
+.skill-tile {
+  border-color: var(--rule);
+  transition:
+    opacity 0.45s var(--ease-soft) var(--d, 0s),
+    transform 0.5s var(--ease-spring) var(--d, 0s),
+    border-color 0.4s var(--ease-soft),
+    box-shadow 0.4s var(--ease-soft);
+}
+
+.skill-tile[data-lit] {
+  border-color: var(--teal);
+  box-shadow: 0 14px 26px -18px color-mix(in oklab, var(--teal) 80%, transparent);
+  transform: translateY(-0.125rem);
+}
+
+.skill-tile[data-dim] {
+  opacity: 0.28;
+  transform: scale(0.96);
+}
+
+/* ---------------------------------------------------------------------------
+   Certification badge spotlight. The badge sits in the hero portrait's ring:
+   a dashed circle turning slowly, a bead going round a little faster, over a
+   soft teal glow. The validity bar fills in when the card is revealed.
+--------------------------------------------------------------------------- */
+.badge-glow {
+  background: radial-gradient(
+    circle at 50% 70%,
+    color-mix(in oklab, var(--teal) 22%, var(--teal-wash)) 0%,
+    var(--teal-wash) 45%,
+    transparent 72%
+  );
+}
+
+.badge-ring {
+  border-color: color-mix(in oklab, var(--teal) 40%, var(--paper));
+  animation: metro-spin 40s linear infinite;
+}
+
+.badge-orbit {
+  animation: metro-spin 9s linear infinite;
+}
+
+.badge-live {
+  animation: metro-pulse 1.8s ease-out infinite;
+}
+
+.badge-bar {
+  transform-origin: left;
+  transition: transform 1s var(--ease-soft) 0.2s;
+}
+
+.js [data-reveal]:not([data-revealed]) .badge-bar {
+  transform: scaleX(0);
+}
+
+html:not(.js) .copy-button {
+  display: none;
+}
+
+/* ---------------------------------------------------------------------------
+   Education milestone. The dashes between graduating and the first role run
+   the same way the metro line's running stretch does.
+--------------------------------------------------------------------------- */
+.edu-bridge {
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--teal) 0 0.625rem,
+    color-mix(in oklab, var(--teal) 40%, var(--paper)) 0.625rem 1.25rem
+  );
+  background-size: 1.25rem 100%;
+  animation: metro-flow 0.9s linear infinite;
+}
+
+.edu-year {
+  color: transparent;
+  -webkit-text-stroke: 2px var(--teal);
+}
+
+/* ---------------------------------------------------------------------------
+   Writing index. The row under the pointer or focus turns teal and its arrow
+   fills; the covers beside the list cross-fade to that row's (WritingIndex).
+--------------------------------------------------------------------------- */
+.writing-cover {
+  opacity: 0;
+  transform: rotate(var(--tilt, -2deg)) scale(0.97);
+  transition:
+    opacity 0.45s var(--ease-soft),
+    transform 0.6s var(--ease-spring);
+}
+
+.writing-cover[data-active] {
+  opacity: 1;
+  transform: rotate(var(--tilt, -2deg));
+}
+
+/* ---------------------------------------------------------------------------
+   Recommendation deck slide. Inactive panels wait a little to either side of
+   the active one, so switching slides in the direction of travel.
+--------------------------------------------------------------------------- */
+.js .rec-stack > [data-rec-panel] {
+  transform: translateX(var(--side, 0));
+}
+
+.js .rec-stack > [data-rec-panel][data-side="prev"] {
+  --side: -2.5rem;
+}
+
+.js .rec-stack > [data-rec-panel][data-side="next"] {
+  --side: 2.5rem;
 }
 
 /* Print: strip the chrome so Cmd-P yields a clean one-page résumé. */
@@ -1301,8 +1881,37 @@ html:not(.js) .rec-counter {
     overflow: visible !important;
   }
 
-  .proj-body {
+  .proj-body,
+  .career-more {
     grid-template-rows: 1fr !important;
+  }
+
+  /* Paper gets every company, not just the one the rail had selected. */
+  .career-stack > li {
+    display: block !important;
+    margin-top: 1.5rem !important;
+  }
+
+  .career-rail,
+  .metro-row {
+    display: none !important;
+  }
+
+  .career-body,
+  .layer-panel {
+    display: block !important;
+  }
+
+  .layer-panel + .layer-panel {
+    margin-top: 1.5rem !important;
+  }
+
+  .layer-stack,
+  .skill-filters,
+  .rec-rail,
+  .rec-counter,
+  .copy-button {
+    display: none !important;
   }
 
   .proj-body-inner,
@@ -1314,10 +1923,10 @@ html:not(.js) .rec-counter {
 
   .spot-card::before,
   .spot-card::after,
-  .portrait-aura,
-  .portrait-ring,
-  .portrait-orbit,
-  .portrait-chip {
+  .photo-aura,
+  .photo-ring,
+  .photo-chip,
+  .hero-bloom {
     display: none !important;
   }
 
