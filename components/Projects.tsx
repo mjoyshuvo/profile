@@ -3,7 +3,7 @@ import { projects, type Project } from "@/content/projects";
 import { CardWash } from "./CardWash";
 import { Disclosure } from "./Disclosure";
 import { OpenOnHash } from "./OpenOnHash";
-import { ProjectFigures } from "./ProjectFigures";
+import { ProjectVisual } from "./ProjectVisual";
 import { Reveal } from "./Reveal";
 import { Section } from "./Section";
 import { StackEffect } from "./StackEffect";
@@ -13,7 +13,7 @@ const TECH_AT_REST = 5;
 
 /**
  * An index of the work first: each project rests as a row a reader can take in
- * at a glance — name, client, period, the one-line gist and the headline figure
+ * at a glance — name, client, period, the one-line gist and a drawing of it
  * — and the case study opens underneath on demand. Four full cards of prose
  * arriving straight after the Experience timeline was more than anyone skims.
  *
@@ -69,7 +69,7 @@ function ProjectCard({ project }: { project: Project }) {
         {/* Title and figure share the top line. The card used to lead with a
             teal 01/02/03 ordinal, which ranked four projects that aren't
             ranked and forced every line beneath it into a hanging indent to
-            clear the numeral. The figure earns that space instead. */}
+            clear the numeral. The drawing earns that space instead. */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between sm:gap-10">
           <div className="min-w-0">
             <h3 className="font-display text-xl font-bold tracking-[-0.03em] sm:text-2xl">
@@ -121,9 +121,9 @@ function ProjectCard({ project }: { project: Project }) {
             </p>
           </div>
 
-          {/* The card's graphic: the headline figure, then the supporting
-              numbers as before/after bars (or counts). */}
-          <ProjectFigures project={project} />
+          {/* The card's graphic: a drawing of what the product is. Its
+              numbers are in Experience and in the case study below. */}
+          <ProjectVisual project={project} />
         </div>
 
         {/* The case study. Clipped rather than removed — see Disclosure — so
