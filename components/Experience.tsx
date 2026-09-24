@@ -1,5 +1,11 @@
 import Image from "next/image";
-import { ArrowDown, Briefcase, ExternalLink, MapPin } from "lucide-react";
+import {
+  ArrowDown,
+  ArrowUpRight,
+  Briefcase,
+  ExternalLink,
+  MapPin,
+} from "lucide-react";
 import { NorwayFlag } from "./BrandIcons";
 import { CardWash } from "./CardWash";
 import { CareerRail } from "./CareerRail";
@@ -194,31 +200,7 @@ function RolePanel({ role, now }: { role: Role; now: Date }) {
           </span>
         </p>
 
-        {role.client ? (
-          <div className="relative mt-1 flex flex-col gap-3 border-t border-rule pt-4 sm:flex-row sm:items-start sm:gap-4">
-            <ClientMark client={role.client} />
-            <p className="text-sm leading-relaxed text-ink-soft">
-              <span className="mr-1.5 inline-flex items-center gap-1.5 align-middle font-display text-[0.6875rem] font-semibold tracking-[0.12em] text-teal uppercase">
-                Client ·{" "}
-                {role.client.url ? (
-                  <a
-                    href={role.client.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="tap transition-colors hover:text-teal-strong"
-                  >
-                    {role.client.name}
-                  </a>
-                ) : (
-                  role.client.name
-                )}
-                <NorwayFlag className="h-3 w-[1.03rem] shrink-0 rounded-[1px] ring-1 ring-black/10" />
-                <span className="sr-only">(Norway)</span>
-              </span>
-              {role.client.blurb}
-            </p>
-          </div>
-        ) : null}
+        {role.client ? <ClientPanel client={role.client} /> : null}
       </div>
 
       {hasStats ? (
@@ -321,33 +303,98 @@ function CaseStudyLinks({ company }: { company: string }) {
 }
 
 /**
+ * Who the work was for, as a tinted panel inside the company card: the logo,
+ * then the name with its country and former name under it.
+ */
+function ClientPanel({ client }: { client: NonNullable<Role["client"]> }) {
+  return (
+    <section className="relative mt-2 flex flex-col gap-4 rounded-2xl bg-teal-wash/60 p-5">
+      <div className="flex items-center gap-4 sm:gap-5">
+        <ClientMark client={client} />
+        <div className="flex min-w-0 grow flex-col gap-1">
+          <span className="font-display text-[0.6875rem] font-semibold tracking-[0.12em] text-teal uppercase">
+            Delivered for
+          </span>
+          <span className="font-display text-xl leading-tight font-bold tracking-[-0.02em]">
+            {client.name}
+          </span>
+          {/* Where the client is, and what it used to be called: one quiet
+              line of data under the name, not a second row of pills. */}
+          <span className="flex flex-wrap items-center gap-x-2 gap-y-1 font-display text-[0.6875rem] font-semibold tracking-[0.08em] text-ink-faint uppercase">
+            <span className="inline-flex items-center gap-1.5">
+              <NorwayFlag className="h-2.5 w-[0.86rem] shrink-0 rounded-[1px] ring-1 ring-black/10" />
+              Norway
+            </span>
+            {client.formerly ? (
+              <>
+                <span aria-hidden="true" className="h-1 w-1 rounded-full bg-rule" />
+                <span>Formerly {client.formerly}</span>
+              </>
+            ) : null}
+          </span>
+        </div>
+        {client.url ? (
+          <a
+            href={client.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={`${client.name} website`}
+            className="tap flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-paper-raised text-teal transition-colors hover:bg-teal hover:text-on-teal"
+          >
+            <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+          </a>
+        ) : null}
+      </div>
+
+      <p className="max-w-[68ch] text-[0.9375rem] leading-relaxed text-ink-soft">
+        {client.blurb}
+      </p>
+
+      {client.sectors?.length ? (
+        <ul className="flex flex-wrap gap-2" aria-label={`What ${client.name} covers`}>
+          {client.sectors.map((sector) => (
+            <li
+              key={sector}
+              className="inline-flex h-[1.875rem] items-center rounded-full border border-teal/20 bg-paper-raised px-3 font-display text-xs font-medium text-teal-strong"
+            >
+              {sector}
+            </li>
+          ))}
+        </ul>
+      ) : null}
+
+    </section>
+  );
+}
+
+/**
  * The client's logo when there's a file for it, and a lettermark otherwise, so
- * the card keeps the same shape either way.
+ * the panel keeps the same shape either way.
  */
 function ClientMark({ client }: { client: NonNullable<Role["client"]> }) {
   // Both marks are wordmarks drawn for a light ground, and one is green — so
-  // the chip carries its own light surface in either theme rather than being
+  // the tile carries its own light surface in either theme rather than being
   // inverted, which would misrepresent the brand colour.
   const base =
-    "flex h-9 shrink-0 items-center justify-center rounded-md border border-rule bg-[#f5f3ee]";
+    "flex h-16 w-20 shrink-0 items-center justify-center rounded-xl bg-[#fbfaf7] shadow-[0_1px_2px_rgb(26_26_26/0.06)]";
 
   if (client.logo) {
     return (
-      <span className={`${base} w-24 px-2`}>
+      <span className={`${base} px-2.5`}>
         <Image
           src={client.logo}
           alt={`${client.name} logo`}
           width={160}
           height={54}
-          className="h-4 w-auto max-w-full object-contain"
+          className="h-5 w-auto max-w-full object-contain"
         />
       </span>
     );
   }
 
   return (
-    <span className={`${base} w-9`} aria-hidden="true">
-      <span className="font-display text-sm font-bold text-ink-faint">
+    <span className={base} aria-hidden="true">
+      <span className="font-display text-lg font-bold text-[#6b6b6b]">
         {client.name.charAt(0)}
       </span>
     </span>

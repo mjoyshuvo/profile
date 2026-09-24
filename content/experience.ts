@@ -18,7 +18,16 @@ export type Role = {
   endDate?: string;
   location: string;
   /** Client the work was delivered for, when it wasn't in-house. */
-  client?: { name: string; url?: string; blurb: string; logo?: string };
+  client?: {
+    name: string;
+    url?: string;
+    blurb: string;
+    logo?: string;
+    /** What the client works in, shown as tags under the blurb. */
+    sectors?: string[];
+    /** A former name, for readers who knew the client by it. */
+    formerly?: string;
+  };
   /**
    * Two or three headline numbers for the role's panel on the career rail.
    * Every one must already be stated in the bullets below (or in the matching
@@ -45,7 +54,14 @@ export const experience: Role[] = [
       url: "https://veyt.com/",
       logo: "/logo-veyt.svg",
       blurb:
-        "Independent Norwegian market intelligence provider for green certificates — carbon, guarantees of origin, power purchase agreements and renewable fuels. Over 300 firms across the Nordics and Europe price and benchmark against its data. Formerly Greenfact.",
+        "Independent market intelligence for green certificates. Over 300 firms across the Nordics and Europe price and benchmark against its data.",
+      sectors: [
+        "Carbon",
+        "Guarantees of origin",
+        "Power purchase agreements",
+        "Renewable fuels",
+      ],
+      formerly: "Greenfact",
     },
     highlights: [
       { value: "200+", label: "pipelines in production" },
