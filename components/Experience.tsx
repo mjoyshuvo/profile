@@ -15,6 +15,16 @@ const BULLETS_AT_REST = 3;
 
 const MONTH = 1000 * 60 * 60 * 24 * 30.4375;
 
+const MONTH_NAMES = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" ");
+
+/** A whole-month count (year × 12 + month) from an ISO date, or now. */
+function monthOf(iso: string | undefined, now: Date) {
+  const date = iso ? new Date(iso) : now;
+  return date.getUTCFullYear() * 12 + date.getUTCMonth();
+}
+
+type RulerMonth = { label: string; year: number | null };
+
 /** A fractional year from an ISO date, for placing bars on the ruler. */
 function yearOf(iso: string | undefined, now: Date) {
   const date = iso ? new Date(iso) : now;
@@ -128,8 +138,19 @@ const POSITION_COLS: Record<number, string> = {
  * both. The numbers sit next to the name, where a skimming reader looks.
  */
 function RolePanel({ role, now }: { role: Role; now: Date }) {
-  const start = yearOf(role.startDate, now);
-  const span = yearOf(role.endDate, now) - start;
+  // Every month of the tenure, for the rulers under the position cards.
+  const first = monthOf(role.startDate, now);
+  const months = Array.from(
+    { length: monthOf(role.endDate, now) - first + 1 },
+    (_, i) => {
+      const year = Math.floor((first + i) / 12);
+      const month = (first + i) % 12;
+      return {
+        label: `${MONTH_NAMES[month]} ${year}`,
+        year: month === 0 ? year : null,
+      };
+    },
+  );
   const hasStats = Boolean(role.highlights?.length);
 
   return (
@@ -201,15 +222,19 @@ function RolePanel({ role, now }: { role: Role; now: Date }) {
       </div>
 
       {hasStats ? (
+        // The figures as piano keys under a key bed: they drop in and play a
+        // quick run when the panel arrives, and a key presses under the
+        // pointer. Motion lives in globals.css (`.piano`).
         <ul
-          className={`grid overflow-hidden rounded-3xl bg-teal text-on-teal lg:col-span-5 ${
+          className={`piano grid gap-1.5 lg:col-span-5 ${
             role.highlights!.length === 3 ? "grid-cols-3" : "grid-cols-2"
           }`}
         >
-          {role.highlights!.map((item) => (
+          {role.highlights!.map((item, i) => (
             <li
               key={item.label}
-              className="@container flex min-w-0 flex-col justify-center gap-2 border-on-teal/15 p-4 not-last:border-r sm:p-6"
+              style={{ "--i": i } as React.CSSProperties}
+              className="piano-key @container flex min-w-0 flex-col justify-start gap-2 bg-teal p-4 pt-10 text-on-teal sm:p-6 sm:pt-14"
             >
               <CountUp
                 value={item.value}
@@ -228,19 +253,16 @@ function RolePanel({ role, now }: { role: Role; now: Date }) {
       <div
         className={`grid gap-4 lg:col-span-12 ${POSITION_COLS[Math.min(role.positions.length, 3)]}`}
       >
-        {role.positions.map((position, i) => {
-          const from = yearOf(position.startDate, now) - start;
-          const length = yearOf(position.endDate, now) - start - from;
-          return (
-            <PositionEntry
-              key={position.title + position.start}
-              position={position}
-              left={(from / span) * 100}
-              width={Math.max(3, (length / span) * 100)}
-              id={`${slugOf(role.company)}-${i}`}
-            />
-          );
-        })}
+        {role.positions.map((position, i) => (
+          <PositionEntry
+            key={position.title + position.start}
+            position={position}
+            months={months}
+            from={monthOf(position.startDate, now) - first}
+            to={monthOf(position.endDate, now) - first + 1}
+            id={`${slugOf(role.company)}-${i}`}
+          />
+        ))}
       </div>
 
       <div className="lg:col-span-12">
@@ -334,14 +356,17 @@ function ClientMark({ client }: { client: NonNullable<Role["client"]> }) {
 
 function PositionEntry({
   position,
-  left,
-  width,
+  months,
+  from,
+  to,
   id,
 }: {
   position: Position;
-  /** Where this position sits inside the company tenure, in percent. */
-  left: number;
-  width: number;
+  /** Every month of the company tenure. */
+  months: RulerMonth[];
+  /** The months this position covers: `from` inclusive, `to` exclusive. */
+  from: number;
+  to: number;
   id: string;
 }) {
   const bullets = position.bullets ?? [];
@@ -360,17 +385,12 @@ function PositionEntry({
         {position.title}
       </h4>
 
-      {/* Where the position sits inside the tenure. Decorative: the dates
-          above say the same in words. */}
-      <span
-        aria-hidden="true"
-        className="relative block h-1.5 overflow-hidden rounded-full bg-rule"
-      >
-        <span
-          className="metro-span absolute inset-y-0 rounded-full bg-teal"
-          style={{ left: `${left}%`, width: `${width}%` }}
-        />
-      </span>
+      <MonthRuler
+        months={months}
+        from={from}
+        to={to}
+        live={!position.endDate}
+      />
 
       {resting.length ? (
         <ul className="mt-1 space-y-2">
@@ -402,6 +422,69 @@ function PositionEntry({
           />
         </>
       ) : null}
+    </div>
+  );
+}
+
+/**
+ * Where the position sits inside the tenure, as a ruler with one tick per
+ * month and a taller tick at each new year. The position's months light up
+ * and the playhead runs to its end when the panel arrives; under a pointer
+ * the ticks rise in a small wave and name their month. All of it is CSS
+ * (`.ruler` in globals.css). Decorative: the dates above say the same in
+ * words.
+ */
+function MonthRuler({
+  months,
+  from,
+  to,
+  live,
+}: {
+  months: RulerMonth[];
+  from: number;
+  to: number;
+  live: boolean;
+}) {
+  const at = (month: number) => `${(month / months.length) * 100}%`;
+  return (
+    <div
+      aria-hidden="true"
+      className="ruler relative mt-6 pb-5"
+      style={{ "--from": at(from), "--to": at(to) } as React.CSSProperties}
+    >
+      <div className="relative flex h-11 items-end">
+        {months.map((month, i) => {
+          const inside = i >= from && i < to;
+          return (
+            <span
+              key={month.label}
+              {...(inside ? { "data-in": "" } : {})}
+              {...(month.year ? { "data-year": "" } : {})}
+              style={
+                inside
+                  ? ({ "--k": (i - from) / Math.max(1, to - from - 1) } as React.CSSProperties)
+                  : undefined
+              }
+              className="ruler-tick relative flex h-full min-w-0 flex-1 items-end justify-center"
+            >
+              <span className="ruler-bar block w-[3px] rounded-full" />
+              {month.year ? (
+                <span className="ruler-year absolute top-[calc(100%+0.375rem)] left-1/2 -translate-x-1/2 font-display text-[0.625rem] font-semibold tracking-[0.06em] text-ink-faint">
+                  {month.year}
+                </span>
+              ) : null}
+              <span className="ruler-tip absolute bottom-[calc(100%+0.5rem)] left-1/2 rounded-lg bg-ink px-2 py-1 font-display text-[0.6875rem] font-bold whitespace-nowrap text-paper-raised tabular-nums">
+                {month.label}
+              </span>
+            </span>
+          );
+        })}
+        <span className="ruler-head absolute -top-1.5 -bottom-1 w-0.5 -translate-x-1/2 rounded-full bg-teal">
+          <span className="ruler-tag absolute bottom-full left-1/2 -translate-x-1/2 rounded-full bg-teal px-2 py-0.5 font-display text-[0.625rem] font-bold tracking-[0.08em] whitespace-nowrap text-on-teal uppercase">
+            {live ? "Now" : months[to - 1]?.label}
+          </span>
+        </span>
+      </div>
     </div>
   );
 }

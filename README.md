@@ -134,8 +134,12 @@ Entrance reveals are CSS driven by one `IntersectionObserver` in
   server-rendered; without JavaScript the line is hidden and all companies are
   listed. Each role's `highlights` in `content/experience.ts` must restate
   numbers already in its bullets; they count up (`components/CountUp.tsx`)
-  from the final value the server rendered. Bullets past the third fold behind
-  a `Disclosure`, still in the DOM.
+  from the final value the server rendered, on teal piano keys (`.piano` in
+  `app/globals.css`) that drop in, play a run and press under the pointer.
+  Each position card has a month ruler (`MonthRuler`): one tick a month, the
+  position's months in teal, a playhead at its end; the ticks rise in a wave
+  and name their month under the pointer. Both are CSS only. Bullets past the
+  third fold behind a `Disclosure`, still in the DOM.
 - **Engineering identity** is a stack of layers (`components/IdentityStack.tsx`):
   AI on data on backend, dots running between them. `tags` in
   `content/identity.ts` must only name tools the body names.

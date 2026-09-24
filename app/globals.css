@@ -16,6 +16,9 @@
   --teal: #0f766e;
   --teal-strong: #115e56;
   --teal-wash: #e6f2f0;
+  /* The piano panel's key bed and black keys, and the keys' front edge. */
+  --key-black: #1a1a1a;
+  --teal-deep: #0b5c55;
   /* Text placed on a --teal fill. Dark mode's teal is light, so white would
      drop to ~1.9:1 there — this flips with the palette. */
   --on-teal: #ffffff;
@@ -51,6 +54,8 @@
   --teal: #2dd4bf;
   --teal-strong: #5eead4;
   --teal-wash: #16302c;
+  --key-black: #050706;
+  --teal-deep: #17a896;
   --on-teal: #06201d;
   --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px -12px rgb(0 0 0 / 0.6);
   --shadow-float: 0 1px 2px rgb(0 0 0 / 0.4), 0 18px 40px -16px rgb(0 0 0 / 0.75);
@@ -860,7 +865,8 @@ html:not(.js) .rec-counter {
   .hero-ch,
   .career-stack > li,
   .career-body,
-  .metro-span,
+  .ruler-bar,
+  .ruler-head,
   .metro-live,
   .metro-now,
   .metro-dot-active,
@@ -868,6 +874,8 @@ html:not(.js) .rec-counter {
   .career-stack > li::after,
   .layer-bit,
   .layer-panel,
+  .piano-key,
+  .piano-key::after,
   .badge-ring,
   .badge-orbit,
   .badge-live,
@@ -1424,15 +1432,95 @@ html:not(.js) .metro-row {
   }
 }
 
-/* A position's place inside the tenure grows in whenever its panel shows. */
-.js .career-stack > li[data-active] .metro-span {
-  transform-origin: left;
-  animation: metro-span 0.9s var(--ease-soft) both;
+/* A position's place inside the tenure, as a month ruler: one tick a month,
+   a taller one each January, the position's months in teal and a playhead at
+   its end. Whenever the panel shows, the months light up left to right and
+   the playhead runs from the position's start to its end. Under a pointer
+   the ticks rise in a small wave and the one under it names its month. */
+.ruler-tick {
+  --bump: 0rem;
 }
 
-@keyframes metro-span {
+.ruler-bar {
+  height: calc(0.75rem + var(--bump));
+  transform-origin: bottom;
+  background: color-mix(in oklab, var(--ink) 20%, transparent);
+  transition:
+    height 0.25s var(--ease-spring),
+    background-color 0.2s ease;
+}
+
+.ruler-tick[data-year] .ruler-bar {
+  height: calc(1.5rem + var(--bump));
+}
+
+.ruler-tick[data-in] .ruler-bar {
+  background: var(--teal);
+}
+
+.ruler-tip {
+  z-index: 2;
+  opacity: 0;
+  transform: translate(-50%, 0.25rem);
+  pointer-events: none;
+  transition:
+    opacity 0.15s ease,
+    transform 0.15s ease;
+}
+
+.ruler-head {
+  left: var(--to);
+  pointer-events: none;
+}
+
+.ruler-tag {
+  transition: opacity 0.2s ease;
+}
+
+@media (hover: hover) {
+  .ruler-tick:hover {
+    --bump: 1.25rem;
+  }
+
+  .ruler-tick:hover + .ruler-tick,
+  .ruler-tick:has(+ .ruler-tick:hover) {
+    --bump: 0.875rem;
+  }
+
+  .ruler-tick:hover + .ruler-tick + .ruler-tick,
+  .ruler-tick:has(+ .ruler-tick + .ruler-tick:hover) {
+    --bump: 0.5rem;
+  }
+
+  .ruler-tick:hover .ruler-tip {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  .ruler:hover .ruler-tag {
+    opacity: 0;
+  }
+}
+
+.js [data-revealed] .career-stack > li[data-active] .ruler-tick[data-in] .ruler-bar {
+  animation: ruler-lit 0.4s var(--ease-spring) calc(0.25s + var(--k, 0) * 0.9s)
+    backwards;
+}
+
+.js [data-revealed] .career-stack > li[data-active] .ruler-head {
+  animation: ruler-run 1.15s var(--ease-soft) 0.25s backwards;
+}
+
+@keyframes ruler-lit {
   from {
-    transform: scaleX(0);
+    background-color: color-mix(in oklab, var(--ink) 20%, transparent);
+    transform: scaleY(0.4);
+  }
+}
+
+@keyframes ruler-run {
+  from {
+    left: var(--from);
   }
 }
 
@@ -1603,6 +1691,116 @@ html:not(.js) .metro-row {
 
 .career-position:has(.disclosure[open]) .career-more {
   grid-template-rows: 1fr;
+}
+
+/* ---------------------------------------------------------------------------
+   Experience figures as piano keys. A dark key bed along the top, black keys
+   between the teal ones, and a front edge under each key that shortens when
+   it is pressed. When a company panel arrives the keys drop in and play a
+   quick run left to right; under a fine pointer a key presses down and a ring
+   spreads from it like a note.
+--------------------------------------------------------------------------- */
+.piano {
+  border-top: 0.875rem solid var(--key-black);
+  border-radius: 1.25rem 1.25rem 0 0;
+  padding-bottom: 0.625rem;
+  /* The bed's inside, behind the top of the keys: a pressed key uncovers it
+     instead of the page. */
+  background: linear-gradient(var(--key-black) 0 0) top / 100% 0.875rem
+    no-repeat;
+}
+
+.piano-key {
+  --rest: 0 0.625rem 0 var(--teal-deep),
+    0 1.125rem 1.625rem -0.75rem rgb(0 0 0 / 0.45);
+  --down: 0 0.125rem 0 var(--teal-deep),
+    0 0.375rem 1rem -0.75rem rgb(0 0 0 / 0.45);
+  position: relative;
+  border-radius: 0 0 1.375rem 1.375rem;
+  background-image: linear-gradient(180deg, rgb(0 0 0 / 0.16), transparent 2.25rem);
+  box-shadow: var(--rest);
+  transition:
+    transform 0.16s var(--ease-spring),
+    box-shadow 0.16s ease;
+}
+
+/* A black key over each seam, hanging from the key bed. */
+.piano-key:not(:last-child)::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -1.0625rem;
+  z-index: 1;
+  width: 1.75rem;
+  height: 38%;
+  max-height: 6rem;
+  border-radius: 0 0 0.5rem 0.5rem;
+  background: var(--key-black);
+  pointer-events: none;
+}
+
+.piano-key::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 1.25rem;
+  width: 3.75rem;
+  height: 3.75rem;
+  margin-left: -1.875rem;
+  border: 2px solid currentColor;
+  border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (hover: hover) {
+  .piano-key:hover {
+    transform: translateY(0.5rem);
+    box-shadow: var(--down);
+  }
+
+  .piano-key:hover::after {
+    animation: piano-note 0.8s ease-out;
+  }
+}
+
+/* Arrival: only once the section is on screen, and again whenever a company
+   panel is shown. `translate` for the drop and `transform` for the press, so
+   the two never fight, and the press keeps no fill so hover still works. */
+.js [data-revealed] .career-stack > li[data-active] .piano-key {
+  animation:
+    piano-in 0.6s var(--ease-spring) calc(var(--i, 0) * 0.12s) both,
+    piano-play 0.34s ease-in-out calc(0.9s + var(--i, 0) * 0.17s) backwards;
+}
+
+@keyframes piano-in {
+  from {
+    translate: 0 -1.75rem;
+    opacity: 0;
+  }
+}
+
+@keyframes piano-play {
+  0%,
+  100% {
+    transform: none;
+    box-shadow: var(--rest);
+  }
+  45% {
+    transform: translateY(0.5rem);
+    box-shadow: var(--down);
+  }
+}
+
+@keyframes piano-note {
+  from {
+    opacity: 0.8;
+    transform: scale(0.3);
+  }
+  to {
+    opacity: 0;
+    transform: scale(2.6);
+  }
 }
 
 /* ---------------------------------------------------------------------------
