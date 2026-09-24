@@ -209,11 +209,11 @@ function RolePanel({ role, now }: { role: Role; now: Date }) {
           {role.highlights!.map((item) => (
             <li
               key={item.label}
-              className="flex flex-col justify-center gap-2 border-on-teal/15 p-4 not-last:border-r sm:p-6"
+              className="@container flex min-w-0 flex-col justify-center gap-2 border-on-teal/15 p-4 not-last:border-r sm:p-6"
             >
               <CountUp
                 value={item.value}
-                className="font-display text-2xl leading-none font-extrabold tracking-[-0.04em] tabular-nums sm:text-[2.5rem]"
+                className="font-display text-[min(2.5rem,24cqi)] leading-none font-extrabold tracking-[-0.04em] whitespace-nowrap tabular-nums"
               />
               <span className="font-display text-[0.625rem] leading-snug font-semibold tracking-[0.08em] uppercase opacity-85 sm:text-[0.6875rem]">
                 {item.label}
