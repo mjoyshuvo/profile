@@ -36,6 +36,21 @@ export type Recommendation = {
  */
 export const recommendations: Recommendation[] = [
   {
+    id: "salman-rahman",
+    name: "Salman Rahman",
+    title:
+      "Senior Software Engineer (Frontend) | React • Next.js • TypeScript | Frontend Architecture | Performance | Scalable Web Applications | 9+ Years",
+    relation: "Worked with me on the same team",
+    date: "September 2026",
+    dateISO: "2026-09-24",
+    avatar: "/recommenders/salman-rahman.jpg",
+    pull: "What stands out most, though, is his leadership: he's approachable and supportive, and he makes you feel comfortable from day one.",
+    quote: [
+      "I've had the pleasure of working with Mrityunjoy on the same team at Cefalo, where he's my team lead. As a frontend engineer joining the team, I found his support during onboarding invaluable. He helped me understand the system, the workflows and the bigger picture, and he was always patient with my questions.",
+      "He is a strong engineer, with more than a decade of experience in Python and data engineering. He's also one of Cefalo's first Claude Certified Architects and is always exploring what's next in AI-native development. What stands out most, though, is his leadership: he's approachable and supportive, and he makes you feel comfortable from day one.",
+    ],
+  },
+  {
     id: "abdullah-al-masud-tushar",
     name: "Abdullah Al Masud Tushar",
     title:
