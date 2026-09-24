@@ -1564,6 +1564,20 @@ html:not(.js) .rec-counter {
   }
 }
 
+/* A phone has no hover, so there the bus, the sidebar highlight and the
+   crosshair simply keep running. */
+@media (hover: none) {
+  .pv-bus,
+  .pv-tab,
+  .pv-scan {
+    animation-play-state: running;
+  }
+
+  .pv-scan {
+    opacity: 1;
+  }
+}
+
 /* The search caret blinks. */
 
 .pv-caret {
@@ -1732,17 +1746,43 @@ html:not(.js) .metro-row {
 }
 
 .js
-  [data-revealed]
   .career-stack
   > li[data-active]
+  [data-reveal-hold][data-revealed]
   .ruler-tick[data-in]
   .ruler-bar {
   animation: ruler-lit 0.4s var(--ease-spring) calc(0.25s + var(--k, 0) * 0.9s)
     backwards;
 }
 
-.js [data-revealed] .career-stack > li[data-active] .ruler-head {
+.js
+  .career-stack
+  > li[data-active]
+  [data-reveal-hold][data-revealed]
+  .ruler-head {
   animation: ruler-run 1.15s var(--ease-soft) 0.25s backwards;
+}
+
+/* Until its ruler reaches the screen, it waits on the first frame of its
+   run, so the arrival plays where the reader can see it. */
+@media (prefers-reduced-motion: no-preference) {
+  .js
+    .career-stack
+    > li[data-active]
+    [data-reveal-hold]:not([data-revealed])
+    .ruler-tick[data-in]
+    .ruler-bar {
+    background-color: color-mix(in oklab, var(--ink) 20%, transparent);
+    transform: scaleY(0.4);
+  }
+
+  .js
+    .career-stack
+    > li[data-active]
+    [data-reveal-hold]:not([data-revealed])
+    .ruler-head {
+    left: var(--from);
+  }
 }
 
 @keyframes ruler-lit {
@@ -2006,10 +2046,18 @@ html:not(.js) .metro-row {
 /* Arrival: only once the section is on screen, and again whenever a company
    panel is shown. `translate` for the drop and `transform` for the press, so
    the two never fight, and the press keeps no fill so hover still works. */
-.js [data-revealed] .career-stack > li[data-active] .piano-key {
+.js .career-stack > li[data-active] .piano[data-revealed] .piano-key {
   animation:
     piano-in 0.6s var(--ease-spring) calc(var(--i, 0) * 0.12s) both,
     piano-play 0.34s ease-in-out calc(0.9s + var(--i, 0) * 0.17s) backwards;
+}
+
+/* The keys wait above the bed until the panel reaches the screen. */
+@media (prefers-reduced-motion: no-preference) {
+  .js .career-stack > li[data-active] .piano:not([data-revealed]) .piano-key {
+    opacity: 0;
+    translate: 0 -1.75rem;
+  }
 }
 
 @keyframes piano-in {

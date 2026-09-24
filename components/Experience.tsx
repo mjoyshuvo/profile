@@ -21,7 +21,9 @@ const BULLETS_AT_REST = 3;
 
 const MONTH = 1000 * 60 * 60 * 24 * 30.4375;
 
-const MONTH_NAMES = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(" ");
+const MONTH_NAMES = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split(
+  " ",
+);
 
 /** A whole-month count (year × 12 + month) from an ISO date, or now. */
 function monthOf(iso: string | undefined, now: Date) {
@@ -207,7 +209,11 @@ function RolePanel({ role, now }: { role: Role; now: Date }) {
         // The figures as piano keys under a key bed: they drop in and play a
         // quick run when the panel arrives, and a key presses under the
         // pointer. Motion lives in globals.css (`.piano`).
-        <ul
+        // Its own trigger: on a phone the keys sit far below the top of the
+        // section, and an arrival keyed to the section would play off screen.
+        <Reveal
+          mode="hold"
+          as="ul"
           className={`piano grid gap-1.5 lg:col-span-5 ${
             role.highlights!.length === 3 ? "grid-cols-3" : "grid-cols-2"
           }`}
@@ -227,7 +233,7 @@ function RolePanel({ role, now }: { role: Role; now: Date }) {
               </span>
             </li>
           ))}
-        </ul>
+        </Reveal>
       ) : null}
 
       {/* One card per position, newest first. A promotion reads as one
@@ -327,7 +333,10 @@ function ClientPanel({ client }: { client: NonNullable<Role["client"]> }) {
             </span>
             {client.formerly ? (
               <>
-                <span aria-hidden="true" className="h-1 w-1 rounded-full bg-rule" />
+                <span
+                  aria-hidden="true"
+                  className="h-1 w-1 rounded-full bg-rule"
+                />
                 <span>Formerly {client.formerly}</span>
               </>
             ) : null}
@@ -351,7 +360,10 @@ function ClientPanel({ client }: { client: NonNullable<Role["client"]> }) {
       </p>
 
       {client.sectors?.length ? (
-        <ul className="flex flex-wrap gap-2" aria-label={`What ${client.name} covers`}>
+        <ul
+          className="flex flex-wrap gap-2"
+          aria-label={`What ${client.name} covers`}
+        >
           {client.sectors.map((sector) => (
             <li
               key={sector}
@@ -362,7 +374,6 @@ function ClientPanel({ client }: { client: NonNullable<Role["client"]> }) {
           ))}
         </ul>
       ) : null}
-
     </section>
   );
 }
@@ -493,46 +504,52 @@ function MonthRuler({
   live: boolean;
 }) {
   const at = (month: number) => `${(month / months.length) * 100}%`;
+  // Its own trigger, for the same reason as the piano keys: each ruler plays
+  // when it reaches the screen, not when the section does.
   return (
-    <div
-      aria-hidden="true"
-      className="ruler relative mt-6 pb-5"
-      style={{ "--from": at(from), "--to": at(to) } as React.CSSProperties}
-    >
-      <div className="relative flex h-11 items-end">
-        {months.map((month, i) => {
-          const inside = i >= from && i < to;
-          return (
-            <span
-              key={month.label}
-              {...(inside ? { "data-in": "" } : {})}
-              {...(month.year ? { "data-year": "" } : {})}
-              style={
-                inside
-                  ? ({ "--k": (i - from) / Math.max(1, to - from - 1) } as React.CSSProperties)
-                  : undefined
-              }
-              className="ruler-tick relative flex h-full min-w-0 flex-1 items-end justify-center"
-            >
-              <span className="ruler-bar block w-[3px] rounded-full" />
-              {month.year ? (
-                <span className="ruler-year absolute top-[calc(100%+0.375rem)] left-1/2 -translate-x-1/2 font-display text-[0.625rem] font-semibold tracking-[0.06em] text-ink-faint">
-                  {month.year}
+    <Reveal mode="hold">
+      <div
+        aria-hidden="true"
+        className="ruler relative mt-6 pb-5"
+        style={{ "--from": at(from), "--to": at(to) } as React.CSSProperties}
+      >
+        <div className="relative flex h-11 items-end">
+          {months.map((month, i) => {
+            const inside = i >= from && i < to;
+            return (
+              <span
+                key={month.label}
+                {...(inside ? { "data-in": "" } : {})}
+                {...(month.year ? { "data-year": "" } : {})}
+                style={
+                  inside
+                    ? ({
+                        "--k": (i - from) / Math.max(1, to - from - 1),
+                      } as React.CSSProperties)
+                    : undefined
+                }
+                className="ruler-tick relative flex h-full min-w-0 flex-1 items-end justify-center"
+              >
+                <span className="ruler-bar block w-[3px] rounded-full" />
+                {month.year ? (
+                  <span className="ruler-year absolute top-[calc(100%+0.375rem)] left-1/2 -translate-x-1/2 font-display text-[0.625rem] font-semibold tracking-[0.06em] text-ink-faint">
+                    {month.year}
+                  </span>
+                ) : null}
+                <span className="ruler-tip absolute bottom-[calc(100%+0.5rem)] left-1/2 rounded-lg bg-ink px-2 py-1 font-display text-[0.6875rem] font-bold whitespace-nowrap text-paper-raised tabular-nums">
+                  {month.label}
                 </span>
-              ) : null}
-              <span className="ruler-tip absolute bottom-[calc(100%+0.5rem)] left-1/2 rounded-lg bg-ink px-2 py-1 font-display text-[0.6875rem] font-bold whitespace-nowrap text-paper-raised tabular-nums">
-                {month.label}
               </span>
+            );
+          })}
+          <span className="ruler-head absolute -top-1.5 -bottom-1 w-0.5 -translate-x-1/2 rounded-full bg-teal">
+            <span className="ruler-tag absolute bottom-full left-1/2 -translate-x-1/2 rounded-full bg-teal px-2 py-0.5 font-display text-[0.625rem] font-bold tracking-[0.08em] whitespace-nowrap text-on-teal uppercase">
+              {live ? "Now" : months[to - 1]?.label}
             </span>
-          );
-        })}
-        <span className="ruler-head absolute -top-1.5 -bottom-1 w-0.5 -translate-x-1/2 rounded-full bg-teal">
-          <span className="ruler-tag absolute bottom-full left-1/2 -translate-x-1/2 rounded-full bg-teal px-2 py-0.5 font-display text-[0.625rem] font-bold tracking-[0.08em] whitespace-nowrap text-on-teal uppercase">
-            {live ? "Now" : months[to - 1]?.label}
           </span>
-        </span>
+        </div>
       </div>
-    </div>
+    </Reveal>
   );
 }
 
