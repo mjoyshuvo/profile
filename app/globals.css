@@ -100,6 +100,19 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* Tailwind v4 gives buttons the arrow cursor. Everything you can click here
+   shows the hand, like a link does. In the base layer, so a utility such as
+   `cursor-grab` still wins. */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not([aria-disabled="true"]),
+  [role="tab"],
+  summary,
+  label[for] {
+    cursor: pointer;
+  }
+}
+
 :focus-visible {
   outline: 2px solid var(--teal);
   outline-offset: 3px;
